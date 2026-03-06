@@ -1,0 +1,40 @@
+#!/bin/bash
+# Pre-commit hook: validate VERSION file format and sync with package.json
+#
+# Install: git config core.hooksPath .githooks
+
+set -e
+
+VERSION_FILE="VERSION"
+PACKAGE_JSON="package.json"
+
+# 1. VERSION file must exist
+if [ ! -f "$VERSION_FILE" ]; then
+  echo "ERROR: VERSION file not found at repo root"
+  exit 1
+fi
+
+VERSION=$(cat "$VERSION_FILE" | tr -d '[:space:]')
+
+# 2. Must match SemVer (with optional v prefix and pre-release/build metadata)
+SEMVER_REGEX='^v?[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9._-]+)?(\+[a-zA-Z0-9._-]+)?$'
+if ! echo "$VERSION" | grep -qE "$SEMVER_REGEX"; then
+  echo "ERROR: VERSION '$VERSION' does not match SemVer format"
+  echo "  Expected: [v]MAJOR.MINOR.PATCH[-prerelease][+build]"
+  echo "  Examples: 0.5.2, v1.0.0, 1.0.0-rc.1, v2.0.0-dev-20260131-a"
+  exit 1
+fi
+
+# 3. VERSION must match package.json version (strip leading v for comparison)
+VERSION_CLEAN="${VERSION#v}"
+PKG_VERSION=$(node -p "require('./$PACKAGE_JSON').version" 2>/dev/null)
+
+if [ "$VERSION_CLEAN" != "$PKG_VERSION" ]; then
+  echo "ERROR: VERSION ($VERSION_CLEAN) does not match package.json version ($PKG_VERSION)"
+  echo "  Update one to match the other."
+  exit 1
+fi
+
+# 4. Report version
+COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+echo "VERSION: ${VERSION}+${COMMIT}"

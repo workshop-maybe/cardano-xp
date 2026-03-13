@@ -1,147 +1,36 @@
 /**
  * Type re-exports from generated gateway types
  *
- * This file provides:
- * 1. Clean type aliases for orchestration types (courses are now orchestration-based)
- * 2. DB client types for projects (still using DB client pattern)
- * 3. Custom types not in the API spec
+ * This file provides clean type aliases and re-exports from the auto-generated
+ * gateway types. All types come from code generation - no manual definitions.
  *
- * NOTE: As of API v2.0.0, course-related types have been consolidated into
- * orchestration types. The old DB client course types no longer exist in the API.
+ * NOTE: As of API v2.1.0, type names have been cleaned up:
+ * - Orchestration* prefix removed
+ * - MergedHandlers* prefix removed
+ * - AndamioApiInternal* prefix removed
+ * - ApiTypes* prefix removed
+ * - AuthViewmodels* prefix removed
  *
  * @see gateway.ts - Raw auto-generated types from OpenAPI spec
  */
 
 // =============================================================================
-// Course System Types (now using Orchestration types)
+// Course System Types (clean names from v2.1.0)
 // =============================================================================
 
 // Course types - using orchestration types for merged data
-export type { OrchestrationCourseContent as CourseContent } from "./gateway";
-export type { OrchestrationModuleContent as ModuleContent } from "./gateway";
-export type { OrchestrationMergedCourseDetail as CourseDetailResponse } from "./gateway";
-export type { OrchestrationMergedCourseListItem as CourseListItem } from "./gateway";
-export type { OrchestrationMergedCourseModuleItem as CourseModuleItem } from "./gateway";
+export type { MergedCourseDetail as CourseDetailResponse } from "./gateway";
+export type { MergedCourseListItem as CourseListItem } from "./gateway";
+export type { MergedCourseModuleItem as CourseModuleItem } from "./gateway";
 
-// Legacy type aliases for backward compatibility
-// These are now orchestration types but aliased for existing code
-import type {
-  OrchestrationMergedCourseDetail,
-  OrchestrationMergedCourseListItem,
-  OrchestrationMergedCourseModuleItem,
-  OrchestrationModuleContent,
-} from "./gateway";
+// Type aliases for backward compatibility
+import type { MergedCourseDetail, MergedCourseListItem } from "./gateway";
 
-/**
- * Course response type (backward compatibility)
- * Maps to OrchestrationMergedCourseDetail for full course data
- */
-export type CourseResponse = OrchestrationMergedCourseDetail;
+/** Course response type - maps to MergedCourseDetail */
+export type CourseResponse = MergedCourseDetail;
 
-/**
- * Course module response type (backward compatibility)
- * Extends OrchestrationModuleContent with slt_hash from the parent merged item
- */
-export interface CourseModuleResponse extends OrchestrationModuleContent {
-  /** SLT hash from the merged module item (copied from parent) */
-  slt_hash?: string;
-}
-
-/**
- * Course module brief response type (backward compatibility)
- */
-export type CourseModuleBriefResponse = {
-  course_module_code?: string;
-  title?: string;
-  module_status?: string;
-};
-
-/**
- * SLT response type (backward compatibility)
- * SLTs are now embedded in OrchestrationModuleContent.slts
- */
-export interface SLTResponse {
-  id?: number;
-  slt_id?: string;
-  slt_text?: string;
-  module_index?: number;
-  slt_index?: number; // Alias for module_index
-  course_module_code?: string;
-  created_at?: string;
-  updated_at?: string;
-  // Nested lesson data (populated by some endpoints)
-  lesson?: LessonResponse | null;
-}
-
-/**
- * Assignment response type (backward compatibility)
- * Assignments are now embedded in OrchestrationModuleContent.assignment
- */
-export interface AssignmentResponse {
-  id?: number;
-  title?: string;
-  assignment_content?: unknown;
-  content_json?: unknown; // Alias for assignment_content (TipTap JSON)
-  course_module_code?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-/**
- * Introduction response type (backward compatibility)
- * Introductions are now embedded in OrchestrationModuleContent.introduction
- */
-export interface IntroductionResponse {
-  id?: number;
-  title?: string;
-  introduction_content?: unknown;
-  content_json?: unknown; // Alias for introduction_content (TipTap JSON)
-  course_module_code?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-/**
- * Lesson response type (backward compatibility)
- */
-export interface LessonResponse {
-  id?: number;
-  lesson_content?: unknown;
-  content_json?: unknown; // Alias for lesson_content (TipTap JSON)
-  slt_id?: string;
-  slt_index?: number;
-  course_module_code?: string;
-  created_at?: string;
-  updated_at?: string;
-  // Additional display fields
-  title?: string;
-  description?: string;
-  is_live?: boolean;
-  image_url?: string;
-  video_url?: string;
-}
-
-/**
- * Assignment commitment response type (backward compatibility)
- */
-export type { OrchestrationAssignmentCommitmentContent as AssignmentCommitmentResponse } from "./gateway";
-
-/**
- * Course teacher response type (backward compatibility)
- */
-export interface CourseTeacherResponse {
-  id?: number;
-  course_nft_policy_id?: string;
-  teacher_alias?: string;
-  created_at?: string;
-}
-
-// List type aliases
-export type CourseListResponse = OrchestrationMergedCourseListItem[];
-export type CourseModuleListResponse = OrchestrationMergedCourseModuleItem[];
-export type SLTListResponse = SLTResponse[];
-export type LessonListResponse = LessonResponse[];
-export type AssignmentListResponse = AssignmentResponse[];
+/** Course list response type - array of MergedCourseListItem */
+export type CourseListResponse = MergedCourseListItem[];
 
 // =============================================================================
 // Project System Types (app-level flattened types)
@@ -170,292 +59,181 @@ export {
 // Re-export the app types with clean names too
 export type { Task, Project, ProjectDetail, TaskCommitment, TaskToken, ProjectState } from "~/hooks/api/project/use-project";
 
-// Legacy compatibility alias
-export interface ProjectPrerequisiteOutput {
-  id?: number;
-  project_id?: string;
-  prerequisite_type?: string;
-  prerequisite_value?: string;
-}
-
 // =============================================================================
-// Orchestration Types (re-exports, already well-named)
+// Orchestration Types (clean names from v2.1.0)
 // =============================================================================
 
 export type {
-  // Course orchestration
-  OrchestrationCourseModule,
-  OrchestrationCourseContent,
-  OrchestrationModuleContent,
-  OrchestrationMergedCourseDetail,
-  OrchestrationMergedCourseListItem,
-  OrchestrationMergedCourseModuleItem,
-  OrchestrationStudentCourseListItem,
-  OrchestrationStudentAssignmentCommitmentItem,
-  OrchestrationAssignmentCommitmentContent,
+  // Course types
+  CourseModule,
+  CourseContent,
+  ModuleContent,
+  MergedCourseDetail,
+  MergedCourseListItem,
+  MergedCourseModuleItem,
+  StudentCourseListItem,
+  StudentAssignmentCommitmentItem,
+  AssignmentCommitmentContent,
+  StudentCourseCredential,
+  CredentialModuleInfo,
 
-  // Project orchestration
-  OrchestrationMergedProjectDetail,
-  OrchestrationMergedProjectListItem,
-  OrchestrationMergedTaskListItem,
-  OrchestrationContributorProjectListItem,
-  OrchestrationManagerProjectListItem,
-  OrchestrationContributorCommitmentItem,
-  OrchestrationManagerCommitmentItem,
-  OrchestrationManagerCommitmentTaskInfo,
-  OrchestrationProjectTaskOnChain,
-  OrchestrationProjectContent,
-  OrchestrationProjectPrerequisite,
-  OrchestrationProjectContributorOnChain,
-  OrchestrationProjectSubmissionOnChain,
-  OrchestrationProjectAssessmentOnChain,
-  OrchestrationProjectTreasuryFundingOnChain,
-  OrchestrationProjectCredentialClaimOnChain,
-  OrchestrationTaskCommitmentContent,
-  OrchestrationTaskContent,
-  OrchestrationMyCommitmentSummary,
-  OrchestrationPendingAssessmentSummary,
+  // Project types
+  MergedProjectDetail,
+  MergedProjectListItem,
+  MergedTaskListItem,
+  ContributorProjectListItem,
+  ManagerProjectListItem,
+  ContributorCommitmentItem,
+  ManagerCommitmentItem,
+  ManagerCommitmentTaskInfo,
+  ProjectTaskOnChain,
+  ProjectContent,
+  ProjectPrerequisite,
+  ProjectContributorOnChain,
+  ProjectSubmissionOnChain,
+  ProjectAssessmentOnChain,
+  ProjectTreasuryFundingOnChain,
+  ProjectCredentialClaimOnChain,
+  TaskCommitmentContent,
+  TaskContent,
+  MyCommitmentSummary,
+  PendingAssessmentSummary,
 } from "./gateway";
 
 // =============================================================================
-// Merged Handler Types (re-exports)
+// Response Types (clean names from v2.1.0)
 // =============================================================================
 
 export type {
-  // Course merged handlers
-  MergedHandlersMergedCoursesResponse,
-  MergedHandlersMergedCourseDetailResponse,
-  MergedHandlersMergedCourseModulesResponse,
-  MergedHandlersStudentCoursesResponse,
-  MergedHandlersStudentAssignmentCommitmentResponse,
-  MergedHandlersStudentAssignmentCommitmentsResponse,
-  MergedHandlersGetStudentAssignmentCommitmentRequest,
+  // Course responses
+  MergedCoursesResponse,
+  MergedCourseDetailResponse,
+  MergedCourseModulesResponse,
+  StudentCoursesResponse,
+  StudentAssignmentCommitmentResponse,
+  StudentAssignmentCommitmentsResponse,
+  GetStudentAssignmentCommitmentRequest,
+  StudentCredentialsResponse,
+  RegisterModuleResponse,
 
-  // Project merged handlers
-  MergedHandlersMergedProjectsResponse,
-  MergedHandlersMergedProjectDetailResponse,
-  MergedHandlersContributorProjectsResponse,
-  MergedHandlersManagerProjectsResponse,
-  MergedHandlersContributorCommitmentResponse,
-  MergedHandlersContributorCommitmentsResponse,
-  MergedHandlersManagerCommitmentsResponse,
-  MergedHandlersMergedTasksResponse,
-  MergedHandlersGetContributorCommitmentRequest,
-  MergedHandlersListManagerTasksRequest,
-  MergedHandlersListTasksRequest,
-  MergedHandlersErrorResponse,
+  // Project responses
+  MergedProjectsResponse,
+  MergedProjectDetailResponse,
+  ContributorProjectsResponse,
+  ManagerProjectsResponse,
+  ContributorCommitmentResponse,
+  ContributorCommitmentsResponse,
+  ManagerCommitmentsResponse,
+  MergedTasksResponse,
+  GetContributorCommitmentRequest,
+  ListManagerTasksRequest,
+  ListTasksRequest,
+  ErrorResponse,
 } from "./gateway";
 
 // =============================================================================
-// TX Client Types (re-exports from generated gateway types)
+// TX Client Types (clean names from v2.1.0)
 // =============================================================================
 
-// Re-export TX client types directly from gateway
 // Course transactions
+export type { CreateCourseTxRequest } from "./gateway";
+export type { ManageModulesTxRequest } from "./gateway";
+export type { MintModuleV2 } from "./gateway";
+export type { UpdateModuleV2 } from "./gateway";
+export type { CommitAssignmentTxRequest } from "./gateway";
+export type { AssignmentActionTxRequest } from "./gateway";
+export type { AssessAssignmentsTxRequest } from "./gateway";
+export type { ClaimCourseCredentialsTxRequest } from "./gateway";
+
+// Project transactions
+export type { CreateProjectTxRequest } from "./gateway";
+export type { ManageTasksTxRequest } from "./gateway";
+export type { TaskData } from "./gateway";
+export type { CommitTaskTxRequest } from "./gateway";
+export type { TaskActionTxRequest } from "./gateway";
+export type { TasksAssessV2TxRequest } from "./gateway";
+export type { ClaimProjectCredentialsTxRequest } from "./gateway";
+export type { ProjectOutcome } from "./gateway";
+
+// Global transactions
+export type { MintAccessTokenTxRequest } from "./gateway";
+
+// Response types
+export type { UnsignedTxResponse } from "./gateway";
+export type { UnsignedTxResponseInitCourse } from "./gateway";
+export type { UnsignedTxResponseInitProject } from "./gateway";
+
+// =============================================================================
+// Request Types (clean names from v2.1.0)
+// =============================================================================
+
+// Project requests
 export type {
-  AtlasTxClientCreateCourseTxRequest,
-  AtlasTxClientManageModulesTxRequest,
-  AtlasTxClientMintModuleV2,
-  AtlasTxClientUpdateModuleV2,
-  AtlasTxClientCommitAssignmentTxRequest,
-  AtlasTxClientAssignmentActionTxRequest,
-  AtlasTxClientAssessAssignmentsTxRequest,
-  AtlasTxClientClaimCourseCredentialsTxRequest,
-  // Project transactions
-  AtlasTxClientCreateProjectTxRequest,
-  AtlasTxClientManageTasksTxRequest,
-  AtlasTxClientTaskData,
-  AtlasTxClientCommitTaskTxRequest,
-  AtlasTxClientTaskActionTxRequest,
-  AtlasTxClientTasksAssessV2TxRequest,
-  AtlasTxClientClaimProjectCredentialsTxRequest,
-  AtlasTxClientProjectOutcome,
-  // Global transactions
-  AtlasTxClientMintAccessTokenTxRequest,
-  // Response types
-  AtlasTxClientUnsignedTxResponse,
-  AtlasTxClientUnsignedTxResponseInitCourse,
-  AtlasTxClientUnsignedTxResponseInitProject,
+  CreateProjectRequest,
+  UpdateProjectRequest,
+  CreateTaskRequest,
+  UpdateTaskRequest,
+  CreateTaskCommitmentRequest,
+  UpdateTaskCommitmentRequest,
 } from "./gateway";
 
 // =============================================================================
-// Request Types (backward compatibility - custom definitions)
-// =============================================================================
-
-/**
- * Course request types (backward compatibility)
- * These are now custom types since the API no longer exposes these directly
- */
-export interface AndamioDbClientCreateCourseV2Request {
-  course_id: string;
-  title: string;
-  description?: string;
-  image_url?: string;
-}
-
-export interface AndamioDbClientUpdateCourseV2Request {
-  course_id: string;
-  data: {
-    title?: string;
-    description?: string;
-    image_url?: string;
-    is_public?: boolean;
-  };
-}
-
-export interface AndamioDbClientCreateModuleV2Request {
-  course_id: string;
-  course_module_code: string;
-  title: string;
-  description?: string;
-}
-
-export interface AndamioDbClientUpdateModuleV2Request {
-  course_id: string;
-  course_module_code: string;
-  title?: string;
-  description?: string;
-}
-
-export interface AndamioDbClientCreateSltV2Request {
-  course_id: string;
-  course_module_code: string;
-  slt_text: string;
-  module_index: number;
-}
-
-export interface AndamioDbClientUpdateSltV2Request {
-  course_id: string;
-  course_module_code: string;
-  slt_id: string;
-  slt_text?: string;
-  module_index?: number;
-}
-
-export interface AndamioDbClientCreateLessonV2Request {
-  course_id: string;
-  course_module_code: string;
-  slt_id: string;
-  lesson_content: unknown;
-}
-
-export interface AndamioDbClientUpdateLessonV2Request {
-  course_id: string;
-  course_module_code: string;
-  slt_id: string;
-  lesson_content: unknown;
-}
-
-export interface AndamioDbClientCreateAssignmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  assignment_content: unknown;
-}
-
-export interface AndamioDbClientUpdateAssignmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  assignment_content: unknown;
-}
-
-export interface AndamioDbClientCreateIntroductionV2Request {
-  course_id: string;
-  course_module_code: string;
-  introduction_content: unknown;
-}
-
-export interface AndamioDbClientUpdateIntroductionV2Request {
-  course_id: string;
-  course_module_code: string;
-  introduction_content: unknown;
-}
-
-export interface AndamioDbClientCreateAssignmentCommitmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  student_alias: string;
-}
-
-export interface AndamioDbClientUpdateAssignmentCommitmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  student_alias: string;
-  evidence_text?: string;
-  evidence_url?: string;
-}
-
-export interface AndamioDbClientSubmitAssignmentCommitmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  student_alias: string;
-}
-
-export interface AndamioDbClientReviewAssignmentCommitmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  student_alias: string;
-  approved: boolean;
-  feedback?: string;
-}
-
-export interface AndamioDbClientLeaveAssignmentCommitmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  student_alias: string;
-}
-
-export interface AndamioDbClientGetAssignmentCommitmentV2Request {
-  course_id: string;
-  course_module_code: string;
-  student_alias: string;
-}
-
-// Project requests (now using ApiTypes)
-export type {
-  ApiTypesCreateProjectRequest,
-  ApiTypesUpdateProjectRequest,
-  ApiTypesCreateTaskRequest,
-  ApiTypesUpdateTaskRequest,
-  ApiTypesCreateTaskCommitmentRequest,
-  ApiTypesUpdateTaskCommitmentRequest,
-} from "./gateway";
-
-// =============================================================================
-// Auth Types (re-exports for developer registration)
+// Auth Types (clean names from v2.1.0)
 // =============================================================================
 
 export type {
   // Developer registration (two-step flow)
-  AuthViewmodelsRegisterSessionRequest,
-  AuthViewmodelsRegisterSessionResponse,
-  AuthViewmodelsRegisterCompleteRequest,
-  AuthViewmodelsRegisterResponse,
-  AuthViewmodelsSignatureData,
+  RegisterSessionRequest,
+  RegisterSessionResponse,
+  RegisterCompleteRequest,
+  RegisterResponse,
+  SignatureData,
 
   // Developer login
-  AuthViewmodelsLoginRequest,
-  AuthViewmodelsLoginResponse,
-  AuthViewmodelsJWTResponse,
+  LoginRequest,
+  LoginResponse,
+  JWTResponse,
 } from "./gateway";
 
 // =============================================================================
-// API Key Types (re-exports for developer API key management)
+// API Key Types (clean names from v2.1.0)
 // =============================================================================
 
 export type {
-  ApiKeyViewmodelsAPIKeyRequest,
-  ApiKeyViewmodelsAPIKeyResponse,
-  ApiKeyViewmodelsDeleteAPIKeyRequest,
-  ApiKeyViewmodelsDeleteAPIKeyResponse,
-  ApiKeyViewmodelsRotateAPIKeyRequest,
-  ApiKeyViewmodelsRotateAPIKeyResponse,
+  APIKeyRequest,
+  APIKeyResponse,
+  DeleteAPIKeyRequest,
+  DeleteAPIKeyResponse,
+  RotateAPIKeyRequest,
+  RotateAPIKeyResponse,
 } from "./gateway";
 
 // Developer profile type (returned from /v2/apikey/developer/profile/get)
-export type { UserViewmodelsMeResponse as DeveloperProfileResponse } from "./gateway";
+export type { MeResponse as DeveloperProfileResponse } from "./gateway";
 
 // Developer usage type (returned from /v2/apikey/developer/usage/get)
-export type { UserViewmodelsUsageResponse as DeveloperUsageResponse } from "./gateway";
+export type { UsageResponse as DeveloperUsageResponse } from "./gateway";
+
+// =============================================================================
+// Dashboard Types (clean names from v2.1.0)
+// =============================================================================
+
+export type {
+  DashboardResponse,
+  DashboardResponseWrapper,
+  DashboardCounts,
+  DashboardUser,
+  StudentDashboard,
+  TeacherDashboard,
+  ProjectsDashboard,
+  DashboardCourseSummary,
+  DashboardCredentialSummary,
+  DashboardCommitmentSummary,
+  DashboardPendingReviewSummary,
+  DashboardPendingAssessmentSummary,
+  DashboardProjectSummary,
+  DashboardProjectWithPrereqs,
+} from "./gateway";
 
 // =============================================================================
 // Custom Types (not in API spec)
@@ -484,8 +262,3 @@ export type GatewayTxType =
   | "task_assess"
   | "project_credential_claim"
   | "treasury_fund";
-
-// =============================================================================
-// Andamioscan types removed — use gateway merged API hooks instead.
-// See ~/hooks/api/project/use-project.ts and ~/hooks/api/course/use-course.ts
-// =============================================================================

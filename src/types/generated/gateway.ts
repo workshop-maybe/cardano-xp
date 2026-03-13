@@ -10,12 +10,12 @@
  * ---------------------------------------------------------------
  */
 
-export enum AndamioDbClientReviewAssignmentCommitmentV2RequestDecision {
+export enum ReviewAssignmentCommitmentV2RequestDecision {
   ReviewAssignmentCommitmentV2RequestDecisionAccept = "accept",
   ReviewAssignmentCommitmentV2RequestDecisionRefuse = "refuse",
 }
 
-export enum AndamioDbClientCourseModuleV2ModuleStatus {
+export enum CourseModuleV2ModuleStatus {
   CourseModuleV2ModuleStatusAPPROVED = "APPROVED",
   CourseModuleV2ModuleStatusARCHIVED = "ARCHIVED",
   CourseModuleV2ModuleStatusDEPRECATED = "DEPRECATED",
@@ -24,18 +24,18 @@ export enum AndamioDbClientCourseModuleV2ModuleStatus {
   CourseModuleV2ModuleStatusPENDINGTX = "PENDING_TX",
 }
 
-export enum AndamioDbClientAggregateUpdateModuleV2RequestStatus {
+export enum AggregateUpdateModuleV2RequestStatus {
   AggregateUpdateModuleV2RequestStatusAPPROVED = "APPROVED",
 }
 
-export enum AndamioDbClientAggregateUpdateErrorResponseFailedOperationOperation {
+export enum AggregateUpdateErrorResponseFailedOperationOperation {
   Approve = "approve",
   Create = "create",
   Delete = "delete",
   Update = "update",
 }
 
-export enum AndamioDbClientAggregateUpdateErrorResponseFailedOperationEntity {
+export enum AggregateUpdateErrorResponseFailedOperationEntity {
   Assignment = "assignment",
   Introduction = "introduction",
   Lesson = "lesson",
@@ -43,7 +43,7 @@ export enum AndamioDbClientAggregateUpdateErrorResponseFailedOperationEntity {
   Slt = "slt",
 }
 
-export enum AndamioDbClientAggregateUpdateErrorResponseCode {
+export enum AggregateUpdateErrorResponseCode {
   BADREQUEST = "BAD_REQUEST",
   INVALIDSLTHASH = "INVALID_SLT_HASH",
   MODULENOTFOUND = "MODULE_NOT_FOUND",
@@ -51,295 +51,7 @@ export enum AndamioDbClientAggregateUpdateErrorResponseCode {
   UNAUTHORIZED = "UNAUTHORIZED",
 }
 
-export interface AdminViewmodelsSetUserRoleRequest {
-  /** @example 1 */
-  tier_id?: number;
-  /** @example "pro" */
-  tier_name?: string;
-  /** @example "123e4567-e89b-12d3-a456-426614174000" */
-  user_id: string;
-}
-
-export interface AdminViewmodelsSetUserRoleResponse {
-  /** @example "User role updated successfully." */
-  message?: string;
-  /**
-   * @min 1
-   * @example 1
-   */
-  tier_id: number;
-  /**
-   * @minLength 1
-   * @example "pro"
-   */
-  tier_name: string;
-  /** @example "123e4567-e89b-12d3-a456-426614174000" */
-  user_id?: string;
-}
-
-export interface AndamioApiInternalInternalApiAndamioDbClientRegisterProjectRequest {
-  description?: string;
-  image_url?: string;
-  project_id?: string;
-  title?: string;
-}
-
-export interface AndamioDbClientAddTeachersV2Request {
-  aliases?: string[];
-  course_id?: string;
-}
-
-export interface AndamioDbClientAggregateAssignmentInput {
-  content_json?: Record<string, any>;
-  description?: string;
-  image_url?: string;
-  title?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientAggregateChangeSummary {
-  assignment_created?: boolean;
-  assignment_deleted?: boolean;
-  assignment_updated?: boolean;
-  introduction_created?: boolean;
-  introduction_deleted?: boolean;
-  introduction_updated?: boolean;
-  lessons_created?: number;
-  lessons_deleted?: number;
-  lessons_updated?: number;
-  module_updated?: boolean;
-  slts_created?: number;
-  slts_deleted?: number;
-  slts_reordered?: boolean;
-  slts_updated?: number;
-  /** StatusChanged True if DRAFT → APPROVED */
-  status_changed?: boolean;
-}
-
-export interface AndamioDbClientAggregateIntroductionInput {
-  content_json?: Record<string, any>;
-  description?: string;
-  title?: string;
-}
-
-export interface AndamioDbClientAggregateLessonInput {
-  content_json?: Record<string, any>;
-  description?: string;
-  image_url?: string;
-  /** SltIndex 1-based SLT index this lesson belongs to */
-  slt_index?: number;
-  title?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientAggregateSltInput {
-  /** SltIndex 1-based index. If provided: update existing. If omitted: create new. */
-  slt_index?: number;
-  /** SltText The SLT text content */
-  slt_text?: string;
-}
-
-export interface AndamioDbClientAggregateUpdateErrorResponse {
-  code?: AndamioDbClientAggregateUpdateErrorResponseCode;
-  error?: string;
-  failed_operation?: {
-    entity?: AndamioDbClientAggregateUpdateErrorResponseFailedOperationEntity;
-    entity_id?: number;
-    operation?: AndamioDbClientAggregateUpdateErrorResponseFailedOperationOperation;
-    reason?: string;
-  };
-  message?: string;
-}
-
-export interface AndamioDbClientAggregateUpdateModuleV2Request {
-  assignment?: AndamioDbClientAggregateAssignmentInput;
-  course_id?: string;
-  course_module_code?: string;
-  /** DeleteAssignment Set to true to delete the assignment */
-  delete_assignment?: boolean;
-  /** DeleteIntroduction Set to true to delete the introduction */
-  delete_introduction?: boolean;
-  /** Description Module description (only send if changed) */
-  description?: string;
-  /** ImageUrl Module image URL (only send if changed) */
-  image_url?: string;
-  introduction?: AndamioDbClientAggregateIntroductionInput;
-  /** Lessons Flat array of lessons keyed by slt_index. Server diffs against current state. */
-  lessons?: AndamioDbClientAggregateLessonInput[];
-  /** SltHash Required when status = 'APPROVED'. Hash of the SLT list. */
-  slt_hash?: string;
-  /** Slts Full ordered list of SLTs. Server diffs against current state. ONLY allowed when status is DRAFT. */
-  slts?: AndamioDbClientAggregateSltInput[];
-  /** Status Set to 'APPROVED' to approve a DRAFT module */
-  status?: AndamioDbClientAggregateUpdateModuleV2RequestStatus;
-  /** Title Module title (only send if changed) */
-  title?: string;
-  /** VideoUrl Module video URL (only send if changed) */
-  video_url?: string;
-}
-
-export interface AndamioDbClientAggregateUpdateModuleV2Response {
-  /** Changes Summary of what changed in the aggregate update */
-  changes?: AndamioDbClientAggregateChangeSummary;
-  /** Data Course Module V2 with full content */
-  data?: AndamioDbClientCourseModuleV2;
-}
-
-export interface AndamioDbClientAssignmentV2 {
-  /** ContentJson Tiptap JSON content */
-  content_json?: Record<string, any>;
-  created_by_alias?: string;
-  description?: string;
-  image_url?: string;
-  is_live?: boolean;
-  title?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientClaimCredentialV2Request {
-  course_id?: string;
-  course_module_code?: string;
-  pending_tx_hash?: string;
-}
-
-export interface AndamioDbClientCourseModuleV2 {
-  /** Assignment Assignment V2 (one-to-one with module) */
-  assignment?: AndamioDbClientAssignmentV2;
-  course_module_code?: string;
-  created_by_alias?: string;
-  description?: string;
-  image_url?: string;
-  introduction?: AndamioDbClientIntroductionV2;
-  is_live?: boolean;
-  module_status?: AndamioDbClientCourseModuleV2ModuleStatus;
-  /** SltHash Hash of SLT list, used as module token name on-chain */
-  slt_hash?: string;
-  slts?: AndamioDbClientSltV2[];
-  title?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientCreateAssignmentCommitmentV2Request {
-  course_id?: string;
-  course_module_code?: string;
-}
-
-export interface AndamioDbClientDeleteModuleV2Request {
-  course_id?: string;
-  course_module_code?: string;
-}
-
-export interface AndamioDbClientIntroductionV2 {
-  /** ContentJson Tiptap JSON content */
-  content_json?: Record<string, any>;
-  created_by_alias?: string;
-  description?: string;
-  image_url?: string;
-  is_live?: boolean;
-  title?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientLeaveAssignmentCommitmentV2Request {
-  course_id?: string;
-  course_module_code?: string;
-  pending_tx_hash?: string;
-}
-
-export interface AndamioDbClientLessonV2 {
-  /** ContentJson Tiptap JSON content */
-  content_json?: Record<string, any>;
-  created_by_alias?: string;
-  description?: string;
-  image_url?: string;
-  is_live?: boolean;
-  title?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientPostProjectContributorCommitmentDeleteJSONRequestBody {
-  task_hash?: string;
-}
-
-export interface AndamioDbClientPostUserAccessTokenAliasJSONRequestBody {
-  access_token_alias?: string;
-}
-
-export interface AndamioDbClientPublishModuleV2Request {
-  course_id?: string;
-  course_module_code?: string;
-}
-
-export interface AndamioDbClientRegisterCourseV2Request {
-  category?: string;
-  course_id?: string;
-  description?: string;
-  image_url?: string;
-  is_public?: boolean;
-  title?: string;
-  tx_hash?: string;
-  video_url?: string;
-}
-
-export interface AndamioDbClientRemoveTeachersV2Request {
-  aliases?: string[];
-  course_id?: string;
-}
-
-export interface AndamioDbClientReviewAssignmentCommitmentV2Request {
-  course_id?: string;
-  course_module_code?: string;
-  decision?: AndamioDbClientReviewAssignmentCommitmentV2RequestDecision;
-  participant_alias?: string;
-  pending_tx_hash?: string;
-}
-
-export interface AndamioDbClientSltV2 {
-  created_by_alias?: string;
-  lesson?: AndamioDbClientLessonV2;
-  /** SltIndex 1-based SLT index (starts at 1, not 0) */
-  slt_index?: number;
-  slt_text?: string;
-}
-
-export interface AndamioDbClientSubmitAssignmentCommitmentV2Request {
-  /** CourseId The course ID (policy ID) */
-  course_id?: string;
-  /** Evidence Tiptap JSON evidence content */
-  evidence?: Record<string, any>;
-  /** EvidenceHash Hash of the evidence for on-chain verification */
-  evidence_hash?: string;
-  /** PendingTxHash The pending transaction hash */
-  pending_tx_hash?: string;
-  /** SltHash The SLT hash identifying the module (on-chain identifier) */
-  slt_hash?: string;
-}
-
-export interface AndamioDbClientUpdateAssignmentCommitmentV2Request {
-  course_id?: string;
-  course_module_code?: string;
-  evidence?: Record<string, any>;
-  evidence_hash?: string;
-}
-
-export interface AndamioDbClientUpdateTeachersV2Request {
-  /** Add Aliases to add as teachers */
-  add?: string[];
-  course_id?: string;
-  /** Remove Aliases to remove as teachers */
-  remove?: string[];
-}
-
-export interface AndamioDbClientUpdateTeachersV2Response {
-  course_id?: string;
-  success?: boolean;
-  teachers_added?: string[];
-  /** TeachersCurrent Final list of teachers after updates */
-  teachers_current?: string[];
-  teachers_removed?: string[];
-}
-
-export interface ApiKeyViewmodelsAPIKeyRequest {
+export interface APIKeyRequest {
   /**
    * @minLength 3
    * @maxLength 64
@@ -353,7 +65,7 @@ export interface ApiKeyViewmodelsAPIKeyRequest {
   expires_in_days?: number;
 }
 
-export interface ApiKeyViewmodelsAPIKeyResponse {
+export interface APIKeyResponse {
   /** @example "ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" */
   api_key?: string;
   /** @example "2025-08-31T23:59:59Z" */
@@ -368,317 +80,7 @@ export interface ApiKeyViewmodelsAPIKeyResponse {
   name?: string;
 }
 
-export interface ApiKeyViewmodelsDeleteAPIKeyRequest {
-  /**
-   * @minLength 3
-   * @maxLength 64
-   * @example "MyFirstKey"
-   */
-  api_key_name: string;
-}
-
-export interface ApiKeyViewmodelsDeleteAPIKeyResponse {
-  /** @example "API key deleted successfully" */
-  confirmation?: string;
-}
-
-export interface ApiKeyViewmodelsRotateAPIKeyRequest {
-  /**
-   * @minLength 3
-   * @maxLength 64
-   * @example "MyFirstKey"
-   */
-  api_key_name: string;
-  /**
-   * @min 1
-   * @example 365
-   */
-  expires_in_days?: number;
-}
-
-export interface ApiKeyViewmodelsRotateAPIKeyResponse {
-  /** @example "API key expiration extended to 2026-08-31T23:59:59Z" */
-  confirmation?: string;
-}
-
-export interface ApiTypesAsset {
-  /** @example "1000000" */
-  amount?: string;
-  /** @example "AndamioToken" */
-  name?: string;
-  /** @example "abc123def456" */
-  policy_id?: string;
-}
-
-export interface ApiTypesAssignmentCommitment {
-  /** @example "submitted" */
-  assignment_commitment_status?: string;
-  assignment_evidence_hash?: string;
-  content?: ApiTypesAssignmentCommitmentContent;
-  course_id: string;
-  created_at?: string;
-  slt_hash: string;
-  student_address: string;
-  updated_at?: string;
-}
-
-export interface ApiTypesAssignmentCommitmentContent {
-  feedback?: string;
-  notes?: string;
-  submission_url?: string;
-}
-
-export interface ApiTypesCourse {
-  content?: ApiTypesCourseContent;
-  course_address?: string;
-  /** @example "policy_abc123" */
-  course_id: string;
-  created_slot?: number;
-  created_tx?: string;
-  /** @example "addr1_owner" */
-  owner?: string;
-  /** @example "chain+db" */
-  source: string;
-  student_state_id?: string;
-  teachers?: string[];
-}
-
-export interface ApiTypesCourseContent {
-  category?: string;
-  /** @example "Learn blockchain basics" */
-  description?: string;
-  /** @example "https://example.com/image.png" */
-  image_url?: string;
-  /** @example true */
-  is_public?: boolean;
-  /** @example "Introduction to Cardano" */
-  title: string;
-  video_url?: string;
-}
-
-export interface ApiTypesCourseModule {
-  course_id: string;
-  course_module_code?: string;
-  created_at?: string;
-  description?: string;
-  image_url?: string;
-  is_live?: boolean;
-  module_status?: string;
-  slt_hash: string;
-  sort_order?: number;
-  title?: string;
-  updated_at?: string;
-  video_url?: string;
-}
-
-export interface ApiTypesCreateCourseRequest {
-  content?: ApiTypesCourseContent;
-  /** @example "policy_abc123" */
-  course_id: string;
-}
-
-export interface ApiTypesCreateModuleRequest {
-  content?: ApiTypesModuleContent;
-}
-
-export interface ApiTypesCreateProjectRequest {
-  content?: ApiTypesProjectContent;
-  /** @example "policy_xyz789" */
-  project_id: string;
-}
-
-export interface ApiTypesCreateTaskCommitmentRequest {
-  evidence?: Record<string, any>;
-  /** @example "hash_abc123" */
-  task_hash: string;
-}
-
-export interface ApiTypesCreateTaskRequest {
-  /** @example "Build a responsive login page" */
-  content?: string;
-  content_json?: Record<string, any>;
-  /** @example "policy_xyz789" */
-  contributor_state_id: string;
-  /** @example "1735689600000" */
-  expiration_time: string;
-  /** @example "5000000" */
-  lovelace_amount: string;
-  /** @example "Build login page" */
-  title: string;
-  tokens?: ApiTypesCreateTaskToken[];
-}
-
-export interface ApiTypesCreateTaskToken {
-  /** @example "MyToken" */
-  asset_name: string;
-  /** @example "abc123def456" */
-  policy_id: string;
-  /** @example "100" */
-  quantity: string;
-}
-
-export interface ApiTypesDeleteTaskRequest {
-  /** @example "policy_xyz789" */
-  contributor_state_id: string;
-  /** @example 0 */
-  index: number;
-}
-
-export interface ApiTypesInitRolesResponse {
-  courses?: ApiTypesCourse[];
-  projects?: ApiTypesProject[];
-}
-
-export interface ApiTypesLoginSession {
-  /** @example "2025-01-24T12:00:00Z" */
-  expires_at: string;
-  /** @example "session-123" */
-  id: string;
-  /** @example "abc123xyz" */
-  nonce: string;
-}
-
-export interface ApiTypesModuleContent {
-  course_module_code?: string;
-  description?: string;
-  image_url?: string;
-  is_live?: boolean;
-  module_status?: string;
-  sort_order?: number;
-  title?: string;
-  video_url?: string;
-}
-
-export interface ApiTypesProject {
-  content?: ApiTypesProjectContent;
-  contributor_state_id?: string;
-  created_at?: string;
-  created_slot?: number;
-  created_tx?: string;
-  managers?: string[];
-  owner?: string;
-  project_address?: string;
-  /** @example "policy_xyz789" */
-  project_id: string;
-  /** @example "chain+db" */
-  source: string;
-  treasury_address?: string;
-}
-
-export interface ApiTypesProjectContent {
-  category?: string;
-  description?: string;
-  image_url?: string;
-  /** @example true */
-  is_public?: boolean;
-  /** @example "Cardano Developer Tools" */
-  title: string;
-  video_url?: string;
-}
-
-export interface ApiTypesSignatureData {
-  key: string;
-  signature: string;
-}
-
-export interface ApiTypesSuccessResponse {
-  /** @example "Operation completed" */
-  message?: string;
-  /** @example true */
-  success?: boolean;
-}
-
-export interface ApiTypesTask {
-  content?: ApiTypesTaskContent;
-  contributor_state_id?: string;
-  created_by?: string;
-  expiration?: string;
-  expiration_posix?: number;
-  lovelace_amount?: number;
-  on_chain_content?: string;
-  project_id: string;
-  source: string;
-  /** @example "hash_abc123" */
-  task_hash: string;
-}
-
-export interface ApiTypesTaskCommitment {
-  content?: ApiTypesTaskCommitmentContent;
-  contributor_address: string;
-  created_at?: string;
-  project_id: string;
-  /** @example "pending" */
-  task_commitment_status?: string;
-  task_evidence_hash?: string;
-  task_hash: string;
-  updated_at?: string;
-}
-
-export interface ApiTypesTaskCommitmentContent {
-  evidence_url?: string;
-  notes?: string;
-}
-
-export interface ApiTypesTaskContent {
-  description?: string;
-  image_url?: string;
-  title?: string;
-}
-
-export interface ApiTypesTokenResponse {
-  expires_at: string;
-  token: string;
-}
-
-export interface ApiTypesUpdateCourseRequest {
-  category?: string;
-  description?: string;
-  image_url?: string;
-  is_public?: boolean;
-  title?: string;
-  video_url?: string;
-}
-
-export interface ApiTypesUpdateProjectRequest {
-  category?: string;
-  description?: string;
-  image_url?: string;
-  is_public?: boolean;
-  title?: string;
-  video_url?: string;
-}
-
-export interface ApiTypesUpdateTaskCommitmentRequest {
-  evidence?: Record<string, any>;
-  /** @example "ev_hash_456" */
-  evidence_hash?: string;
-  /** @example "hash_abc123" */
-  task_hash: string;
-}
-
-export interface ApiTypesUpdateTaskRequest {
-  /** @example "Build a responsive login page" */
-  content?: string;
-  content_json?: Record<string, any>;
-  /** @example "policy_xyz789" */
-  contributor_state_id: string;
-  /** @example "1735689600000" */
-  expiration_time?: string;
-  /** @example 0 */
-  index: number;
-  /** @example "5000000" */
-  lovelace_amount?: string;
-  /** @example "Build login page" */
-  title?: string;
-  tokens?: ApiTypesCreateTaskToken[];
-}
-
-export interface ApiTypesValidateSignatureRequest {
-  session_id: string;
-  signature: ApiTypesSignatureData;
-}
-
-export interface ApiUsageViewmodelsAPIUsage {
+export interface APIUsage {
   /** @example "MyFirstKey" */
   api_key_name?: string;
   /** @example "v1" */
@@ -741,13 +143,129 @@ export interface ApiUsageViewmodelsAPIUsage {
   user_id?: string;
 }
 
-export interface ApiUsageViewmodelsAPIUsageMetric {
+export interface APIUsageMetric {
   /** @example "MyFirstKey" */
   api_key_name?: string;
-  usage_metrics?: ApiUsageViewmodelsAPIUsage[];
+  usage_metrics?: APIUsage[];
 }
 
-export interface ApiUsageViewmodelsAnyUserDailyApiUsageRequest {
+export interface AddFundsTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
+  deposit_value?: any[][];
+  initiator_data?: WalletData;
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+}
+
+export interface AddTeachersV2Request {
+  aliases?: string[];
+  course_id?: string;
+}
+
+export interface AggregateAssignmentInput {
+  content_json?: Record<string, any>;
+  description?: string;
+  image_url?: string;
+  title?: string;
+  video_url?: string;
+}
+
+export interface AggregateChangeSummary {
+  assignment_created?: boolean;
+  assignment_deleted?: boolean;
+  assignment_updated?: boolean;
+  introduction_created?: boolean;
+  introduction_deleted?: boolean;
+  introduction_updated?: boolean;
+  lessons_created?: number;
+  lessons_deleted?: number;
+  lessons_updated?: number;
+  module_updated?: boolean;
+  slts_created?: number;
+  slts_deleted?: number;
+  slts_reordered?: boolean;
+  slts_updated?: number;
+  /** StatusChanged True if DRAFT → APPROVED */
+  status_changed?: boolean;
+}
+
+export interface AggregateIntroductionInput {
+  content_json?: Record<string, any>;
+  description?: string;
+  title?: string;
+}
+
+export interface AggregateLessonInput {
+  content_json?: Record<string, any>;
+  description?: string;
+  image_url?: string;
+  /** SltIndex 1-based SLT index this lesson belongs to */
+  slt_index?: number;
+  title?: string;
+  video_url?: string;
+}
+
+export interface AggregateSltInput {
+  /** SltIndex 1-based index. If provided: update existing. If omitted: create new. */
+  slt_index?: number;
+  /** SltText The SLT text content */
+  slt_text?: string;
+}
+
+export interface AggregateUpdateErrorResponse {
+  code?: AggregateUpdateErrorResponseCode;
+  error?: string;
+  failed_operation?: {
+    entity?: AggregateUpdateErrorResponseFailedOperationEntity;
+    entity_id?: number;
+    operation?: AggregateUpdateErrorResponseFailedOperationOperation;
+    reason?: string;
+  };
+  message?: string;
+}
+
+export interface AggregateUpdateModuleV2Request {
+  assignment?: AggregateAssignmentInput;
+  course_id?: string;
+  course_module_code?: string;
+  /** DeleteAssignment Set to true to delete the assignment */
+  delete_assignment?: boolean;
+  /** DeleteIntroduction Set to true to delete the introduction */
+  delete_introduction?: boolean;
+  /** Description Module description (only send if changed) */
+  description?: string;
+  /** ImageUrl Module image URL (only send if changed) */
+  image_url?: string;
+  introduction?: AggregateIntroductionInput;
+  /** Lessons Flat array of lessons keyed by slt_index. Server diffs against current state. */
+  lessons?: AggregateLessonInput[];
+  /** SltHash Required when status = 'APPROVED'. Hash of the SLT list. */
+  slt_hash?: string;
+  /** Slts Full ordered list of SLTs. Server diffs against current state. ONLY allowed when status is DRAFT. */
+  slts?: AggregateSltInput[];
+  /** Status Set to 'APPROVED' to approve a DRAFT module */
+  status?: AggregateUpdateModuleV2RequestStatus;
+  /** Title Module title (only send if changed) */
+  title?: string;
+  /** VideoUrl Module video URL (only send if changed) */
+  video_url?: string;
+}
+
+export interface AggregateUpdateModuleV2Response {
+  /** Changes Summary of what changed in the aggregate update */
+  changes?: AggregateChangeSummary;
+  /** Data Course Module V2 with full content */
+  data?: CourseModuleV2;
+}
+
+export interface AliasExistsResponse {
+  alias?: string;
+  exists?: boolean;
+}
+
+export interface AnyUserDailyApiUsageRequest {
   /** @example "2023-01-31" */
   end_date: string;
   /** @example "2023-01-01" */
@@ -756,225 +274,160 @@ export interface ApiUsageViewmodelsAnyUserDailyApiUsageRequest {
    * @maxItems 64
    * @minItems 1
    */
-  user_infos?: ApiUsageViewmodelsUserInfo[];
+  user_infos?: UserInfo[];
 }
 
-export interface ApiUsageViewmodelsAnyUserDailyApiUsageResponse {
+export interface AnyUserDailyApiUsageResponse {
   /** A list of usage data, aggregated by user. */
-  users_usages?: ApiUsageViewmodelsUserUsage[];
+  users_usages?: UserUsage[];
 }
 
-export interface ApiUsageViewmodelsUsageData {
-  /** @example "MyFirstKey" */
-  api_key_name?: string;
-  /** @example ["[\"v1\"]"] */
-  api_versions?: string[];
-  /** @example ["[\"API_KEY\"]"] */
-  authentication_methods?: string[];
-  /** @example "2023-01-01T00:00:00Z" */
-  date?: string;
-  /** @example ["[\"/v1/data\"]"] */
-  endpoints?: string[];
-  /** @example ["[\"GET\"]"] */
-  http_methods?: string[];
-  /** @example 500 */
-  max_response_time_ms?: number;
-  /** @example 10 */
-  min_response_time_ms?: number;
-  /** @example 1 */
-  tier_id?: number;
-  /** @example "Free" */
-  tier_name?: string;
-  /** @example 100 */
-  total_cache_hit_count?: number;
-  /** @example 1024000 */
-  total_data_transfer_in_bytes?: number;
-  /** @example 2048000 */
-  total_data_transfer_out_bytes?: number;
-  /** @example 50 */
-  total_error_count?: number;
-  /** @example 2 */
-  total_quota_exceeded_count?: number;
-  /** @example 5 */
-  total_rate_limited_count?: number;
-  /** @example 1000 */
-  total_requests?: number;
-  /** @example 50000 */
-  total_response_time_ms?: number;
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  user_id?: string;
-  /**
-   * Added UserIPs
-   * @example ["[\"192.168.1.1\"]"]
-   */
-  user_ips?: string[];
-}
-
-export interface ApiUsageViewmodelsUsagePerApiKeyName {
-  /** @example "MyFirstKey" */
-  api_key_name?: string;
-  usage_data?: ApiUsageViewmodelsUsageData[];
-}
-
-export interface ApiUsageViewmodelsUserAPIUsageRequest {
-  /**
-   * @minLength 1
-   * @maxLength 64
-   * @example "johndoe"
-   */
-  alias: string;
-  /** @example ["[\"MyFirstKey\""," \"AnotherKey\"]"] */
-  api_key_names?: string[];
-  /** @example "2023-01-31" */
-  end_date: string;
-  /** @example "2023-01-01" */
-  start_date: string;
-}
-
-export interface ApiUsageViewmodelsUserAPIUsageResponse {
-  /** @example "johndoe" */
-  alias?: string;
-  api_usage_metrics?: ApiUsageViewmodelsAPIUsageMetric[];
-}
-
-export interface ApiUsageViewmodelsUserDailyApiUsageRequest {
-  /** @example ["[\"MyFirstKey\""," \"AnotherKey\"]"] */
-  api_key_names?: string[];
-  /** @example "2023-01-31" */
-  end_date: string;
-  /** @example "2023-01-01" */
-  start_date: string;
-}
-
-export interface ApiUsageViewmodelsUserDailyApiUsageResponse {
-  user_usages?: ApiUsageViewmodelsUserUsagePerApiKeyName[];
-}
-
-export interface ApiUsageViewmodelsUserInfo {
-  /**
-   * @minLength 1
-   * @maxLength 64
-   * @example "johndoe"
-   */
-  alias: string;
-  /** @example ["[\"MyFirstKey\""," \"AnotherKey\"]"] */
-  api_key_names?: string[];
-}
-
-export interface ApiUsageViewmodelsUserUsage {
-  /** @example "johndoe" */
-  alias?: string;
-  usages?: ApiUsageViewmodelsUsagePerApiKeyName[];
-}
-
-export interface ApiUsageViewmodelsUserUsageData {
-  /** @example "MyFirstKey" */
-  api_key_name?: string;
-  /** @example ["[\"v1\"]"] */
-  api_versions?: string[];
-  /** @example ["[\"API_KEY\"]"] */
-  authentication_methods?: string[];
-  /** @example "2023-01-01" */
-  date?: string;
-  /** @example ["[\"/v1/data\"]"] */
-  endpoints?: string[];
-  /** @example ["[\"GET\"]"] */
-  http_methods?: string[];
-  /** @example 1 */
-  tier_id?: number;
-  /** @example "Free" */
-  tier_name?: string;
-  /** @example 50 */
-  total_error_count?: number;
-  /** @example 1000 */
-  total_requests?: number;
-}
-
-export interface ApiUsageViewmodelsUserUsagePerApiKeyName {
-  /** @example "MyFirstKey" */
-  api_key_name?: string;
-  usage_Data?: ApiUsageViewmodelsUserUsageData[];
-}
-
-export interface AtlasTxClientAddFundsTxRequest {
+export interface AssessAssignmentsTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
-  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
-  deposit_value?: any[][];
-  initiator_data?: AtlasTxClientWalletData;
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
-}
-
-export interface AtlasTxClientAssessAssignmentsTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  assignment_decisions?: AtlasTxClientAssignmentOutcome[];
+  assignment_decisions?: AssignmentOutcome[];
   /** This is the hash of a minting policy script. */
   course_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  initiator_data?: WalletData;
 }
 
-export interface AtlasTxClientAssignmentActionTxRequest {
+export interface Asset {
+  /** @example "1000000" */
+  amount?: string;
+  /** @example "AndamioToken" */
+  name?: string;
+  /** @example "abc123def456" */
+  policy_id?: string;
+}
+
+export interface AssignmentActionTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
   /** A text string with a maximum length of 140 characters */
   assignment_info?: string;
   /** This is the hash of a minting policy script. */
   course_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  initiator_data?: WalletData;
 }
 
-export interface AtlasTxClientAssignmentOutcome {
+export interface AssignmentCommitment {
+  /** @example "submitted" */
+  assignment_commitment_status?: string;
+  assignment_evidence_hash?: string;
+  content?: AssignmentSubmissionInput;
+  course_id: string;
+  created_at?: string;
+  slt_hash: string;
+  student_address: string;
+  updated_at?: string;
+}
+
+export interface AssignmentCommitmentContent {
+  /** Hash for on-chain verification */
+  assignment_evidence_hash?: string;
+  /** DRAFT, SUBMITTED, APPROVED, etc. */
+  commitment_status?: string;
+  /** JSON evidence data */
+  evidence?: any;
+}
+
+export interface AssignmentOutcome {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
   outcome?: string;
 }
 
-export interface AtlasTxClientClaimCourseCredentialsTxRequest {
+export interface AssignmentSubmissionInput {
+  feedback?: string;
+  notes?: string;
+  submission_url?: string;
+}
+
+export interface AssignmentV2 {
+  /** ContentJson Tiptap JSON content */
+  content_json?: Record<string, any>;
+  created_by_alias?: string;
+  description?: string;
+  image_url?: string;
+  is_live?: boolean;
+  title?: string;
+  video_url?: string;
+}
+
+export interface BadGatewayErrorResponse {
+  details?: string;
+  /** @example "Bad Gateway: The upstream server returned an invalid response." */
+  message: string;
+  /** @example 502 */
+  status_code: number;
+}
+
+export interface BadRequestErrorResponse {
+  details?: string;
+  /** @example "Bad Request: Invalid input." */
+  message: string;
+  /** @example 400 */
+  status_code: number;
+}
+
+export interface BadRequestResponse {
+  details?: string;
+  /** @example "Bad Request: Invalid input." */
+  message: string;
+  /** @example 400 */
+  status_code: number;
+}
+
+export interface ClaimCourseCredentialsTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
   /** This is the hash of a minting policy script. */
   course_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  initiator_data?: WalletData;
 }
 
-export interface AtlasTxClientClaimProjectCredentialsTxRequest {
+export interface ClaimCredentialV2Request {
+  course_id?: string;
+  course_module_code?: string;
+  pending_tx_hash?: string;
+}
+
+export interface ClaimProjectCredentialsTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
   /** This is the hash of a minting policy script. */
   contributor_state_id?: string;
   fee_tier?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  initiator_data?: WalletData;
   /** This is the hash of a minting policy script. */
   project_id?: string;
 }
 
-export interface AtlasTxClientClaimV2AccessTokenTxRequest {
+export interface ClaimV2AccessTokenTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
-  initiator_data?: AtlasTxClientSponsoredInitiatorData;
+  initiator_data?: SponsoredInitiatorData;
 }
 
-export interface AtlasTxClientCommitAssignmentTxRequest {
+export interface CommitAssignmentTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
   /** A text string with a maximum length of 140 characters */
   assignment_info?: string;
   /** This is the hash of a minting policy script. */
   course_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  initiator_data?: WalletData;
   /** Hex encoded hash of slts (exactly 64 characters) */
   slt_hash?: string;
 }
 
-export interface AtlasTxClientCommitTaskTxRequest {
+export interface CommitTaskTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
   /** This is the hash of a minting policy script. */
   contributor_state_id?: string;
   fee_tier?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  initiator_data?: WalletData;
   /** This is the hash of a minting policy script. */
   project_id?: string;
   /** Hex encoded hash of slts (exactly 64 characters) */
@@ -983,164 +436,372 @@ export interface AtlasTxClientCommitTaskTxRequest {
   task_info?: string;
 }
 
-export interface AtlasTxClientCreateCourseTxRequest {
-  /** Plain text alias. Any characters allowed. */
+/** Request to complete verification with a CIP-30 wallet signature. */
+export interface CompleteVerificationRequest {
+  /**
+   * SessionID is the verification session ID from the /session endpoint.
+   * 	@example	550e8400-e29b-41d4-a716-446655440000
+   */
+  session_id: string;
+  /** Signature contains the CIP-30 signature data from the wallet. */
+  signature: SignatureData;
+}
+
+/** Response containing the attestation JWT upon successful verification. */
+export interface CompleteVerificationResponse {
+  /**
+   * Alias is the Access Token alias that was verified.
+   * 	@example	alice
+   */
   alias?: string;
-  initiator_data?: AtlasTxClientWalletData;
+  /**
+   * AttestationJWT is a signed JWT attesting to the wallet's ownership of the Access Token.
+   * This JWT can be verified offline using the public key from /.well-known/jwks.json.
+   * 	@example	eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+   */
+  attestation_jwt?: string;
+  /**
+   * Verified indicates whether the verification was successful.
+   * 	@example	true
+   */
+  verified?: boolean;
+  /**
+   * WalletAddress is the bech32 wallet address extracted from the signature.
+   * 	@example	addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj83ws8lhrn648jjxtwq2ytjqp
+   */
+  wallet_address?: string;
+}
+
+export interface ConflictErrorResponse {
+  details?: string;
+  /** @example "Conflict" */
+  message: string;
+  /** @example 409 */
+  status_code: number;
+}
+
+export interface ContributorCommitmentItem {
+  /** Off-chain content (nested) */
+  content?: TaskCommitmentContent;
+  /** Hex-encoded */
+  on_chain_content?: string;
+  /** On-chain status */
+  on_chain_status: string;
+  project_id: string;
+  /** Data source indicator */
+  source: string;
+  submission_tx?: string;
+  /** Identifiers */
+  task_hash: string;
+}
+
+export interface ContributorCommitmentResponse {
+  data: ContributorCommitmentItem;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface ContributorCommitmentsResponse {
+  data: ContributorCommitmentItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface ContributorProjectListItem {
+  /** Off-chain content (nested) */
+  content?: ProjectContent;
+  contributor_state_id?: string;
+  created_at?: string;
+  created_slot?: number;
+  created_tx?: string;
+  managers?: string[];
+  /** Contributor's own commitments */
+  my_commitments?: MyCommitmentSummary[];
+  owner?: string;
+  prerequisites?: ProjectPrerequisite[];
+  project_address?: string;
+  /** On-chain fields (top level) */
+  project_id: string;
+  /** Data source indicator */
+  source: string;
+  treasury_address?: string;
+}
+
+export interface ContributorProjectsResponse {
+  data: ContributorProjectListItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface Course {
+  content?: CourseContentInput;
+  course_address?: string;
+  /** @example "policy_abc123" */
+  course_id: string;
+  created_slot?: number;
+  created_tx?: string;
+  /** @example "addr1_owner" */
+  owner?: string;
+  /** @example "chain+db" */
+  source: string;
+  student_state_id?: string;
   teachers?: string[];
 }
 
-export interface AtlasTxClientCreateProjectTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  course_prereqs?: any[][];
-  initiator_data?: AtlasTxClientWalletData;
-  managers?: string[];
+export interface CourseContent {
+  description?: string;
+  image_url?: string;
+  is_public?: boolean;
+  title?: string;
 }
 
-export interface AtlasTxClientManageContributorBlacklistTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  aliases_to_add?: string[];
-  aliases_to_remove?: string[];
-  initiator_data?: AtlasTxClientWalletData;
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
+export interface CourseContentInput {
+  category?: string;
+  /** @example "Learn blockchain basics" */
+  description?: string;
+  /** @example "https://example.com/image.png" */
+  image_url?: string;
+  /** @example true */
+  is_public?: boolean;
+  /** @example "Introduction to Cardano" */
+  title: string;
+  video_url?: string;
 }
 
-export interface AtlasTxClientManageManagersTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  initiator_data?: AtlasTxClientWalletData;
-  managers_to_add?: string[];
-  managers_to_remove?: string[];
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
-}
-
-export interface AtlasTxClientManageModulesTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  /** This is the hash of a minting policy script. */
-  course_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
-  modules_to_add?: AtlasTxClientMintModuleV2[];
-  modules_to_remove?: string[];
-  modules_to_update?: AtlasTxClientUpdateModuleV2[];
-}
-
-export interface AtlasTxClientManageTasksTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  /** This is the hash of a minting policy script. */
-  contributor_state_id?: string;
-  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
-  deposit_value?: any[][];
-  initiator_data?: AtlasTxClientWalletData;
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
-  tasks_to_add?: AtlasTxClientTaskData[];
-  tasks_to_remove?: AtlasTxClientTaskData[];
-}
-
-export interface AtlasTxClientManageTeachersTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  /** This is the hash of a minting policy script. */
-  course_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
-  teachers_to_add?: string[];
-  teachers_to_remove?: string[];
-}
-
-export interface AtlasTxClientMintAccessTokenTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  /** An address, serialised as Bech32. */
-  initiator_data?: string;
-}
-
-export interface AtlasTxClientMintModuleV2 {
-  allowed_student_state_ids?: string[];
-  prereq_slt_hashes?: string[];
+export interface CourseModule {
+  created_by?: string;
+  prerequisites?: string[];
+  slt_hash: string;
   slts?: string[];
 }
 
-export interface AtlasTxClientProjectOutcome {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  outcome?: string;
+export interface CourseModuleEntity {
+  course_id: string;
+  course_module_code?: string;
+  created_at?: string;
+  description?: string;
+  image_url?: string;
+  is_live?: boolean;
+  module_status?: string;
+  slt_hash: string;
+  sort_order?: number;
+  title?: string;
+  updated_at?: string;
+  video_url?: string;
 }
 
-export interface AtlasTxClientSponsoredInitiatorData {
-  /** UTxO reference for collateral (format: txhash#index). */
-  collateral_utxo_ref?: string;
-  /** The sponsor's address that will fund the transaction, serialised as Bech32. */
-  sponsor_address?: string;
-  /** UTxO reference for the static input (format: txhash#index). */
-  static_utxo_ref?: string;
-}
-
-export interface AtlasTxClientTaskActionTxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  initiator_data?: AtlasTxClientWalletData;
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
-  /** A text string with a maximum length of 140 characters */
-  project_info?: string;
-}
-
-export interface AtlasTxClientTaskData {
-  expiration_posix?: number;
-  lovelace_amount?: number;
-  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
-  native_assets?: any[][];
-  /** A text string with a maximum length of 140 characters */
-  project_content?: string;
-}
-
-export interface AtlasTxClientTasksAssessV2TxRequest {
-  /** Plain text alias. Any characters allowed. */
-  alias?: string;
-  /** This is the hash of a minting policy script. */
-  contributor_state_id?: string;
-  initiator_data?: AtlasTxClientWalletData;
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
-  task_decisions?: AtlasTxClientProjectOutcome[];
-}
-
-export interface AtlasTxClientUnsignedTxResponse {
-  unsigned_tx?: string;
-}
-
-export interface AtlasTxClientUnsignedTxResponseInitCourse {
-  /** This is the hash of a minting policy script. */
-  course_id?: string;
-  unsigned_tx?: string;
-}
-
-export interface AtlasTxClientUnsignedTxResponseInitProject {
-  /** This is the hash of a minting policy script. */
-  project_id?: string;
-  unsigned_tx?: string;
-}
-
-export interface AtlasTxClientUpdateModuleV2 {
-  allowed_student_state_ids?: string[];
-  prereq_slt_hashes?: string[];
-  /** Hex encoded hash of slts (exactly 64 characters) */
+export interface CourseModuleV2 {
+  /** Assignment Assignment V2 (one-to-one with module) */
+  assignment?: AssignmentV2;
+  course_module_code?: string;
+  created_by_alias?: string;
+  description?: string;
+  image_url?: string;
+  introduction?: IntroductionV2;
+  is_live?: boolean;
+  module_status?: CourseModuleV2ModuleStatus;
+  /** SltHash Hash of SLT list, used as module token name on-chain */
   slt_hash?: string;
+  slts?: SltV2[];
+  title?: string;
+  video_url?: string;
 }
 
-export interface AtlasTxClientWalletData {
-  /** An address, serialised as Bech32. */
-  change_address?: string;
-  used_addresses?: string[];
+export interface CreateAssignmentCommitmentV2Request {
+  course_id?: string;
+  course_module_code?: string;
 }
 
-export interface AuthViewmodelsEmailVerificationStatusResponse {
+export interface CreateCourseRequest {
+  content?: CourseContentInput;
+  /** @example "policy_abc123" */
+  course_id: string;
+}
+
+export interface CreateCourseTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  initiator_data?: WalletData;
+  teachers?: string[];
+}
+
+export interface CreateModuleRequest {
+  content?: ModuleContentInput;
+}
+
+export interface CreateProjectRequest {
+  content?: ProjectContentInput;
+  /** @example "policy_xyz789" */
+  project_id: string;
+}
+
+export interface CreateProjectTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  course_prereqs?: any[][];
+  initiator_data?: WalletData;
+  managers?: string[];
+}
+
+export interface CreateTaskCommitmentRequest {
+  evidence?: Record<string, any>;
+  /** @example "hash_abc123" */
+  task_hash: string;
+}
+
+export interface CreateTaskRequest {
+  /** @example "Build a responsive login page" */
+  content?: string;
+  content_json?: Record<string, any>;
+  /** @example "policy_xyz789" */
+  contributor_state_id: string;
+  /** @example "1735689600000" */
+  expiration_time: string;
+  /** @example "5000000" */
+  lovelace_amount: string;
+  /** @example "Build login page" */
+  title: string;
+  tokens?: CreateTaskToken[];
+}
+
+export interface CreateTaskToken {
+  /** @example "MyToken" */
+  asset_name: string;
+  /** @example "abc123def456" */
+  policy_id: string;
+  /** @example "100" */
+  quantity: string;
+}
+
+export interface CredentialModuleInfo {
+  course_module_code?: string;
+  slt_hash?: string;
+  title?: string;
+}
+
+export interface DashboardCommitmentSummary {
+  course_id?: string;
+  slt_hash?: string;
+  status: string;
+}
+
+export interface DashboardCounts {
+  completed_courses?: number;
+  contributing_projects?: number;
+  enrolled_courses?: number;
+  managing_projects?: number;
+  pending_project_assessments?: number;
+  pending_reviews?: number;
+  teaching_courses?: number;
+  total_credentials?: number;
+}
+
+export interface DashboardCourseSummary {
+  course_id: string;
+  description?: string;
+  image_url?: string;
+  title?: string;
+}
+
+export interface DashboardCredentialSummary {
+  course_id: string;
+  course_title?: string;
+  credentials?: string[];
+}
+
+export interface DashboardPendingAssessmentSummary {
+  count?: number;
+  project_id: string;
+  project_title?: string;
+}
+
+export interface DashboardPendingReviewSummary {
+  count?: number;
+  course_id: string;
+  course_title?: string;
+}
+
+export interface DashboardProjectPrerequisite {
+  course_id?: string;
+  slt_hashes?: string[];
+}
+
+export interface DashboardProjectSummary {
+  description?: string;
+  image_url?: string;
+  project_id: string;
+  title?: string;
+}
+
+export interface DashboardProjectWithPrereqs {
+  image_url?: string;
+  prerequisites?: DashboardProjectPrerequisite[];
+  project_id: string;
+  /** true if user has all required credentials */
+  qualified?: boolean;
+  title?: string;
+}
+
+export interface DashboardResponse {
+  counts?: DashboardCounts;
+  projects?: ProjectsDashboard;
+  student?: StudentDashboard;
+  teacher?: TeacherDashboard;
+  user?: DashboardUser;
+}
+
+export interface DashboardResponseWrapper {
+  data: DashboardResponse;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface DashboardUser {
+  alias: string;
+  wallet_address?: string;
+}
+
+export interface DeleteAPIKeyRequest {
+  /**
+   * @minLength 3
+   * @maxLength 64
+   * @example "MyFirstKey"
+   */
+  api_key_name: string;
+}
+
+export interface DeleteAPIKeyResponse {
+  /** @example "API key deleted successfully" */
+  confirmation?: string;
+}
+
+export interface DeleteModuleV2Request {
+  course_id?: string;
+  course_module_code?: string;
+}
+
+export interface DeleteTaskRequest {
+  /** @example "policy_xyz789" */
+  contributor_state_id: string;
+  /** @example 0 */
+  index: number;
+}
+
+export interface DeleteUserRequest {
+  /**
+   * @minLength 3
+   * @maxLength 50
+   * @example "johndoe"
+   */
+  alias: string;
+}
+
+export interface DeleteUserResponse {
+  /** @example "User deleted successfully." */
+  message?: string;
+}
+
+export interface EmailVerificationStatusResponse {
   /** @example true */
   can_resend?: boolean;
   /** @example false */
@@ -1153,269 +814,36 @@ export interface AuthViewmodelsEmailVerificationStatusResponse {
   wait_duration_seconds?: number;
 }
 
-export interface AuthViewmodelsJWTResponse {
-  /** @example "2025-09-01T23:59:59Z" */
-  expires_at?: string;
-  /** @example "eyJhbGci..." */
-  token?: string;
-}
-
-export interface AuthViewmodelsLoginRequest {
-  /**
-   * @minLength 1
-   * @maxLength 32
-   * @example "johndoe"
-   */
-  alias: string;
-  /**
-   * @minLength 103
-   * @maxLength 108
-   * @example "addr1q..."
-   */
-  wallet_address: string;
-}
-
-export interface AuthViewmodelsLoginResponse {
-  /** @example "johndoe" */
-  alias?: string;
-  jwt?: AuthViewmodelsJWTResponse;
-  /** @example "Free" */
-  tier?: string;
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  user_id?: string;
-}
-
-export interface AuthViewmodelsRegisterCompleteRequest {
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  session_id: string;
-  signature: AuthViewmodelsSignatureData;
-}
-
-export interface AuthViewmodelsRegisterRequest {
-  /**
-   * @minLength 1
-   * @maxLength 32
-   * @example "johndoe"
-   */
-  alias: string;
-  /**
-   * @minLength 1
-   * @maxLength 254
-   * @example "john.doe@example.com"
-   */
-  email: string;
-  /**
-   * @minLength 103
-   * @maxLength 108
-   * @example "addr1q..."
-   */
-  wallet_address: string;
-}
-
-export interface AuthViewmodelsRegisterResponse {
-  /** @example "johndoe" */
-  alias?: string;
-  /** @example "2026-08-31T23:59:59Z" */
-  subscription_expiration?: string;
-  /** @example "Free" */
-  tier?: string;
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  user_id?: string;
-}
-
-export interface AuthViewmodelsRegisterSessionRequest {
-  /**
-   * @minLength 1
-   * @maxLength 32
-   * @example "johndoe"
-   */
-  alias: string;
-  /**
-   * @minLength 1
-   * @maxLength 254
-   * @example "john.doe@example.com"
-   */
-  email: string;
-  /**
-   * @minLength 103
-   * @maxLength 108
-   * @example "addr1q..."
-   */
-  wallet_address: string;
-}
-
-export interface AuthViewmodelsRegisterSessionResponse {
-  /** @example "2026-01-22T15:30:00Z" */
-  expires_at?: string;
-  /** @example "Please sign this message to verify wallet ownership: abc123..." */
-  nonce?: string;
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  session_id?: string;
-}
-
-export interface AuthViewmodelsResendVerificationResponse {
-  /** @example "Verification email sent" */
-  message?: string;
-  /** @example "2026-02-09T15:30:00Z" */
-  next_resend_available_at?: string;
-  /** @example 4 */
-  remaining_attempts?: number;
-}
-
-export interface AuthViewmodelsSignatureData {
-  /** @example "a4010103272006215820..." */
-  key: string;
-  /** @example "84582aa201276761..." */
-  signature: string;
-}
-
-export interface AuthViewmodelsVerifyEmailRequest {
-  /** @example "dGVzdC10b2tlbg==" */
-  token: string;
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  token_id: string;
-}
-
-export interface AuthViewmodelsVerifyEmailResponse {
-  /** @example "johndoe" */
-  alias?: string;
-  /** @example true */
-  email_verified?: boolean;
-  jwt?: AuthViewmodelsJWTResponse;
-  /** @example "Email verified successfully" */
-  message?: string;
-  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  user_id?: string;
-}
-
-export interface DbHandlersUpdateModuleStatusRequest {
-  course_id?: string;
-  course_module_code?: string;
-  /** Required when status = "APPROVED" */
-  slt_hash?: string;
-  /** "APPROVED" or "DRAFT" */
-  status?: string;
-}
-
-export interface ErrorsBadGatewayErrorResponse {
+/** Error details with code, message, and optional debug info */
+export interface ErrorDetail {
+  /** @example "BAD_REQUEST" */
+  code: string;
+  /** @example "Field 'email' is required" */
   details?: string;
-  /** @example "Bad Gateway: The upstream server returned an invalid response." */
-  message?: string;
-  /** @example 502 */
-  status_code?: number;
+  /** @example "Invalid input provided" */
+  message: string;
 }
 
-export interface ErrorsBadRequestErrorResponse {
-  details?: string;
-  /** @example "Bad Request: Invalid input." */
-  message?: string;
-  /** @example 400 */
-  status_code?: number;
+/** Standard error response envelope */
+export interface ErrorResponse {
+  /** Error details with code, message, and optional debug info */
+  error: ErrorDetail;
 }
 
-export interface ErrorsBadRequestResponse {
-  details?: string;
-  /** @example "Bad Request: Invalid input." */
-  message?: string;
-  /** @example 400 */
-  status_code?: number;
-}
-
-export interface ErrorsConflictErrorResponse {
-  details?: string;
-  /** @example "Conflict" */
-  message?: string;
-  /** @example 409 */
-  status_code?: number;
-}
-
-export interface ErrorsForbiddenErrorResponse {
+export interface ForbiddenErrorResponse {
   details?: string;
   /** @example "Forbidden: Insufficient permissions or tier access." */
-  message?: string;
+  message: string;
   /** @example 403 */
-  status_code?: number;
+  status_code: number;
 }
 
-export interface ErrorsGoneErrorResponse {
-  details?: string;
-  /** @example "Gone - The requested resource is no longer available." */
-  message?: string;
-  /** @example 410 */
-  status_code?: number;
-}
-
-export interface ErrorsInternalServerErrorResponse {
-  details?: string;
-  /** @example "Internal Server Error: An unexpected error occurred." */
-  message?: string;
-  /** @example 500 */
-  status_code?: number;
-}
-
-export interface ErrorsNotFoundErrorResponse {
-  details?: string;
-  /** @example "Not Found: The requested resource could not be found." */
-  message?: string;
-  /** @example 404 */
-  status_code?: number;
-}
-
-export interface ErrorsTooManyRequestsErrorResponse {
-  details?: string;
-  /** @example "Too Many Requests: Rate limit or quota exceeded." */
-  message?: string;
-  /** @example 429 */
-  status_code?: number;
-}
-
-export interface ErrorsUnauthorizedErrorResponse {
-  details?: string;
-  /** @example "Unauthorized: Invalid or missing credentials." */
-  message?: string;
-  /** @example 401 */
-  status_code?: number;
-}
-
-export interface ErrorsUnprocessableEntityErrorResponse {
-  details?: string;
-  /** @example "Unprocessable Entity: Invalid request structure or data." */
-  message?: string;
-  /** @example 422 */
-  status_code?: number;
-}
-
-export interface MergedHandlersContributorCommitmentResponse {
-  data?: OrchestrationContributorCommitmentItem;
-  warning?: string;
-}
-
-export interface MergedHandlersContributorCommitmentsResponse {
-  data?: OrchestrationContributorCommitmentItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersContributorProjectsResponse {
-  data?: OrchestrationContributorProjectListItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersDashboardResponseWrapper {
-  data?: OrchestrationDashboardResponse;
-  warning?: string;
-}
-
-export interface MergedHandlersErrorResponse {
-  details?: string;
-  error?: string;
-}
-
-export interface MergedHandlersGetContributorCommitmentRequest {
+export interface GetContributorCommitmentRequest {
   project_id?: string;
   task_hash?: string;
 }
 
-export interface MergedHandlersGetStudentAssignmentCommitmentRequest {
+export interface GetStudentAssignmentCommitmentRequest {
   course_id?: string;
   /** Human-readable code (e.g., "101") - used for DB lookup */
   course_module_code?: string;
@@ -1423,298 +851,248 @@ export interface MergedHandlersGetStudentAssignmentCommitmentRequest {
   slt_hash?: string;
 }
 
-export interface MergedHandlersListManagerTasksRequest {
-  project_id?: string;
+export interface GoneErrorResponse {
+  details?: string;
+  /** @example "Gone - The requested resource is no longer available." */
+  message: string;
+  /** @example 410 */
+  status_code: number;
 }
 
-export interface MergedHandlersListProjectCommitmentsRequest {
-  project_id?: string;
+export interface InitRolesResponse {
+  courses?: Course[];
+  projects?: Project[];
 }
 
-export interface MergedHandlersListStudentAssignmentCommitmentsRequest {
-  course_id?: string;
+export interface InternalServerErrorResponse {
+  details?: string;
+  /** @example "Internal Server Error: An unexpected error occurred." */
+  message: string;
+  /** @example 500 */
+  status_code: number;
 }
 
-export interface MergedHandlersListTasksRequest {
-  project_id?: string;
+export interface IntroductionV2 {
+  /** ContentJson Tiptap JSON content */
+  content_json?: Record<string, any>;
+  created_by_alias?: string;
+  description?: string;
+  image_url?: string;
+  is_live?: boolean;
+  title?: string;
+  video_url?: string;
 }
 
-export interface MergedHandlersListTeacherAssignmentCommitmentsRequest {
-  course_id?: string;
+/** A single JSON Web Key (JWK) as defined in RFC 7517. */
+export interface JWK {
+  /**
+   * Alg is the algorithm intended for use with the key
+   * @example "RS256"
+   */
+  alg?: string;
+  /**
+   * E is the RSA exponent (base64url-encoded)
+   * @example "AQAB"
+   */
+  e?: string;
+  /**
+   * Kid is a key identifier used to match a specific key
+   * @example "andamio-api-attestation-key"
+   */
+  kid?: string;
+  /**
+   * Kty is the key type (always "RSA" for our keys)
+   * @example "RSA"
+   */
+  kty?: string;
+  /**
+   * N is the RSA modulus (base64url-encoded)
+   * @example "0vx7agoebGcQ..."
+   */
+  n?: string;
+  /**
+   * Use indicates the intended use of the key ("sig" for signature verification)
+   * @example "sig"
+   */
+  use?: string;
 }
 
-export interface MergedHandlersListTeacherCourseModulesRequest {
-  course_id?: string;
+/** JSON Web Key Set containing public keys for JWT verification. */
+export interface JWKSResponse {
+  keys?: JWK[];
 }
 
-export interface MergedHandlersManagerCommitmentsResponse {
-  data?: OrchestrationManagerCommitmentItem[];
-  warning?: string;
+export interface JWTResponse {
+  /** @example "2025-09-01T23:59:59Z" */
+  expires_at?: string;
+  /** @example "eyJhbGci..." */
+  token?: string;
 }
 
-export interface MergedHandlersManagerProjectsResponse {
-  data?: OrchestrationManagerProjectListItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersMergedAssignmentResponseWrapper {
-  data?: OrchestrationMergedAssignmentResponse;
-  warning?: string;
-}
-
-export interface MergedHandlersMergedCourseDetailResponse {
-  data?: OrchestrationMergedCourseDetail;
-  warning?: string;
-}
-
-export interface MergedHandlersMergedCourseModulesPublicResponse {
-  data?: OrchestrationPublicCourseModuleItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersMergedCourseModulesResponse {
-  data?: OrchestrationMergedCourseModuleItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersMergedCoursesResponse {
-  data?: OrchestrationMergedCourseListItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersMergedIntroductionResponseWrapper {
-  data?: OrchestrationMergedIntroductionResponse;
-  warning?: string;
-}
-
-export interface MergedHandlersMergedLessonResponseWrapper {
-  data?: OrchestrationMergedLessonResponse;
-  warning?: string;
-}
-
-export interface MergedHandlersMergedProjectDetailResponse {
-  data?: OrchestrationMergedProjectDetail;
-  warning?: string;
-}
-
-export interface MergedHandlersMergedProjectsResponse {
-  data?: OrchestrationMergedProjectListItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersMergedSltsResponseWrapper {
-  data?: OrchestrationMergedSltsResponse;
-  warning?: string;
-}
-
-export interface MergedHandlersMergedTasksResponse {
-  data?: OrchestrationMergedTaskListItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersRegisterModuleFromChainRequest {
+export interface LeaveAssignmentCommitmentV2Request {
   course_id?: string;
   course_module_code?: string;
-  slt_hash?: string;
+  pending_tx_hash?: string;
 }
 
-export interface MergedHandlersRegisterModuleResponse {
-  data?: OrchestrationRegisterModuleResponse;
-}
-
-export interface MergedHandlersStudentAssignmentCommitmentResponse {
-  data?: OrchestrationStudentAssignmentCommitmentItem;
-  warning?: string;
-}
-
-export interface MergedHandlersStudentAssignmentCommitmentsResponse {
-  data?: OrchestrationStudentAssignmentCommitmentItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersStudentCoursesResponse {
-  data?: OrchestrationStudentCourseListItem[];
-  warning?: string;
-}
-
-export interface MergedHandlersStudentCredentialsResponse {
-  data?: OrchestrationStudentCourseCredential[];
-  warning?: string;
-}
-
-export interface MergedHandlersTeacherAssignmentCommitmentsResponse {
-  data?: OrchestrationTeacherAssignmentCommitmentItem[];
-  warning?: string;
-}
-
-export interface OrchestrationAssignmentCommitmentContent {
-  /** Hash for on-chain verification */
-  assignment_evidence_hash?: string;
-  /** DRAFT, SUBMITTED, APPROVED, etc. */
-  commitment_status?: string;
-  /** JSON evidence data */
-  evidence?: any;
-}
-
-export interface OrchestrationContributorCommitmentItem {
-  /** Off-chain content (nested) */
-  content?: OrchestrationTaskCommitmentContent;
-  /** Hex-encoded */
-  on_chain_content?: string;
-  /** On-chain status */
-  on_chain_status?: string;
-  project_id?: string;
-  /** Data source indicator */
-  source?: string;
-  submission_tx?: string;
-  /** Identifiers */
-  task_hash?: string;
-}
-
-export interface OrchestrationContributorProjectListItem {
-  /** Off-chain content (nested) */
-  content?: OrchestrationProjectContent;
-  contributor_state_id?: string;
-  created_at?: string;
-  created_slot?: number;
-  created_tx?: string;
-  managers?: string[];
-  /** Contributor's own commitments */
-  my_commitments?: OrchestrationMyCommitmentSummary[];
-  owner?: string;
-  prerequisites?: OrchestrationProjectPrerequisite[];
-  project_address?: string;
-  /** On-chain fields (top level) */
-  project_id?: string;
-  /** Data source indicator */
-  source?: string;
-  treasury_address?: string;
-}
-
-export interface OrchestrationCourseContent {
+export interface LessonV2 {
+  /** ContentJson Tiptap JSON content */
+  content_json?: Record<string, any>;
+  created_by_alias?: string;
   description?: string;
   image_url?: string;
-  is_public?: boolean;
+  is_live?: boolean;
   title?: string;
+  video_url?: string;
 }
 
-export interface OrchestrationCourseModule {
-  created_by?: string;
-  prerequisites?: string[];
-  slt_hash?: string;
-  slts?: string[];
-}
-
-export interface OrchestrationCredentialModuleInfo {
-  course_module_code?: string;
-  slt_hash?: string;
-  title?: string;
-}
-
-export interface OrchestrationDashboardCommitmentSummary {
-  course_id?: string;
-  slt_hash?: string;
-  status?: string;
-}
-
-export interface OrchestrationDashboardCounts {
-  completed_courses?: number;
-  contributing_projects?: number;
-  enrolled_courses?: number;
-  managing_projects?: number;
-  pending_project_assessments?: number;
-  pending_reviews?: number;
-  teaching_courses?: number;
-  total_credentials?: number;
-}
-
-export interface OrchestrationDashboardCourseSummary {
-  course_id?: string;
-  description?: string;
-  image_url?: string;
-  title?: string;
-}
-
-export interface OrchestrationDashboardCredentialSummary {
-  course_id?: string;
-  course_title?: string;
-  credentials?: string[];
-}
-
-export interface OrchestrationDashboardPendingAssessmentSummary {
-  count?: number;
+export interface ListManagerTasksRequest {
   project_id?: string;
-  project_title?: string;
 }
 
-export interface OrchestrationDashboardPendingReviewSummary {
-  count?: number;
-  course_id?: string;
-  course_title?: string;
-}
-
-export interface OrchestrationDashboardProjectPrerequisite {
-  course_id?: string;
-  slt_hashes?: string[];
-}
-
-export interface OrchestrationDashboardProjectSummary {
-  description?: string;
-  image_url?: string;
+export interface ListProjectCommitmentsRequest {
   project_id?: string;
-  title?: string;
 }
 
-export interface OrchestrationDashboardProjectWithPrereqs {
-  image_url?: string;
-  prerequisites?: OrchestrationDashboardProjectPrerequisite[];
+export interface ListStudentAssignmentCommitmentsRequest {
+  course_id?: string;
+}
+
+export interface ListTasksRequest {
   project_id?: string;
-  /** true if user has all required credentials */
-  qualified?: boolean;
-  title?: string;
 }
 
-export interface OrchestrationDashboardResponse {
-  counts?: OrchestrationDashboardCounts;
-  projects?: OrchestrationProjectsDashboard;
-  student?: OrchestrationStudentDashboard;
-  teacher?: OrchestrationTeacherDashboard;
-  user?: OrchestrationDashboardUser;
+export interface ListTeacherAssignmentCommitmentsRequest {
+  course_id?: string;
 }
 
-export interface OrchestrationDashboardUser {
+export interface ListTeacherCourseModulesRequest {
+  course_id?: string;
+}
+
+export interface LoginRequest {
+  /**
+   * @minLength 1
+   * @maxLength 32
+   * @example "johndoe"
+   */
+  alias: string;
+  /**
+   * @minLength 103
+   * @maxLength 108
+   * @example "addr1q..."
+   */
+  wallet_address: string;
+}
+
+export interface LoginResponse {
+  /** @example "johndoe" */
   alias?: string;
-  wallet_address?: string;
+  jwt?: JWTResponse;
+  /** @example "Free" */
+  tier?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  user_id?: string;
 }
 
-export interface OrchestrationManagerCommitmentItem {
+export interface LoginSession {
+  /** @example "2025-01-24T12:00:00Z" */
+  expires_at: string;
+  /** @example "session-123" */
+  id: string;
+  /** @example "abc123xyz" */
+  nonce: string;
+}
+
+export interface ManageContributorBlacklistTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  aliases_to_add?: string[];
+  aliases_to_remove?: string[];
+  initiator_data?: WalletData;
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+}
+
+export interface ManageManagersTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  initiator_data?: WalletData;
+  managers_to_add?: string[];
+  managers_to_remove?: string[];
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+}
+
+export interface ManageModulesTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  /** This is the hash of a minting policy script. */
+  course_id?: string;
+  initiator_data?: WalletData;
+  modules_to_add?: MintModuleV2[];
+  modules_to_remove?: string[];
+  modules_to_update?: UpdateModuleV2[];
+}
+
+export interface ManageTasksTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  /** This is the hash of a minting policy script. */
+  contributor_state_id?: string;
+  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
+  deposit_value?: any[][];
+  initiator_data?: WalletData;
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+  tasks_to_add?: TaskData[];
+  tasks_to_remove?: TaskData[];
+}
+
+export interface ManageTeachersTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  /** This is the hash of a minting policy script. */
+  course_id?: string;
+  initiator_data?: WalletData;
+  teachers_to_add?: string[];
+  teachers_to_remove?: string[];
+}
+
+export interface ManagerCommitmentItem {
   /** Off-chain content (nested) - contributor's evidence */
-  content?: OrchestrationTaskCommitmentContent;
+  content?: TaskCommitmentContent;
   /** Hex-encoded */
   on_chain_content?: string;
   /** Identifiers */
-  project_id?: string;
+  project_id: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
   /** On-chain submission info */
   submission_tx?: string;
-  submitted_by?: string;
+  submitted_by: string;
   /** Task context */
-  task?: OrchestrationManagerCommitmentTaskInfo;
-  task_hash?: string;
+  task?: ManagerCommitmentTaskInfo;
+  task_hash: string;
 }
 
-export interface OrchestrationManagerCommitmentTaskInfo {
-  assets?: ApiTypesAsset[];
+export interface ManagerCommitmentTaskInfo {
+  assets?: Asset[];
   expiration?: string;
   expiration_posix?: number;
   lovelace_amount?: number;
   on_chain_content?: string;
 }
 
-export interface OrchestrationManagerProjectListItem {
+export interface ManagerCommitmentsResponse {
+  data: ManagerCommitmentItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface ManagerProjectListItem {
   /** Off-chain content (nested) */
-  content?: OrchestrationProjectContent;
+  content?: ProjectContent;
   contributor_state_id?: string;
   created_at?: string;
   created_slot?: number;
@@ -1722,17 +1100,40 @@ export interface OrchestrationManagerProjectListItem {
   managers?: string[];
   owner?: string;
   /** Pending assessments for this manager */
-  pending_assessments?: OrchestrationPendingAssessmentSummary[];
-  prerequisites?: OrchestrationProjectPrerequisite[];
+  pending_assessments?: PendingAssessmentSummary[];
+  prerequisites?: ProjectPrerequisite[];
   project_address?: string;
   /** On-chain fields (top level) */
-  project_id?: string;
+  project_id: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
   treasury_address?: string;
 }
 
-export interface OrchestrationMergedAssignmentContent {
+export interface ManagerProjectsResponse {
+  data: ManagerProjectListItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MeResponse {
+  active_keys?: APIKeyResponse[];
+  /** @example "johndoe" */
+  alias?: string;
+  /** @example "2025-08-31T23:59:59Z" */
+  created_at?: string;
+  /** @example "Free" */
+  tier?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  user_id?: string;
+}
+
+/** Standard API response envelope for user profile */
+export interface MeResponseEnvelope {
+  data: MeResponse;
+}
+
+export interface MergedAssignmentContent {
   /** Tiptap JSON content */
   content_json?: Record<string, any>;
   description?: string;
@@ -1741,56 +1142,68 @@ export interface OrchestrationMergedAssignmentContent {
   video_url?: string;
 }
 
-export interface OrchestrationMergedAssignmentResponse {
+export interface MergedAssignmentResponse {
   /** Off-chain content (from DB API) */
-  content?: OrchestrationMergedAssignmentContent;
+  content?: MergedAssignmentContent;
   /** Course and module context */
-  course_id?: string;
-  course_module_code?: string;
+  course_id: string;
+  course_module_code: string;
   /** On-chain fields */
   created_by?: string;
   slt_hash?: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
 }
 
-export interface OrchestrationMergedCourseDetail {
+export interface MergedAssignmentResponseWrapper {
+  data: MergedAssignmentResponse;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedCourseDetail {
   /** Off-chain content (nested) */
-  content?: OrchestrationCourseContent;
+  content?: CourseContent;
   course_address?: string;
   /** On-chain fields (top level) */
-  course_id?: string;
-  modules?: OrchestrationCourseModule[];
+  course_id: string;
+  modules?: CourseModule[];
   /** WORKAROUND: fetched via extra API call until Andamioscan#15 is resolved */
   owner?: string;
   past_students?: string[];
   /** Data source indicator */
-  source?: string;
+  source: string;
   student_state_id?: string;
   students?: string[];
   teachers?: string[];
 }
 
-export interface OrchestrationMergedCourseListItem {
+export interface MergedCourseDetailResponse {
+  data: MergedCourseDetail;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedCourseListItem {
   /** Off-chain content (nested) */
-  content?: OrchestrationCourseContent;
+  content?: CourseContent;
   course_address?: string;
   /** On-chain fields (top level) */
-  course_id?: string;
+  course_id: string;
   created_slot?: number;
   created_tx?: string;
   owner?: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
   student_state_id?: string;
   teachers?: string[];
 }
 
-export interface OrchestrationMergedCourseModuleItem {
+export interface MergedCourseModuleItem {
   /** Off-chain content (from DB API) */
-  content?: OrchestrationModuleContent;
+  content?: ModuleContent;
   /** Course context */
-  course_id?: string;
+  course_id: string;
   /** On-chain fields (from Andamioscan) */
   created_by?: string;
   /** SLT hashes from chain */
@@ -1803,10 +1216,28 @@ export interface OrchestrationMergedCourseModuleItem {
    */
   slt_hash?: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
 }
 
-export interface OrchestrationMergedIntroductionContent {
+export interface MergedCourseModulesPublicResponse {
+  data: PublicCourseModuleItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedCourseModulesResponse {
+  data: MergedCourseModuleItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedCoursesResponse {
+  data: MergedCourseListItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedIntroductionContent {
   /** Tiptap JSON content */
   content_json?: Record<string, any>;
   description?: string;
@@ -1815,17 +1246,23 @@ export interface OrchestrationMergedIntroductionContent {
   video_url?: string;
 }
 
-export interface OrchestrationMergedIntroductionResponse {
-  content?: OrchestrationMergedIntroductionContent;
-  course_id?: string;
-  course_module_code?: string;
+export interface MergedIntroductionResponse {
+  content?: MergedIntroductionContent;
+  course_id: string;
+  course_module_code: string;
   created_by?: string;
   slt_hash?: string;
   /** "merged", "chain_only" */
-  source?: string;
+  source: string;
 }
 
-export interface OrchestrationMergedLessonContent {
+export interface MergedIntroductionResponseWrapper {
+  data: MergedIntroductionResponse;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedLessonContent {
   /** Tiptap JSON content */
   content_json?: Record<string, any>;
   description?: string;
@@ -1834,81 +1271,105 @@ export interface OrchestrationMergedLessonContent {
   video_url?: string;
 }
 
-export interface OrchestrationMergedLessonResponse {
-  content?: OrchestrationMergedLessonContent;
-  course_id?: string;
-  course_module_code?: string;
+export interface MergedLessonResponse {
+  content?: MergedLessonContent;
+  course_id: string;
+  course_module_code: string;
   created_by?: string;
   slt_hash?: string;
-  slt_index?: number;
+  slt_index: number;
   slt_text?: string;
   /** "merged", "chain_only" */
-  source?: string;
+  source: string;
 }
 
-export interface OrchestrationMergedProjectDetail {
-  assessments?: OrchestrationProjectAssessmentOnChain[];
+export interface MergedLessonResponseWrapper {
+  data: MergedLessonResponse;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedProjectDetail {
+  assessments?: ProjectAssessmentOnChain[];
   /** Off-chain content (nested) */
-  content?: OrchestrationProjectContent;
+  content?: ProjectContent;
   contributor_state_id?: string;
-  contributors?: OrchestrationProjectContributorOnChain[];
-  credential_claims?: OrchestrationProjectCredentialClaimOnChain[];
+  contributors?: ProjectContributorOnChain[];
+  credential_claims?: ProjectCredentialClaimOnChain[];
   managers?: string[];
   owner?: string;
-  prerequisites?: OrchestrationProjectPrerequisite[];
+  prerequisites?: ProjectPrerequisite[];
   /** On-chain fields (top level) */
-  project_id?: string;
+  project_id: string;
   /** Data source indicator */
-  source?: string;
-  submissions?: OrchestrationProjectSubmissionOnChain[];
-  tasks?: OrchestrationProjectTaskOnChain[];
+  source: string;
+  submissions?: ProjectSubmissionOnChain[];
+  tasks?: ProjectTaskOnChain[];
   treasury_address?: string;
   /** Spendable lovelace (total fundings minus 5 ADA reserve) */
   treasury_balance?: number;
-  treasury_fundings?: OrchestrationProjectTreasuryFundingOnChain[];
+  treasury_fundings?: ProjectTreasuryFundingOnChain[];
 }
 
-export interface OrchestrationMergedProjectListItem {
+export interface MergedProjectDetailResponse {
+  data: MergedProjectDetail;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedProjectListItem {
   /** Off-chain content (nested) */
-  content?: OrchestrationProjectContent;
+  content?: ProjectContent;
   contributor_state_id?: string;
   created_at?: string;
   created_slot?: number;
   created_tx?: string;
   managers?: string[];
   owner?: string;
-  prerequisites?: OrchestrationProjectPrerequisite[];
+  prerequisites?: ProjectPrerequisite[];
   project_address?: string;
   /** On-chain fields (top level) */
-  project_id?: string;
+  project_id: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
   treasury_address?: string;
 }
 
-export interface OrchestrationMergedSltItem {
+export interface MergedProjectsResponse {
+  data: MergedProjectListItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedSltItem {
   created_by?: string;
   has_lesson?: boolean;
-  lesson?: OrchestrationMergedLessonContent;
+  lesson?: MergedLessonContent;
   slt_index?: number;
   slt_text?: string;
 }
 
-export interface OrchestrationMergedSltsResponse {
-  course_id?: string;
-  course_module_code?: string;
+export interface MergedSltsResponse {
+  course_id: string;
+  course_module_code: string;
   created_by?: string;
   slt_hash?: string;
-  slts?: OrchestrationMergedSltItem[];
+  slts?: MergedSltItem[];
   /** "merged", "chain_only" */
-  source?: string;
+  source: string;
 }
 
-export interface OrchestrationMergedTaskListItem {
+export interface MergedSltsResponseWrapper {
+  data: MergedSltsResponse;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface MergedTaskListItem {
   /** Native assets */
-  assets?: ApiTypesAsset[];
+  assets?: Asset[];
   /** Off-chain content (nested) */
-  content?: OrchestrationTaskContent;
+  content?: TaskContent;
   contributor_state_id?: string;
   created_by?: string;
   /** ISO timestamp */
@@ -1917,9 +1378,9 @@ export interface OrchestrationMergedTaskListItem {
   lovelace_amount?: number;
   /** Hex-encoded */
   on_chain_content?: string;
-  project_id?: string;
+  project_id: string;
   /** Data source indicator */
-  source?: string;
+  source: string;
   /** On-chain fields (top level) */
   task_hash?: string;
   /** DB task index (for draft identification) */
@@ -1928,7 +1389,33 @@ export interface OrchestrationMergedTaskListItem {
   task_status?: string;
 }
 
-export interface OrchestrationModuleContent {
+export interface MergedTasksResponse {
+  data: MergedTaskListItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+/** Optional metadata for API responses */
+export interface Meta {
+  /** Pagination metadata for list endpoints */
+  pagination?: Pagination;
+  warning?: string;
+}
+
+export interface MintAccessTokenTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  /** An address, serialised as Bech32. */
+  initiator_data?: string;
+}
+
+export interface MintModuleV2 {
+  allowed_student_state_ids?: string[];
+  prereq_slt_hashes?: string[];
+  slts?: string[];
+}
+
+export interface ModuleContent {
   /** Full assignment content (AssignmentV2) */
   assignment?: any;
   course_module_code?: string;
@@ -1944,243 +1431,51 @@ export interface OrchestrationModuleContent {
   video_url?: string;
 }
 
-export interface OrchestrationMyCommitmentSummary {
-  /** committed, submitted, approved, rejected */
-  commitment_status?: string;
-  content?: OrchestrationTaskCommitmentContent;
-  task_hash?: string;
-}
-
-export interface OrchestrationPendingAssessmentSummary {
-  on_chain_content?: string;
-  submission_tx?: string;
-  submitted_by?: string;
-  task_hash?: string;
-}
-
-export interface OrchestrationProjectAssessmentOnChain {
-  assessed_by?: string;
-  /** ACCEPTED, REFUSED, DENIED */
-  decision?: string;
-  slot?: number;
-  task_hash?: string;
-  tx?: string;
-}
-
-export interface OrchestrationProjectContent {
-  description?: string;
-  image_url?: string;
-  title?: string;
-}
-
-export interface OrchestrationProjectContributorOnChain {
-  alias?: string;
-}
-
-export interface OrchestrationProjectCredentialClaimOnChain {
-  alias?: string;
-  slot?: number;
-  tx?: string;
-}
-
-export interface OrchestrationProjectPrerequisite {
-  course_id?: string;
-  slt_hashes?: string[];
-}
-
-export interface OrchestrationProjectSubmissionOnChain {
-  on_chain_content?: string;
-  slot?: number;
-  submission_tx?: string;
-  submitted_by?: string;
-  task_hash?: string;
-}
-
-export interface OrchestrationProjectTaskOnChain {
-  /** Native assets */
-  assets?: ApiTypesAsset[];
-  contributor_state_id?: string;
-  created_by?: string;
-  /** ISO timestamp */
-  expiration?: string;
-  expiration_posix?: number;
-  lovelace_amount?: number;
-  /** Hex-encoded */
-  on_chain_content?: string;
-  task_hash?: string;
-}
-
-export interface OrchestrationProjectTreasuryFundingOnChain {
-  alias?: string;
-  assets?: ApiTypesAsset[];
-  lovelace_amount?: number;
-  slot?: number;
-  tx_hash?: string;
-}
-
-export interface OrchestrationProjectsDashboard {
-  contributing?: OrchestrationDashboardProjectSummary[];
-  managing?: OrchestrationDashboardProjectSummary[];
-  pending_assessments?: OrchestrationDashboardPendingAssessmentSummary[];
-  total_pending_assessments?: number;
-  with_prerequisites?: OrchestrationDashboardProjectWithPrereqs[];
-}
-
-export interface OrchestrationPublicCourseModuleItem {
-  /** Off-chain content (from DB API) */
-  content?: OrchestrationPublicModuleContent;
-  /** Course context */
-  course_id?: string;
-  /** On-chain fields (from Andamioscan) */
-  created_by?: string;
-  /** SLT text from chain */
-  on_chain_slts?: string[];
-  /** On-chain prerequisite module hashes */
-  prerequisites?: string[];
-  /** Primary identifier - on-chain slts_hash */
-  slt_hash?: string;
-  /** Data source indicator */
-  source?: string;
-}
-
-export interface OrchestrationPublicModuleContent {
+export interface ModuleContentInput {
   course_module_code?: string;
   description?: string;
   image_url?: string;
   is_live?: boolean;
-  title?: string;
-}
-
-export interface OrchestrationRegisterModuleResponse {
-  course_id?: string;
-  course_module_code?: string;
-  /** Should be "APPROVED" */
   module_status?: string;
-  /** Number of SLTs successfully created */
-  slt_count?: number;
-  slt_hash?: string;
-  slts?: OrchestrationRegisteredSltItem[];
-  /** "merged" */
-  source?: string;
-}
-
-export interface OrchestrationRegisteredSltItem {
-  /** 1-based index */
-  slt_index?: number;
-  /** The SLT content */
-  slt_text?: string;
-}
-
-export interface OrchestrationStudentAssignmentCommitmentItem {
-  /** Off-chain content (nested) */
-  content?: OrchestrationAssignmentCommitmentContent;
-  course_id?: string;
-  course_module_code?: string;
-  /** Hex-encoded on-chain content */
-  on_chain_content?: string;
-  /** On-chain status */
-  on_chain_status?: string;
-  /** Identifiers */
-  slt_hash?: string;
-  /** Data source indicator */
-  source?: string;
-}
-
-export interface OrchestrationStudentCourseCredential {
-  /** Claimed credentials (slt_hashes from on-chain, for completed courses) */
-  claimed_credentials?: string[];
-  /** Course identity */
-  course_id?: string;
-  course_title?: string;
-  /** "enrolled", "completed" */
-  enrollment_status?: string;
-  /** Enrollment state (from on-chain) */
-  is_enrolled?: boolean;
-  /** Module metadata (from DB, for resolving slt_hash → title/code) */
-  modules?: OrchestrationCredentialModuleInfo[];
-  /** Data source indicator */
-  source?: string;
-}
-
-export interface OrchestrationStudentCourseListItem {
-  /** Off-chain content (nested) */
-  content?: OrchestrationCourseContent;
-  course_address?: string;
-  /** On-chain fields (top level) */
-  course_id?: string;
-  created_slot?: number;
-  created_tx?: string;
-  /** "enrolled" or "completed" */
-  enrollment_status?: string;
-  owner?: string;
-  /** Data source indicator */
-  source?: string;
-  student_state_id?: string;
-  teachers?: string[];
-}
-
-export interface OrchestrationStudentDashboard {
-  commitments?: OrchestrationDashboardCommitmentSummary[];
-  completed_courses?: OrchestrationDashboardCourseSummary[];
-  credentials_by_course?: OrchestrationDashboardCredentialSummary[];
-  enrolled_courses?: OrchestrationDashboardCourseSummary[];
-  total_credentials?: number;
-}
-
-export interface OrchestrationTaskCommitmentContent {
-  /** Manager who assessed */
-  assessed_by?: string;
-  /** DRAFT, COMMITTED, SUBMITTED, ACCEPTED, etc. */
-  commitment_status?: string;
-  /** Tiptap JSON document */
-  evidence?: any;
-  /** Hash for on-chain verification */
-  task_evidence_hash?: string;
-  /** ACCEPTED, REFUSED, DENIED */
-  task_outcome?: string;
-}
-
-export interface OrchestrationTaskContent {
-  /** Rich Tiptap JSON document */
-  content_json?: any;
-  description?: string;
-  task_index?: number;
+  sort_order?: number;
   title?: string;
+  video_url?: string;
 }
 
-export interface OrchestrationTeacherAssignmentCommitmentItem {
-  /** Off-chain content (nested) */
-  content?: OrchestrationAssignmentCommitmentContent;
-  /** Identifiers */
-  course_id?: string;
-  /** Human-readable module code (from DB) */
-  course_module_code?: string;
-  /** Hex-encoded on-chain content */
+export interface MyCommitmentSummary {
+  /** committed, submitted, approved, rejected */
+  commitment_status: string;
+  content?: TaskCommitmentContent;
+  task_hash: string;
+}
+
+export interface NotFoundErrorResponse {
+  details?: string;
+  /** @example "Not Found: The requested resource could not be found." */
+  message: string;
+  /** @example 404 */
+  status_code: number;
+}
+
+/** Pagination metadata for list endpoints */
+export interface Pagination {
+  /** @example 1 */
+  page: number;
+  /** @example 20 */
+  page_size: number;
+  /** @example 100 */
+  total: number;
+}
+
+export interface PendingAssessmentSummary {
   on_chain_content?: string;
-  /** On-chain student status (from course details) */
-  on_chain_status?: string;
-  slt_hash?: string;
-  /** Data source indicator */
-  source?: string;
-  student_alias?: string;
-  submission_slot?: number;
-  /** On-chain submission info */
   submission_tx?: string;
-}
-
-export interface OrchestrationTeacherDashboard {
-  courses?: OrchestrationDashboardCourseSummary[];
-  pending_reviews?: OrchestrationDashboardPendingReviewSummary[];
-  total_pending_reviews?: number;
-}
-
-export interface PublicScanHandlersAliasExistsResponse {
-  alias?: string;
-  exists?: boolean;
+  submitted_by: string;
+  task_hash: string;
 }
 
 /** Response containing the current state of a tracked transaction. */
-export interface TxStateHandlersPendingTxResponse {
+export interface PendingTxResponse {
   /**
    * Timestamp when the transaction was confirmed on-chain (RFC3339 format, null if not yet confirmed)
    * @example "2026-01-19T12:00:30Z"
@@ -2191,6 +1486,11 @@ export interface TxStateHandlersPendingTxResponse {
    * @example "2026-01-19T12:00:00Z"
    */
   created_at?: string;
+  /**
+   * Failure reason code for permanent failures (e.g., TASK_NOT_FOUND, MODULE_NOT_FOUND)
+   * @example "TASK_NOT_FOUND"
+   */
+  failure_reason?: string;
   /**
    * Optional instance ID (course_id or project_id)
    * @example "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
@@ -2252,8 +1552,177 @@ export interface TxStateHandlersPendingTxResponse {
   user_id?: string;
 }
 
+export interface PostProjectContributorCommitmentDeleteJSONRequestBody {
+  task_hash?: string;
+}
+
+export interface PostUserAccessTokenAliasJSONRequestBody {
+  access_token_alias?: string;
+}
+
+export interface Project {
+  content?: ProjectContentInput;
+  contributor_state_id?: string;
+  created_at?: string;
+  created_slot?: number;
+  created_tx?: string;
+  managers?: string[];
+  owner?: string;
+  project_address?: string;
+  /** @example "policy_xyz789" */
+  project_id: string;
+  /** @example "chain+db" */
+  source: string;
+  treasury_address?: string;
+}
+
+export interface ProjectAssessmentOnChain {
+  assessed_by: string;
+  /** ACCEPTED, REFUSED, DENIED */
+  decision: string;
+  slot?: number;
+  task_hash: string;
+  tx?: string;
+}
+
+export interface ProjectContent {
+  description?: string;
+  image_url?: string;
+  title?: string;
+}
+
+export interface ProjectContentInput {
+  category?: string;
+  description?: string;
+  image_url?: string;
+  /** @example true */
+  is_public?: boolean;
+  /** @example "Cardano Developer Tools" */
+  title: string;
+  video_url?: string;
+}
+
+export interface ProjectContributorOnChain {
+  alias: string;
+}
+
+export interface ProjectCredentialClaimOnChain {
+  alias: string;
+  slot?: number;
+  tx?: string;
+}
+
+export interface ProjectOutcome {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  outcome?: string;
+}
+
+export interface ProjectPrerequisite {
+  course_id?: string;
+  slt_hashes?: string[];
+}
+
+export interface ProjectSubmissionOnChain {
+  on_chain_content?: string;
+  slot?: number;
+  submission_tx?: string;
+  submitted_by: string;
+  task_hash: string;
+}
+
+export interface ProjectTaskOnChain {
+  /** Native assets */
+  assets?: Asset[];
+  contributor_state_id?: string;
+  created_by?: string;
+  /** ISO timestamp */
+  expiration?: string;
+  expiration_posix?: number;
+  lovelace_amount?: number;
+  /** Hex-encoded */
+  on_chain_content?: string;
+  task_hash: string;
+}
+
+export interface ProjectTreasuryFundingOnChain {
+  alias?: string;
+  assets?: Asset[];
+  lovelace_amount?: number;
+  slot?: number;
+  tx_hash: string;
+}
+
+export interface ProjectsDashboard {
+  contributing?: DashboardProjectSummary[];
+  managing?: DashboardProjectSummary[];
+  pending_assessments?: DashboardPendingAssessmentSummary[];
+  total_pending_assessments?: number;
+  with_prerequisites?: DashboardProjectWithPrereqs[];
+}
+
+export interface PublicCourseModuleItem {
+  /** Off-chain content (from DB API) */
+  content?: PublicModuleContent;
+  /** Course context */
+  course_id: string;
+  /** On-chain fields (from Andamioscan) */
+  created_by?: string;
+  /** SLT text from chain */
+  on_chain_slts?: string[];
+  /** On-chain prerequisite module hashes */
+  prerequisites?: string[];
+  /** Primary identifier - on-chain slts_hash */
+  slt_hash: string;
+  /** Data source indicator */
+  source: string;
+}
+
+export interface PublicModuleContent {
+  course_module_code?: string;
+  description?: string;
+  image_url?: string;
+  is_live?: boolean;
+  title?: string;
+}
+
+export interface PublishModuleV2Request {
+  course_id?: string;
+  course_module_code?: string;
+}
+
+export interface RegisterCompleteRequest {
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  session_id: string;
+  /** CIP-30 signature data from a Cardano wallet, containing the COSE_Sign1 signature and COSE_Key. */
+  signature: SignatureData;
+}
+
+export interface RegisterCourseV2Request {
+  category?: string;
+  course_id?: string;
+  description?: string;
+  image_url?: string;
+  is_public?: boolean;
+  title?: string;
+  tx_hash?: string;
+  video_url?: string;
+}
+
+export interface RegisterModuleFromChainRequest {
+  course_id?: string;
+  course_module_code?: string;
+  slt_hash?: string;
+}
+
+export interface RegisterModuleResponse {
+  data: RegisterModuleResponse;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
 /** Request body for registering a transaction with the TX State Machine. After submitting a signed transaction to the Cardano network, register it here so the Gateway can track confirmation and automatically update the database. */
-export interface TxStateHandlersRegisterPendingTxRequest {
+export interface RegisterPendingTxRequest {
   /**
    * Optional instance ID (course_id or project_id) for scoping
    * @example "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
@@ -2290,8 +1759,452 @@ export interface TxStateHandlersRegisterPendingTxRequest {
     | "access_token_mint";
 }
 
+export interface RegisterProjectRequest {
+  description?: string;
+  image_url?: string;
+  project_id?: string;
+  title?: string;
+}
+
+export interface RegisterRequest {
+  /**
+   * @minLength 1
+   * @maxLength 32
+   * @example "johndoe"
+   */
+  alias: string;
+  /**
+   * @minLength 1
+   * @maxLength 254
+   * @example "john.doe@example.com"
+   */
+  email: string;
+  /**
+   * @minLength 103
+   * @maxLength 108
+   * @example "addr1q..."
+   */
+  wallet_address: string;
+}
+
+export interface RegisterResponse {
+  /** @example "johndoe" */
+  alias?: string;
+  /** @example "2026-08-31T23:59:59Z" */
+  subscription_expiration?: string;
+  /** @example "Free" */
+  tier?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  user_id?: string;
+}
+
+export interface RegisterSessionRequest {
+  /**
+   * @minLength 1
+   * @maxLength 32
+   * @example "johndoe"
+   */
+  alias: string;
+  /**
+   * @minLength 1
+   * @maxLength 254
+   * @example "john.doe@example.com"
+   */
+  email: string;
+  /**
+   * @minLength 103
+   * @maxLength 108
+   * @example "addr1q..."
+   */
+  wallet_address: string;
+}
+
+export interface RegisterSessionResponse {
+  /** @example "2026-01-22T15:30:00Z" */
+  expires_at?: string;
+  /** @example "Please sign this message to verify wallet ownership: abc123..." */
+  nonce?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  session_id?: string;
+}
+
+export interface RegisteredSltItem {
+  /** 1-based index */
+  slt_index?: number;
+  /** The SLT content */
+  slt_text?: string;
+}
+
+export interface RemoveTeachersV2Request {
+  aliases?: string[];
+  course_id?: string;
+}
+
+export interface ResendVerificationResponse {
+  /** @example "Verification email sent" */
+  message?: string;
+  /** @example "2026-02-09T15:30:00Z" */
+  next_resend_available_at?: string;
+  /** @example 4 */
+  remaining_attempts?: number;
+}
+
+export interface ReviewAssignmentCommitmentV2Request {
+  course_id?: string;
+  course_module_code?: string;
+  decision?: ReviewAssignmentCommitmentV2RequestDecision;
+  participant_alias?: string;
+  pending_tx_hash?: string;
+}
+
+export interface RotateAPIKeyRequest {
+  /**
+   * @minLength 3
+   * @maxLength 64
+   * @example "MyFirstKey"
+   */
+  api_key_name: string;
+  /**
+   * @min 1
+   * @example 365
+   */
+  expires_in_days?: number;
+}
+
+export interface RotateAPIKeyResponse {
+  /** @example "API key expiration extended to 2026-08-31T23:59:59Z" */
+  confirmation?: string;
+}
+
+export interface ServiceUnavailableErrorResponse {
+  details?: string;
+  /** @example "Service Unavailable - One or more critical dependencies (e.g., database, Redis) are not reachable or healthy." */
+  message: string;
+  /** @example 503 */
+  status_code: number;
+}
+
+export interface SetUserRoleRequest {
+  /** @example 1 */
+  tier_id?: number;
+  /** @example "pro" */
+  tier_name?: string;
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
+  user_id: string;
+}
+
+export interface SetUserRoleResponse {
+  /** @example "User role updated successfully." */
+  message?: string;
+  /**
+   * @min 1
+   * @example 1
+   */
+  tier_id: number;
+  /**
+   * @minLength 1
+   * @example "pro"
+   */
+  tier_name: string;
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
+  user_id?: string;
+}
+
+/** Standard API response envelope for setting user role */
+export interface SetUserRoleResponseEnvelope {
+  data: SetUserRoleResponse;
+}
+
+/** CIP-30 signature data from a Cardano wallet, containing the COSE_Sign1 signature and COSE_Key. */
+export interface SignatureData {
+  /** @example "a4010103272006215820..." */
+  key: string;
+  /** @example "84582aa201276761..." */
+  signature: string;
+}
+
+export interface SltV2 {
+  created_by_alias?: string;
+  lesson?: LessonV2;
+  /** SltIndex 1-based SLT index (starts at 1, not 0) */
+  slt_index?: number;
+  slt_text?: string;
+}
+
+export interface SponsoredInitiatorData {
+  /** UTxO reference for collateral (format: txhash#index). */
+  collateral_utxo_ref?: string;
+  /** The sponsor's address that will fund the transaction, serialised as Bech32. */
+  sponsor_address?: string;
+  /** UTxO reference for the static input (format: txhash#index). */
+  static_utxo_ref?: string;
+}
+
+/** Request to start an Access Token ownership verification session. */
+export interface StartVerificationRequest {
+  /**
+   * Alias is the Access Token alias to verify ownership of.
+   * 	@example	alice
+   * @minLength 1
+   * @maxLength 64
+   */
+  alias: string;
+}
+
+/** Response containing session details for the wallet to sign. */
+export interface StartVerificationResponse {
+  /**
+   * ExpiresAt is the timestamp when this session expires (5 minutes from creation).
+   * 	@example	2026-03-10T12:05:00Z
+   */
+  expires_at?: string;
+  /**
+   * Nonce is the message that must be signed by the wallet using CIP-30.
+   * 	@example	Sign this message to verify Andamio Access Token ownership: a1b2c3d4...
+   */
+  nonce?: string;
+  /**
+   * SessionID is the unique identifier for this verification session.
+   * 	@example	550e8400-e29b-41d4-a716-446655440000
+   */
+  session_id?: string;
+}
+
+export interface StudentAssignmentCommitmentItem {
+  /** Off-chain content (nested) */
+  content?: AssignmentCommitmentContent;
+  course_id: string;
+  course_module_code: string;
+  /** Hex-encoded on-chain content */
+  on_chain_content?: string;
+  /** On-chain status */
+  on_chain_status: string;
+  /** Identifiers */
+  slt_hash: string;
+  /** Data source indicator */
+  source: string;
+}
+
+export interface StudentAssignmentCommitmentResponse {
+  data: StudentAssignmentCommitmentItem;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface StudentAssignmentCommitmentsResponse {
+  data: StudentAssignmentCommitmentItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface StudentCourseCredential {
+  /** Claimed credentials (slt_hashes from on-chain, for completed courses) */
+  claimed_credentials?: string[];
+  /** Course identity */
+  course_id: string;
+  course_title?: string;
+  /** "enrolled", "completed" */
+  enrollment_status: string;
+  /** Enrollment state (from on-chain) */
+  is_enrolled?: boolean;
+  /** Module metadata (from DB, for resolving slt_hash → title/code) */
+  modules?: CredentialModuleInfo[];
+  /** Data source indicator */
+  source: string;
+}
+
+export interface StudentCourseListItem {
+  /** Off-chain content (nested) */
+  content?: CourseContent;
+  course_address?: string;
+  /** On-chain fields (top level) */
+  course_id: string;
+  created_slot?: number;
+  created_tx?: string;
+  /** "enrolled" or "completed" */
+  enrollment_status: string;
+  owner?: string;
+  /** Data source indicator */
+  source: string;
+  student_state_id?: string;
+  teachers?: string[];
+}
+
+export interface StudentCoursesResponse {
+  data: StudentCourseListItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface StudentCredentialsResponse {
+  data: StudentCourseCredential[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface StudentDashboard {
+  commitments?: DashboardCommitmentSummary[];
+  completed_courses?: DashboardCourseSummary[];
+  credentials_by_course?: DashboardCredentialSummary[];
+  enrolled_courses?: DashboardCourseSummary[];
+  total_credentials?: number;
+}
+
+export interface SubmitAssignmentCommitmentV2Request {
+  /** CourseId The course ID (policy ID) */
+  course_id?: string;
+  /** Evidence Tiptap JSON evidence content */
+  evidence?: Record<string, any>;
+  /** EvidenceHash Hash of the evidence for on-chain verification */
+  evidence_hash?: string;
+  /** PendingTxHash The pending transaction hash */
+  pending_tx_hash?: string;
+  /** SltHash The SLT hash identifying the module (on-chain identifier) */
+  slt_hash?: string;
+}
+
+export interface SuccessResponse {
+  /** @example "Operation completed" */
+  message?: string;
+  /** @example true */
+  success: boolean;
+}
+
+export interface Task {
+  content?: TaskContentInput;
+  contributor_state_id?: string;
+  created_by?: string;
+  expiration?: string;
+  expiration_posix?: number;
+  lovelace_amount?: number;
+  on_chain_content?: string;
+  project_id: string;
+  source: string;
+  /** @example "hash_abc123" */
+  task_hash: string;
+}
+
+export interface TaskActionTxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  initiator_data?: WalletData;
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+  /** A text string with a maximum length of 140 characters */
+  project_info?: string;
+}
+
+export interface TaskCommitment {
+  content?: TaskSubmissionInput;
+  contributor_address: string;
+  created_at?: string;
+  project_id: string;
+  /** @example "pending" */
+  task_commitment_status?: string;
+  task_evidence_hash?: string;
+  task_hash: string;
+  updated_at?: string;
+}
+
+export interface TaskCommitmentContent {
+  /** Manager who assessed */
+  assessed_by?: string;
+  /** DRAFT, COMMITTED, SUBMITTED, ACCEPTED, etc. */
+  commitment_status?: string;
+  /** Tiptap JSON document */
+  evidence?: any;
+  /** Hash for on-chain verification */
+  task_evidence_hash?: string;
+  /** ACCEPTED, REFUSED, DENIED */
+  task_outcome?: string;
+}
+
+export interface TaskContent {
+  /** Rich Tiptap JSON document */
+  content_json?: any;
+  description?: string;
+  task_index?: number;
+  title?: string;
+}
+
+export interface TaskContentInput {
+  description?: string;
+  image_url?: string;
+  title?: string;
+}
+
+export interface TaskData {
+  expiration_posix?: number;
+  lovelace_amount?: number;
+  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
+  native_assets?: any[][];
+  /** A text string with a maximum length of 140 characters */
+  project_content?: string;
+}
+
+export interface TaskSubmissionInput {
+  evidence_url?: string;
+  notes?: string;
+}
+
+export interface TasksAssessV2TxRequest {
+  /** Plain text alias. Any characters allowed. */
+  alias?: string;
+  /** This is the hash of a minting policy script. */
+  contributor_state_id?: string;
+  initiator_data?: WalletData;
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+  task_decisions?: ProjectOutcome[];
+}
+
+export interface TeacherAssignmentCommitmentItem {
+  /** Off-chain content (nested) */
+  content?: AssignmentCommitmentContent;
+  /** Identifiers */
+  course_id: string;
+  /** Human-readable module code (from DB) */
+  course_module_code?: string;
+  /** Hex-encoded on-chain content */
+  on_chain_content?: string;
+  /** On-chain student status (from course details) */
+  on_chain_status?: string;
+  slt_hash: string;
+  /** Data source indicator */
+  source: string;
+  student_alias: string;
+  submission_slot?: number;
+  /** On-chain submission info */
+  submission_tx?: string;
+}
+
+export interface TeacherAssignmentCommitmentsResponse {
+  data: TeacherAssignmentCommitmentItem[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface TeacherDashboard {
+  courses?: DashboardCourseSummary[];
+  pending_reviews?: DashboardPendingReviewSummary[];
+  total_pending_reviews?: number;
+}
+
+export interface TokenResponse {
+  expires_at: string;
+  token: string;
+}
+
+export interface TooManyRequestsErrorResponse {
+  details?: string;
+  /** @example "Too Many Requests: Rate limit or quota exceeded." */
+  message: string;
+  /** @example 429 */
+  status_code: number;
+}
+
 /** Statistics about the TX State Machine for monitoring and debugging. */
-export interface TxStateHandlersTxStatsResponse {
+export interface TxStatsResponse {
   /**
    * Number of transactions confirmed on-chain
    * @example 142
@@ -2326,42 +2239,174 @@ export interface TxStateHandlersTxStatsResponse {
   updated_count?: number;
 }
 
-/** List of valid transaction types that can be registered with the TX State Machine. */
-export interface TxStateHandlersValidTxTypesResponse {
-  /**
-   * List of valid transaction type strings
-   * @example ["course_create","assignment_submit","access_token_mint"]
-   */
-  types?: string[];
+export interface UnauthorizedErrorResponse {
+  details?: string;
+  /** @example "Unauthorized: Invalid or missing credentials." */
+  message: string;
+  /** @example 401 */
+  status_code: number;
 }
 
-export interface UserViewmodelsDeleteUserRequest {
-  /**
-   * @minLength 3
-   * @maxLength 50
-   * @example "johndoe"
-   */
-  alias: string;
+export interface UnprocessableEntityErrorResponse {
+  details?: string;
+  /** @example "Unprocessable Entity: Invalid request structure or data." */
+  message: string;
+  /** @example 422 */
+  status_code: number;
 }
 
-export interface UserViewmodelsDeleteUserResponse {
-  /** @example "User deleted successfully." */
-  message?: string;
+export interface UnsignedTxResponse {
+  unsigned_tx?: string;
 }
 
-export interface UserViewmodelsMeResponse {
-  active_keys?: ApiKeyViewmodelsAPIKeyResponse[];
-  /** @example "johndoe" */
-  alias?: string;
-  /** @example "2025-08-31T23:59:59Z" */
-  created_at?: string;
+export interface UnsignedTxResponseInitCourse {
+  /** This is the hash of a minting policy script. */
+  course_id?: string;
+  unsigned_tx?: string;
+}
+
+export interface UnsignedTxResponseInitProject {
+  /** This is the hash of a minting policy script. */
+  project_id?: string;
+  unsigned_tx?: string;
+}
+
+export interface UpdateAssignmentCommitmentV2Request {
+  course_id?: string;
+  course_module_code?: string;
+  evidence?: Record<string, any>;
+  evidence_hash?: string;
+}
+
+export interface UpdateCourseRequest {
+  category?: string;
+  description?: string;
+  image_url?: string;
+  is_public?: boolean;
+  title?: string;
+  video_url?: string;
+}
+
+export interface UpdateModuleStatusRequest {
+  course_id?: string;
+  course_module_code?: string;
+  /** Required when status = "APPROVED" */
+  slt_hash?: string;
+  /** "APPROVED" or "DRAFT" */
+  status?: string;
+}
+
+export interface UpdateModuleV2 {
+  allowed_student_state_ids?: string[];
+  prereq_slt_hashes?: string[];
+  /** Hex encoded hash of slts (exactly 64 characters) */
+  slt_hash?: string;
+}
+
+export interface UpdateProjectRequest {
+  category?: string;
+  description?: string;
+  image_url?: string;
+  is_public?: boolean;
+  title?: string;
+  video_url?: string;
+}
+
+export interface UpdateTaskCommitmentRequest {
+  evidence?: Record<string, any>;
+  /** @example "ev_hash_456" */
+  evidence_hash?: string;
+  /** @example "hash_abc123" */
+  task_hash: string;
+}
+
+export interface UpdateTaskRequest {
+  /** @example "Build a responsive login page" */
+  content?: string;
+  content_json?: Record<string, any>;
+  /** @example "policy_xyz789" */
+  contributor_state_id: string;
+  /** @example "1735689600000" */
+  expiration_time?: string;
+  /** @example 0 */
+  index: number;
+  /** @example "5000000" */
+  lovelace_amount?: string;
+  /** @example "Build login page" */
+  title?: string;
+  tokens?: CreateTaskToken[];
+}
+
+export interface UpdateTeachersV2Request {
+  /** Add Aliases to add as teachers */
+  add?: string[];
+  course_id?: string;
+  /** Remove Aliases to remove as teachers */
+  remove?: string[];
+}
+
+export interface UpdateTeachersV2Response {
+  course_id?: string;
+  success?: boolean;
+  teachers_added?: string[];
+  /** TeachersCurrent Final list of teachers after updates */
+  teachers_current?: string[];
+  teachers_removed?: string[];
+}
+
+export interface UsageData {
+  /** @example "MyFirstKey" */
+  api_key_name?: string;
+  /** @example ["[\"v1\"]"] */
+  api_versions?: string[];
+  /** @example ["[\"API_KEY\"]"] */
+  authentication_methods?: string[];
+  /** @example "2023-01-01T00:00:00Z" */
+  date?: string;
+  /** @example ["[\"/v1/data\"]"] */
+  endpoints?: string[];
+  /** @example ["[\"GET\"]"] */
+  http_methods?: string[];
+  /** @example 500 */
+  max_response_time_ms?: number;
+  /** @example 10 */
+  min_response_time_ms?: number;
+  /** @example 1 */
+  tier_id?: number;
   /** @example "Free" */
-  tier?: string;
+  tier_name?: string;
+  /** @example 100 */
+  total_cache_hit_count?: number;
+  /** @example 1024000 */
+  total_data_transfer_in_bytes?: number;
+  /** @example 2048000 */
+  total_data_transfer_out_bytes?: number;
+  /** @example 50 */
+  total_error_count?: number;
+  /** @example 2 */
+  total_quota_exceeded_count?: number;
+  /** @example 5 */
+  total_rate_limited_count?: number;
+  /** @example 1000 */
+  total_requests?: number;
+  /** @example 50000 */
+  total_response_time_ms?: number;
   /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
   user_id?: string;
+  /**
+   * Added UserIPs
+   * @example ["[\"192.168.1.1\"]"]
+   */
+  user_ips?: string[];
 }
 
-export interface UserViewmodelsUsageResponse {
+export interface UsagePerApiKeyName {
+  /** @example "MyFirstKey" */
+  api_key_name?: string;
+  usage_data?: UsageData[];
+}
+
+export interface UsageResponse {
   /** @example 50 */
   daily_quota_consumed?: number;
   /** @example 1000 */
@@ -2380,4 +2425,148 @@ export interface UserViewmodelsUsageResponse {
   remaining_monthly?: number;
   /** @example "Free" */
   subscription_tier?: string;
+}
+
+/** Standard API response envelope for usage metrics */
+export interface UsageResponseEnvelope {
+  data: UsageResponse;
+}
+
+export interface UserAPIUsageRequest {
+  /**
+   * @minLength 1
+   * @maxLength 64
+   * @example "johndoe"
+   */
+  alias: string;
+  /** @example ["[\"MyFirstKey\""," \"AnotherKey\"]"] */
+  api_key_names?: string[];
+  /** @example "2023-01-31" */
+  end_date: string;
+  /** @example "2023-01-01" */
+  start_date: string;
+}
+
+export interface UserAPIUsageResponse {
+  /** @example "johndoe" */
+  alias?: string;
+  api_usage_metrics?: APIUsageMetric[];
+}
+
+export interface UserDailyApiUsageRequest {
+  /** @example ["[\"MyFirstKey\""," \"AnotherKey\"]"] */
+  api_key_names?: string[];
+  /** @example "2023-01-31" */
+  end_date: string;
+  /** @example "2023-01-01" */
+  start_date: string;
+}
+
+export interface UserDailyApiUsageResponse {
+  user_usages?: UserUsagePerApiKeyName[];
+}
+
+export interface UserInfo {
+  /**
+   * @minLength 1
+   * @maxLength 64
+   * @example "johndoe"
+   */
+  alias: string;
+  /** @example ["[\"MyFirstKey\""," \"AnotherKey\"]"] */
+  api_key_names?: string[];
+}
+
+export interface UserUsage {
+  /** @example "johndoe" */
+  alias?: string;
+  usages?: UsagePerApiKeyName[];
+}
+
+export interface UserUsageData {
+  /** @example "MyFirstKey" */
+  api_key_name?: string;
+  /** @example ["[\"v1\"]"] */
+  api_versions?: string[];
+  /** @example ["[\"API_KEY\"]"] */
+  authentication_methods?: string[];
+  /** @example "2023-01-01" */
+  date?: string;
+  /** @example ["[\"/v1/data\"]"] */
+  endpoints?: string[];
+  /** @example ["[\"GET\"]"] */
+  http_methods?: string[];
+  /** @example 1 */
+  tier_id?: number;
+  /** @example "Free" */
+  tier_name?: string;
+  /** @example 50 */
+  total_error_count?: number;
+  /** @example 1000 */
+  total_requests?: number;
+}
+
+export interface UserUsagePerApiKeyName {
+  /** @example "MyFirstKey" */
+  api_key_name?: string;
+  usage_Data?: UserUsageData[];
+}
+
+/** List of valid transaction types that can be registered with the TX State Machine. */
+export interface ValidTxTypesResponse {
+  /**
+   * List of valid transaction type strings
+   * @example ["course_create","assignment_submit","access_token_mint"]
+   */
+  types?: string[];
+}
+
+export interface ValidateSignatureRequest {
+  session_id: string;
+  /** CIP-30 signature data from a Cardano wallet, containing the COSE_Sign1 signature and COSE_Key. */
+  signature: SignatureData;
+}
+
+/** Response when verification fails, containing error details. */
+export interface VerificationFailureResponse {
+  /**
+   * Error is a machine-readable error code.
+   * 	@example	session_expired
+   */
+  error?: string;
+  /**
+   * Message is a human-readable error description.
+   * 	@example	The verification session has expired. Please start a new session.
+   */
+  message?: string;
+  /**
+   * Verified is always false for failure responses.
+   * 	@example	false
+   */
+  verified?: boolean;
+}
+
+export interface VerifyEmailRequest {
+  /** @example "dGVzdC10b2tlbg==" */
+  token: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  token_id: string;
+}
+
+export interface VerifyEmailResponse {
+  /** @example "johndoe" */
+  alias?: string;
+  /** @example true */
+  email_verified?: boolean;
+  jwt?: JWTResponse;
+  /** @example "Email verified successfully" */
+  message?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  user_id?: string;
+}
+
+export interface WalletData {
+  /** An address, serialised as Bech32. */
+  change_address?: string;
+  used_addresses?: string[];
 }

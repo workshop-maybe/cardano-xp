@@ -1,4 +1,6 @@
-# CLAUDE.md - Andamio T3 App Template
+# AGENTS.md - Andamio App Template
+
+Project instructions for AI coding agents. Works with [Claude Code](https://claude.ai/code), [Cursor](https://cursor.com), [Copilot](https://github.com/features/copilot), [Gemini CLI](https://geminicli.com), and [30+ other compatible agents](https://agentskills.io/home).
 
 ## Project Overview
 
@@ -126,7 +128,7 @@ NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 
 ## Skills
 
-[Agent Skills](https://agentskills.io) — works with any compatible coding agent.
+This repo includes [Agent Skills](https://agentskills.io) — portable instructions that work with any compatible coding agent.
 
 **Learning Path**: `/getting-started` → `/auth` → `/transactions` → `/tx-challenge`
 
@@ -140,3 +142,5 @@ NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 | `/design-system` | Styling patterns, components |
 | `/fix` | AI-assisted bug fixing |
 | `/ship` | Commit → PR → Merge workflow |
+
+Skills are in `.skills/*/SKILL.md`. See the [Agent Skills spec](https://agentskills.io/specification) for the format.

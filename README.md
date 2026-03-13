@@ -3,9 +3,12 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
+[![Agent Skills](https://img.shields.io/badge/Agent_Skills-8_skills-8B5CF6)](https://agentskills.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 Forkable Cardano dApp starter built on the Andamio Protocol. Course creation, credential issuance, project management, and treasury operations — all on-chain.
+
+**Built for AI-assisted development.** This repo includes [Agent Skills](https://agentskills.io) that work with Claude Code, Cursor, Copilot, Gemini CLI, and [30+ other coding agents](https://agentskills.io/home). Fork it, open your favorite AI coding tool, and run `/getting-started` to customize your theme in 2 minutes.
 
 ## Quick Start
 
@@ -55,6 +58,12 @@ NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 
 ```
 andamio-app-template/
+├── .skills/                    # Agent Skills (works with 30+ coding agents)
+│   ├── getting-started/        # Quick onboarding
+│   ├── auth/                   # Authentication guide
+│   ├── transactions/           # TX state machine
+│   └── ...                     # More skills
+│
 ├── src/
 │   ├── app/
 │   │   ├── (app)/              # Sidebar layout routes
@@ -74,9 +83,8 @@ andamio-app-template/
 │   ├── lib/                    # Gateway client, utilities
 │   └── config/                 # TX schemas, UI config
 │
-└── .claude/
-    ├── CLAUDE.md               # AI development rules
-    └── skills/                 # Agent Skills (works with any compatible agent)
+├── AGENTS.md                   # AI development rules (works with any agent)
+└── .claude/                    # Claude Code specific settings (optional)
 ```
 
 ## Key Patterns
@@ -202,18 +210,50 @@ if (status.state === "updated") refetchData();
 
 ## Agent Skills
 
-This template includes [Agent Skills](https://agentskills.io) — portable instructions that work with any compatible coding agent (Claude Code, Cursor, Copilot, Gemini CLI, Roo Code, and [30+ others](https://agentskills.io/home)).
+This template includes [Agent Skills](https://agentskills.io) — portable instructions that work with any compatible coding agent.
+
+```
+.skills/
+├── getting-started/   # Quick onboarding (start here!)
+├── auth/              # API keys and JWT authentication
+├── transactions/      # Cardano TX state machine
+├── tx-challenge/      # 4 progressive TX challenges
+├── task-lifecycle/    # Commit → submit → assess flow
+├── design-system/     # UI patterns and styling
+├── fix/               # AI-assisted bug fixing
+└── ship/              # Commit, PR, merge workflow
+```
+
+### Get Started
+
+1. Fork this repo
+2. Open with your AI coding agent ([Claude Code](https://claude.ai/code), [Cursor](https://cursor.com), [Copilot](https://github.com/features/copilot), [Gemini CLI](https://geminicli.com), or [others](https://agentskills.io/home))
+3. Run `/getting-started` — you'll customize the theme and see hot reload in 2 minutes
+4. Follow the learning path: `/auth` → `/transactions` → `/tx-challenge`
+
+### Learning Path
+
+| Skill | What you'll learn |
+|-------|-------------------|
+| `/getting-started` | Quick win: customize theme colors in 2 minutes |
+| `/auth` | API keys for devs, JWTs for end users |
+| `/transactions` | Cardano TX state machine and hooks |
+| `/tx-challenge` | Learn by building — 4 progressive TX challenges |
+| `/task-lifecycle` | Hands-on commit → submit → assess on preprod |
+
+### Reference Skills
 
 | Skill | What it does |
 |-------|-------------|
-| `/getting-started` | Quick win: customize your theme colors in 2 minutes |
 | `/design-system` | UI patterns, component reference, styling audits |
-| `/auth` | API key and JWT authentication guide |
-| `/transactions` | Cardano TX state machine and hooks |
 | `/fix` | AI-assisted bug fixing |
 | `/ship` | Version bump, commit, PR, merge |
 
-Skills live in `.claude/skills/*/SKILL.md` and follow the open [Agent Skills spec](https://agentskills.io/specification).
+### How It Works
+
+Skills follow the open [Agent Skills spec](https://agentskills.io/specification). Each skill is a folder with a `SKILL.md` file containing instructions your AI agent can follow. Instead of reading docs, you learn by doing — your agent guides you through real tasks in your actual codebase.
+
+Project-wide rules live in [`AGENTS.md`](./AGENTS.md) at the repo root.
 
 ## Customization
 

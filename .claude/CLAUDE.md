@@ -4,7 +4,7 @@
 
 Cardano dApp starter: Next.js 15, tRPC v11, Tailwind CSS v4, Mesh SDK, shadcn/ui.
 
-**Gateway**: `https://dev.api.andamio.io` | **Docs**: `https://dev.api.andamio.io/api/v1/docs/index.html`
+**Gateway**: `https://preprod.api.andamio.io` | **Docs**: [docs.andamio.io](https://docs.andamio.io)
 
 ## Critical Rules
 
@@ -119,7 +119,7 @@ npm run generate:types  # Regenerate API types
 ## Environment Variables
 
 ```bash
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev.api.andamio.io"
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
 ANDAMIO_API_KEY="your-api-key"
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 ```

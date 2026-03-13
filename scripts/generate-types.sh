@@ -5,7 +5,7 @@
 
 set -e
 
-GATEWAY_URL="${NEXT_PUBLIC_ANDAMIO_GATEWAY_URL:-https://dev.api.andamio.io}"
+GATEWAY_URL="${NEXT_PUBLIC_ANDAMIO_GATEWAY_URL:-https://preprod.api.andamio.io}"
 SPEC_URL="${GATEWAY_URL}/api/v1/docs/doc.json"
 OUTPUT_DIR="src/types/generated"
 METADATA_FILE="${OUTPUT_DIR}/api-metadata.json"

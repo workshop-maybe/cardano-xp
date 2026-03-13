@@ -19,7 +19,7 @@ import { MeshWallet, BlockfrostProvider } from "@meshsdk/core";
 // =============================================================================
 
 const NETWORK_ID = 0; // preprod
-const GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL ?? "https://dev.api.andamio.io";
+const GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL ?? "https://preprod.api.andamio.io";
 const API_KEY = process.env.ANDAMIO_API_KEY ?? "ant_0bYl6MAGxdnEzUxQPP_ljdnKhRPg4f7HKkQqu5EB0WY=";
 const BLOCKFROST_KEY = process.env.BLOCKFROST_PREPROD_API_KEY;
 

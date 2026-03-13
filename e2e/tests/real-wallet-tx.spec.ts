@@ -52,7 +52,7 @@ const TEST_WALLET_CONFIG: RealWalletConfig = {
   name: "TestWallet",
 };
 
-const GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL ?? "https://dev.api.andamio.io";
+const GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL ?? "https://preprod.api.andamio.io";
 
 // =============================================================================
 // Tests

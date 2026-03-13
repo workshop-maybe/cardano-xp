@@ -95,7 +95,7 @@ cp .env.example .env
 
 Required for basic tests:
 ```env
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev.api.andamio.io"
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 ```
 
@@ -440,4 +440,4 @@ This skill provides step-by-step guidance for:
 - [Mesh SDK Documentation](https://meshjs.dev/)
 - [Blockfrost](https://blockfrost.io/)
 - [Cardano Testnet Faucet](https://docs.cardano.org/cardano-testnets/tools/faucet/)
-- [Andamio Gateway API Docs](https://dev.api.andamio.io/api/v1/docs/)
+- [Andamio Docs](https://docs.andamio.io)

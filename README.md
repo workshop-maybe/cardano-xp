@@ -25,7 +25,7 @@ Open [http://localhost:3000](http://localhost:3000). The app connects to Andamio
 ## Environment
 
 ```bash
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev.api.andamio.io"
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
 ANDAMIO_API_KEY="your-api-key"  # Get from https://app.andamio.io/api-setup
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 ```
@@ -225,7 +225,7 @@ Skills live in `.claude/skills/*/SKILL.md` and follow the open [Agent Skills spe
 ## Resources
 
 - [Andamio Platform](https://andamio.io) | [Andamio Docs](https://docs.andamio.io)
-- [API Docs](https://dev.api.andamio.io/api/v1/docs/index.html)
+- [API Docs](https://docs.andamio.io)
 - [T3 Stack](https://create.t3.gg/) | [Next.js](https://nextjs.org/docs)
 - [Mesh SDK](https://meshjs.dev) | [shadcn/ui](https://ui.shadcn.com)
 

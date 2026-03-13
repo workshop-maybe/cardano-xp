@@ -5,29 +5,11 @@ description: How Cardano transactions work in Andamio — state machine, APIs, a
 
 # Transactions
 
-How to build, submit, and track Cardano transactions in Andamio apps.
+Build, submit, and track Cardano transactions in Andamio apps.
 
-## The Key Insight
+**Docs**: [docs.andamio.io](https://docs.andamio.io) | **API**: [preprod.api.andamio.io](https://preprod.api.andamio.io)
 
-**"confirmed" is NOT terminal.** The Gateway updates the database ~30 seconds after on-chain confirmation.
-
-```
-WRONG:  TX confirmed → success callback → fetch data → STALE DATA
-
-CORRECT: TX confirmed → keep watching → DB updated → success callback → fresh data
-```
-
-## Transaction States
-
-| State | Terminal? | What it means |
-|-------|-----------|---------------|
-| `pending` | No | TX submitted, waiting for blockchain |
-| `confirmed` | **No** | On-chain, Gateway still processing |
-| `updated` | **Yes** | DB updated — SUCCESS |
-| `failed` | **Yes** | TX failed after retries |
-| `expired` | **Yes** | TX exceeded 2-hour TTL |
-
-## The Flow
+## The State Machine
 
 ```
 BUILD → SIGN → SUBMIT → REGISTER → WATCH
@@ -37,6 +19,51 @@ BUILD → SIGN → SUBMIT → REGISTER → WATCH
   │       │       └─ wallet.submitTx(signed) → txHash
   │       └─ wallet.signTx(cbor, true)
   └─ POST to /api/v2/tx/* → unsigned CBOR
+```
+
+| State | Terminal? | What it means |
+|-------|-----------|---------------|
+| `pending` | No | TX submitted, waiting for blockchain |
+| `confirmed` | **No** | On-chain, Gateway still processing |
+| `updated` | **Yes** | DB updated — safe to fetch data |
+| `failed` | **Yes** | TX failed after retries |
+| `expired` | **Yes** | TX exceeded 2-hour TTL |
+
+## Try It: Explore TX Code in This Repo
+
+### 1. Read the hooks
+
+```bash
+# The main TX execution hook
+cat src/hooks/tx/use-transaction.ts
+
+# Real-time SSE tracking (preferred)
+cat src/hooks/tx/use-tx-stream.ts
+
+# Polling fallback
+cat src/hooks/tx/use-tx-watcher.ts
+```
+
+### 2. See TX types and endpoints
+
+```bash
+# All TX types (access_token_mint, course_create, etc.)
+cat src/config/transaction-ui.ts
+
+# Zod schemas for validation
+cat src/config/transaction-schemas.ts
+```
+
+### 3. Find existing TX implementations
+
+Search for components that use transactions:
+
+```bash
+# Find usages of the TX hook
+grep -r "useTransaction" src/
+
+# Find TX stream usage
+grep -r "useTxStream" src/
 ```
 
 ## Using the Hooks
@@ -94,21 +121,12 @@ const { status, isSuccess } = useTxWatcher(txHash, {
 | Assess task | `task_assess` |
 | Fund treasury | `treasury_fund` |
 
-## Common Mistakes
+## What to Build Next
 
-### Checking for "confirmed" instead of "updated"
-
-```typescript
-// WRONG - data will be stale
-if (status.state === "confirmed") { refetchData(); }
-
-// CORRECT - wait for DB update
-if (status.state === "updated") { refetchData(); }
-```
-
-### Calling confirm-tx endpoints directly
-
-The Gateway handles DB updates automatically. Just wait for `"updated"` status.
+| Challenge | Description |
+|-----------|-------------|
+| `/tx-challenge` | 4 progressive challenges — from status display to full TX flow |
+| `/task-lifecycle` | Walk through commit → submit → assess on preprod |
 
 ## Key Files
 
@@ -122,20 +140,27 @@ The Gateway handles DB updates automatically. Just wait for `"updated"` status.
 
 ---
 
-## Compound Engineering
+## Key Insights
 
-Transaction bugs are subtle — state machine timing, SSE connection drops, stale data after "confirmed". When you solve a TX issue, document it:
+### "confirmed" is NOT terminal
 
-```bash
-/workflows:compound
+The Gateway updates the database ~30 seconds after on-chain confirmation. If you fetch data at "confirmed", you'll get stale results.
+
+```typescript
+// WRONG - data will be stale
+if (status.state === "confirmed") { refetchData(); }
+
+// CORRECT - wait for DB update
+if (status.state === "updated") { refetchData(); }
 ```
 
-The `docs/solutions/` directory will grow with patterns like:
-- `runtime-errors/tx-stream-timeout-fallback.md`
-- `logic-errors/confirmed-vs-updated-race.md`
-- `integration-issues/gateway-sse-connection-reset.md`
+### Don't call confirm-tx endpoints directly
 
-Check there first before debugging — your answer may already exist.
+The Gateway handles DB updates automatically. Just wait for `"updated"` status.
+
+### SSE connections can drop
+
+The `useTxStream` hook handles reconnection, but if you're building custom TX tracking, implement fallback to polling via `useTxWatcher`.
 
 ---
 

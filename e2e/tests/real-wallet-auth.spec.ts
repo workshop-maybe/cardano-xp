@@ -31,7 +31,7 @@ const SKIP_REASON = !BLOCKFROST_API_KEY
   ? "BLOCKFROST_PREPROD_API_KEY not set"
   : null;
 
-const GATEWAY_URL = "https://dev.api.andamio.io";
+const GATEWAY_URL = "https://preprod.api.andamio.io";
 const API_KEY = "ant_0bYl6MAGxdnEzUxQPP_ljdnKhRPg4f7HKkQqu5EB0WY=";
 
 // Expected Access Token aliases (must match what was minted)

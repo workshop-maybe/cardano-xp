@@ -543,13 +543,13 @@ export async function signMessageWithWallet(
  * 3. Validates the signature to get a JWT
  *
  * @param config - Wallet configuration
- * @param gatewayUrl - Gateway API URL (default: https://dev.api.andamio.io)
+ * @param gatewayUrl - Gateway API URL (default: https://preprod.api.andamio.io)
  * @param apiKey - API key for Gateway requests
  * @returns JWT and user info
  */
 export async function authenticateWalletWithGateway(
   config: RealWalletConfig,
-  gatewayUrl: string = "https://dev.api.andamio.io",
+  gatewayUrl: string = "https://preprod.api.andamio.io",
   apiKey: string
 ): Promise<{
   jwt: string;

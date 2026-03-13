@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
-// @ts-nocheck
+// TypeScript checking enabled - API types are compile-time safe
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -67,17 +67,17 @@ export interface APIKeyRequest {
 
 export interface APIKeyResponse {
   /** @example "ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" */
-  api_key?: string;
+  api_key: string;
   /** @example "2025-08-31T23:59:59Z" */
-  created_at?: string;
+  created_at: string;
   /** @example "2026-08-31T23:59:59Z" */
-  expires_at?: string;
+  expires_at: string;
   /** @example 365 */
-  expires_in_days?: number;
+  expires_in_days: number;
   /** @example true */
-  is_active?: boolean;
+  is_active: boolean;
   /** @example "MyFirstKey" */
-  name?: string;
+  name: string;
 }
 
 export interface APIUsage {
@@ -772,7 +772,7 @@ export interface DeleteAPIKeyRequest {
 
 export interface DeleteAPIKeyResponse {
   /** @example "API key deleted successfully" */
-  confirmation?: string;
+  confirmation: string;
 }
 
 export interface DeleteModuleV2Request {
@@ -924,9 +924,9 @@ export interface JWKSResponse {
 
 export interface JWTResponse {
   /** @example "2025-09-01T23:59:59Z" */
-  expires_at?: string;
+  expires_at: string;
   /** @example "eyJhbGci..." */
-  token?: string;
+  token: string;
 }
 
 export interface LeaveAssignmentCommitmentV2Request {
@@ -987,12 +987,12 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   /** @example "johndoe" */
-  alias?: string;
-  jwt?: JWTResponse;
+  alias: string;
+  jwt: JWTResponse;
   /** @example "Free" */
-  tier?: string;
+  tier: string;
   /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  user_id?: string;
+  user_id: string;
 }
 
 export interface LoginSession {
@@ -1119,13 +1119,13 @@ export interface ManagerProjectsResponse {
 export interface MeResponse {
   active_keys?: APIKeyResponse[];
   /** @example "johndoe" */
-  alias?: string;
+  alias: string;
   /** @example "2025-08-31T23:59:59Z" */
-  created_at?: string;
+  created_at: string;
   /** @example "Free" */
-  tier?: string;
+  tier: string;
   /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
-  user_id?: string;
+  user_id: string;
 }
 
 /** Standard API response envelope for user profile */
@@ -1873,7 +1873,7 @@ export interface RotateAPIKeyRequest {
 
 export interface RotateAPIKeyResponse {
   /** @example "API key expiration extended to 2026-08-31T23:59:59Z" */
-  confirmation?: string;
+  confirmation: string;
 }
 
 export interface ServiceUnavailableErrorResponse {

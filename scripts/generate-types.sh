@@ -19,6 +19,10 @@ npx swagger-typescript-api generate \
   -n gateway.ts \
   --no-client
 
+# Remove @ts-nocheck - types compile cleanly without it (verified 2026-03-13)
+# This enables TypeScript compile-time checking on generated API types
+sed -i '' 's|// @ts-nocheck|// TypeScript checking enabled - API types are compile-time safe|' "${OUTPUT_DIR}/gateway.ts"
+
 # Fetch API metadata, sync version to VERSION + package.json
 node -e "
   fetch('${SPEC_URL}')

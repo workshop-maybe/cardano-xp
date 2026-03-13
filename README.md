@@ -127,6 +127,79 @@ Always import from the centralized icon system:
 import { CredentialIcon, CourseIcon } from "~/components/icons";
 ```
 
+### How Transactions Work
+
+Andamio uses a two-layer state machine for Cardano transactions.
+
+#### Client Layer (User-Facing)
+
+```
+idle → fetching → signing → submitting → success
+         ↓           ↓           ↓
+       error       error       error
+```
+
+The `useTransaction` hook manages this:
+
+```typescript
+const { execute, state, result } = useTransaction();
+
+await execute({
+  txType: "COURSE_STUDENT_ASSIGNMENT_COMMIT",
+  params: { course_id, alias, slt_hash, ... }
+});
+// state: fetching → signing → submitting → success
+```
+
+#### Gateway Layer (Background Confirmation)
+
+After submission, the gateway monitors the blockchain:
+
+```
+pending → confirmed → updated
+            ↓
+         failed/expired
+```
+
+Track confirmation with `useTxStream`:
+
+```typescript
+const { status, isSuccess } = useTxStream(result?.txHash);
+// status.state: pending → confirmed → updated
+```
+
+#### Key Insight
+
+**"confirmed" is NOT terminal.** The gateway updates the database ~30s after on-chain confirmation. Always wait for `updated` before refetching data:
+
+```typescript
+// WRONG - data will be stale
+if (status.state === "confirmed") refetchData();
+
+// CORRECT - wait for DB sync
+if (status.state === "updated") refetchData();
+```
+
+#### The 7-Step Flow
+
+1. **UI Action** → `useTransaction().execute({ txType, params })`
+2. **Build** → POST to gateway, receive unsigned CBOR
+3. **Sign** → Wallet signs with partial signing enabled
+4. **Submit** → Wallet submits to blockchain, returns txHash
+5. **Register** → POST `/api/v2/tx/register` starts gateway monitoring
+6. **Monitor** → SSE stream (or polling) until terminal state
+7. **Complete** → Toast fires, DB updated, UI refreshes
+
+#### Key Files
+
+| File | Purpose |
+|------|---------|
+| `hooks/tx/use-transaction.ts` | Execute transactions |
+| `hooks/tx/use-tx-stream.ts` | SSE-based confirmation tracking |
+| `stores/tx-watcher-store.ts` | Persistent TX monitoring |
+| `config/transaction-ui.ts` | TX types and endpoints |
+| `config/transaction-schemas.ts` | Zod validation |
+
 ## Agent Skills
 
 This template includes [Agent Skills](https://agentskills.io) — portable instructions that work with any compatible coding agent (Claude Code, Cursor, Copilot, Gemini CLI, Roo Code, and [30+ others](https://agentskills.io/home)).

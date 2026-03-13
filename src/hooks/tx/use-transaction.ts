@@ -168,12 +168,18 @@ export function useTransaction() {
       setResult(null);
 
       try {
-        // Step 0: Check wallet connection
+        // =========================================================================
+        // PHASE 0: PREREQUISITES
+        // Check wallet connection before proceeding
+        // =========================================================================
         if (!connected || !wallet) {
           throw new Error("Wallet not connected");
         }
 
-        // Step 1: Validate params (part of "fetching" state)
+        // =========================================================================
+        // PHASE 1: VALIDATION
+        // Validate params against Zod schema. Gateway will also validate.
+        // =========================================================================
         setState("fetching");
         if (!skipValidation) {
           const validation = validateTxParams(txType, params);
@@ -185,7 +191,10 @@ export function useTransaction() {
           }
         }
 
-        // Step 2: Build transaction (fetch unsigned CBOR)
+        // =========================================================================
+        // PHASE 2: BUILD
+        // POST to gateway endpoint, receive unsigned CBOR
+        // =========================================================================
         const endpoint = TRANSACTION_ENDPOINTS[txType];
         const url = `${PROXY_BASE}${endpoint}`;
 
@@ -225,18 +234,28 @@ export function useTransaction() {
 
         txLogger.buildResult(txType, true, apiResponse);
 
-        // Step 3: Sign transaction
+        // =========================================================================
+        // PHASE 3: SIGN
+        // User signs with connected wallet. partialSign=true for V2 protocol.
+        // =========================================================================
         setState("signing");
         const signedTx = await wallet.signTxReturnFullTx(unsignedCbor, true); // partialSign=true for V2
 
-        // Step 4: Submit to blockchain
+        // =========================================================================
+        // PHASE 4: SUBMIT
+        // Submit signed transaction to Cardano blockchain. Point of no return.
+        // =========================================================================
         setState("submitting");
         const txHash = await wallet.submitTx(signedTx);
 
         const explorerUrl = getExplorerUrl(txHash);
         txLogger.txSubmitted(txType, txHash, explorerUrl);
 
-        // Step 5: Register with gateway (for TXs that need DB updates OR on-chain confirmation tracking)
+        // =========================================================================
+        // PHASE 5: REGISTER
+        // Register with gateway + global store for tracking. Gateway handles DB sync.
+        // =========================================================================
+        // For TXs that need DB updates OR on-chain confirmation tracking
         // JWT is optional — gateway only requires X-API-Key (added by proxy).
         // This allows access token mint to be registered before the user has a JWT.
         const shouldRegister = ui.requiresDBUpdate || ui.requiresOnChainConfirmation;
@@ -261,7 +280,10 @@ export function useTransaction() {
           console.log(`[${txType}] Pure on-chain TX - skipping registration`);
         }
 
-        // Step 6: Success!
+        // =========================================================================
+        // PHASE 6: SUCCESS
+        // Update state, fire toasts, call callbacks
+        // =========================================================================
         setState("success");
 
         const txResult: SimpleTransactionResult = {

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Image from "next/image";
 import { env } from "~/env";
 import { LandingHero } from "~/components/landing/landing-hero";
 import { FirstLoginCard } from "~/components/landing/first-login-card";
+import { AppNavBar } from "~/components/layout/app-nav-bar";
 
 interface MintedInfo {
   alias: string;
@@ -19,24 +19,20 @@ export default function Home() {
     setMintedInfo(info);
   }, []);
 
-  // Show FirstLoginCard after minting
   const showFirstLogin = !!mintedInfo;
 
   return (
-    <main className="bg-background text-foreground h-dvh flex flex-col overflow-y-auto">
-      <section className="flex flex-1 flex-col items-center px-6 pt-[6vh]">
-        {/* Logo — pinned near top so it doesn't shift between states */}
-        <Image
-          src="/logos/logo-with-typography-stacked.svg"
-          alt="Cardano XP"
-          width={200}
-          height={200}
-          className="shrink-0"
-          priority
-        />
+    <main className="relative bg-background text-foreground h-dvh flex flex-col overflow-y-auto">
+      {/* Layered background: grid → mesh → glow → vignette */}
+      <div className="pointer-events-none fixed inset-0 xp-grid" aria-hidden />
+      <div className="pointer-events-none fixed inset-0 xp-mesh-deep" aria-hidden />
+      <div className="pointer-events-none fixed inset-0 xp-glow-spot" aria-hidden />
+      <div className="pointer-events-none fixed inset-0 xp-vignette" aria-hidden />
 
-        {/* Card area — positioned closer to logo */}
-        <div className="flex flex-1 w-full items-start justify-center pt-[8vh] sm:pt-[10vh]">
+      <AppNavBar />
+
+      <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
+        <div className="w-full max-w-2xl">
           {showFirstLogin ? (
             <FirstLoginCard
               alias={mintedInfo.alias}
@@ -49,11 +45,18 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-4 px-6 border-t border-border/50">
-        <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground font-mono">
+      <footer className="relative z-10 py-4 px-6 border-t border-border/30">
+        <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground/70 font-mono">
           <span className="uppercase tracking-wider">{network}</span>
-          <span className="text-border">•</span>
-          <span>v2.0.0</span>
+          <span className="text-border/50">·</span>
+          <a
+            href="https://andamio.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Powered by Andamio
+          </a>
         </div>
       </footer>
     </main>

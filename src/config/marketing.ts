@@ -12,16 +12,12 @@ export const MARKETING = {
    */
   hero: {
     badge: "Cardano XP",
-    title: "Learn. Contribute. Earn XP.",
-    subtitle: "A single-purpose dApp on Cardano.",
-    lead: "Complete the course, earn credentials, contribute feedback, and collect XP — a reputation token that proves what you've done.",
+    title: "Put your track record on-chain.",
+    subtitle: "Do real work on Cardano. Earn reputation, not tokens to trade.",
+    lead: "Five years of building on Cardano and nothing to show for it. XP changes that.",
     primaryCta: {
-      text: "Get Started",
+      text: "Connect Wallet",
       href: "/",
-    },
-    secondaryCta: {
-      text: "What is Andamio?",
-      href: "https://andamio.io",
     },
   },
 
@@ -77,10 +73,10 @@ export const MARKETING = {
    * Landing page hero section
    */
   landingHero: {
-    headline: "Learn. Contribute. Earn XP.",
-    subtext: "Complete courses. Earn credentials. Contribute to projects.",
-    enterCta: "Get Started",
-    browseCta: "Learn More",
+    headline: "Put your track record on-chain.",
+    subtext: "Do real work on Cardano. Earn reputation, not tokens to trade.",
+    enterCta: "Connect Wallet",
+    browseCta: "Explore the course",
     launchCta: "Studio",
   },
 
@@ -110,11 +106,10 @@ export const MARKETING = {
    */
   footer: {
     brandText: "Cardano XP",
-    links: [
-      { text: "Andamio Docs", href: BRANDING.links.docs, external: true },
-      { text: "andamio.io", href: BRANDING.links.website, external: true },
-      { text: "Build Your Own", href: "https://github.com/Andamio-Platform/andamio-app-template", external: true },
-    ],
+    poweredBy: {
+      text: "Powered by Andamio",
+      href: "https://andamio.io",
+    },
   },
 
   /**

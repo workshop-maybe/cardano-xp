@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { AuthStatusBar } from "./auth-status-bar";
 import { AppNavBar } from "./app-nav-bar";
 import {
   StudioHeader,
@@ -66,7 +65,6 @@ export function StudioLayout({
   return (
     <StudioHeaderContext.Provider value={contextValue}>
       <div className="flex h-screen w-full flex-col overflow-hidden overscroll-none bg-background">
-        <AuthStatusBar />
         <AppNavBar />
 
         <div className="flex flex-1 flex-col overflow-hidden">

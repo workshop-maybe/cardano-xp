@@ -1,52 +1,150 @@
 "use client";
 
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { APP_NAVIGATION, isNavItemActive, BRANDING } from "~/config";
+import { usePathname, useRouter } from "next/navigation";
+import { useWallet } from "@meshsdk/react";
+import { useTheme } from "next-themes";
+import { APP_NAVIGATION, isNavItemActive } from "~/config";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { AndamioButton } from "~/components/andamio/andamio-button";
+import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
+import {
+  LogOutIcon,
+  LightModeIcon,
+  DarkModeIcon,
+} from "~/components/icons";
 import { cn } from "~/lib/utils";
+import { env } from "~/env";
 
 /**
- * Horizontal top navigation bar — replaces the sidebar.
- * Shows Learn | Contribute | Credentials (+ Studio for authenticated users).
+ * Unified glass nav bar for all app routes.
+ * Combines brand mark, navigation, auth status, and controls in one bar.
  */
 export function AppNavBar() {
   const pathname = usePathname();
-  const { isAuthenticated } = useAndamioAuth();
+  const router = useRouter();
+  const { name: walletName } = useWallet();
+  const { theme, setTheme } = useTheme();
+  const {
+    isAuthenticated,
+    user,
+    logout,
+  } = useAndamioAuth();
+
+  const [mounted, setMounted] = useState(false);
+
+  const handleLogout = useCallback(() => {
+    logout();
+    router.push("/");
+  }, [logout, router]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-xl backdrop-saturate-150">
-      <div className="flex h-10 items-center gap-1 px-3 sm:px-4">
-        <Link href="/" className="mr-4 text-sm font-display font-semibold tracking-tight">
-          {BRANDING.name}
-        </Link>
-        {APP_NAVIGATION.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            className={cn(
-              "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
-              isNavItemActive(pathname, item.href)
-                ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-            )}
-          >
-            {item.name}
+    <nav className="sticky top-0 z-40 xp-glass border-b border-border/30">
+      <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6">
+        {/* Left: Brand mark + nav links */}
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Link href="/" className="flex items-center gap-2 mr-3 sm:mr-5">
+            <div className="h-7 w-7 bg-secondary flex items-center justify-center">
+              <span className="font-display font-bold text-xs text-secondary-foreground">XP</span>
+            </div>
+            <span className="hidden sm:block font-display font-semibold text-sm tracking-tight text-foreground">
+              Cardano XP
+            </span>
           </Link>
-        ))}
-        {isAuthenticated && (
-          <Link
-            href="/studio"
-            className={cn(
-              "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
-              isNavItemActive(pathname, "/studio")
-                ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-            )}
-          >
-            Studio
-          </Link>
-        )}
+
+          {APP_NAVIGATION.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={cn(
+                "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
+                isNavItemActive(pathname, item.href)
+                  ? "bg-foreground/10 text-foreground"
+                  : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+              )}
+            >
+              {item.name}
+            </Link>
+          ))}
+          {isAuthenticated && (
+            <Link
+              href="/studio"
+              className={cn(
+                "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
+                isNavItemActive(pathname, "/studio")
+                  ? "bg-foreground/10 text-foreground"
+                  : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+              )}
+            >
+              Studio
+            </Link>
+          )}
+        </div>
+
+        {/* Right: Status + controls */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Network badge (non-mainnet) */}
+          {env.NEXT_PUBLIC_CARDANO_NETWORK !== "mainnet" && (
+            <div className="flex items-center gap-1.5 rounded-sm bg-warning/15 px-2 py-0.5">
+              <span className="h-1.5 w-1.5 rounded-sm bg-warning animate-pulse" />
+              <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-warning">
+                {env.NEXT_PUBLIC_CARDANO_NETWORK}
+              </span>
+            </div>
+          )}
+
+          {/* User alias badge */}
+          {isAuthenticated && user?.accessTokenAlias && (
+            <span className="hidden sm:inline-flex items-center h-6 px-2 rounded-sm bg-secondary/15 text-[11px] font-mono text-secondary">
+              {user.accessTokenAlias}
+            </span>
+          )}
+
+          {/* Connected wallet indicator */}
+          {isAuthenticated && walletName && (
+            <span className="hidden md:inline-flex items-center text-[11px] text-muted-foreground">
+              {walletName}
+            </span>
+          )}
+
+          {/* Theme toggle */}
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="h-8 w-8 flex items-center justify-center rounded-sm text-muted-foreground hover:bg-foreground/5 hover:text-foreground transition-colors"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {theme === "dark" ? (
+                <LightModeIcon className="h-3.5 w-3.5" />
+              ) : (
+                <DarkModeIcon className="h-3.5 w-3.5" />
+              )}
+            </button>
+          )}
+
+          {/* Auth action */}
+          {isAuthenticated ? (
+            <AndamioButton
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="hidden sm:flex h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+            >
+              <LogOutIcon className="mr-1.5 h-3 w-3" />
+              Sign Out
+            </AndamioButton>
+          ) : (
+            <ConnectWalletButton
+              label="Connect"
+              className="h-7 px-3 text-xs rounded-sm border-0 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-medium"
+            />
+          )}
+        </div>
       </div>
     </nav>
   );

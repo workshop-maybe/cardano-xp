@@ -111,7 +111,7 @@
    ========================================================================== */
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0;
   color-scheme: light;
 
   /* Base — blue-tinted neutrals */
@@ -831,6 +831,56 @@
       radial-gradient(ellipse 50% 60% at 50% 80%, oklch(0.6 0.14 175 / 0.06), transparent);
   }
 
+  /* Deep Mesh — more intense for hero / landing */
+  .xp-mesh-deep {
+    background:
+      radial-gradient(ellipse 100% 60% at 15% 30%, oklch(0.45 0.155 248 / 0.12), transparent),
+      radial-gradient(ellipse 70% 80% at 85% 15%, oklch(0.72 0.17 85 / 0.10), transparent),
+      radial-gradient(ellipse 60% 70% at 50% 90%, oklch(0.6 0.14 175 / 0.08), transparent),
+      radial-gradient(ellipse 120% 40% at 60% 50%, oklch(0.45 0.155 248 / 0.04), transparent);
+  }
+
+  .dark .xp-mesh-deep {
+    background:
+      radial-gradient(ellipse 100% 60% at 15% 30%, oklch(0.45 0.155 248 / 0.25), transparent),
+      radial-gradient(ellipse 70% 80% at 85% 15%, oklch(0.72 0.17 85 / 0.12), transparent),
+      radial-gradient(ellipse 60% 70% at 50% 90%, oklch(0.6 0.14 175 / 0.10), transparent),
+      radial-gradient(ellipse 120% 40% at 60% 50%, oklch(0.45 0.155 248 / 0.08), transparent);
+  }
+
+  /* Grid overlay — subtle structure under the gradients */
+  .xp-grid {
+    background-image:
+      linear-gradient(oklch(0.5 0 248 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.5 0 248 / 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .dark .xp-grid {
+    background-image:
+      linear-gradient(oklch(0.8 0 248 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.8 0 248 / 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* Vignette — darkened edges for focus */
+  .xp-vignette {
+    box-shadow: inset 0 0 200px 60px oklch(0 0 0 / 0.06);
+  }
+
+  .dark .xp-vignette {
+    box-shadow: inset 0 0 200px 60px oklch(0 0 0 / 0.3);
+  }
+
+  /* Glow spot — a single warm accent light */
+  .xp-glow-spot {
+    background: radial-gradient(circle 400px at 50% 40%, oklch(0.72 0.17 85 / 0.08), transparent);
+  }
+
+  .dark .xp-glow-spot {
+    background: radial-gradient(circle 400px at 50% 40%, oklch(0.72 0.17 85 / 0.12), transparent);
+  }
+
   /* Glass Panel */
   .xp-glass {
     background: oklch(1 0 0 / 0.7);
@@ -862,6 +912,25 @@
 
   @keyframes hue-drift {
     to { --xp-hue: 265; }
+  }
+
+  /* Pulse glow — breathing gold accent */
+  .xp-pulse-glow {
+    animation: pulse-glow 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse-glow {
+    0% { box-shadow: 0 0 20px 4px oklch(0.72 0.17 85 / 0.15); }
+    100% { box-shadow: 0 0 40px 8px oklch(0.72 0.17 85 / 0.25); }
+  }
+
+  .dark .xp-pulse-glow {
+    animation: pulse-glow-dark 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse-glow-dark {
+    0% { box-shadow: 0 0 20px 4px oklch(0.78 0.155 85 / 0.2); }
+    100% { box-shadow: 0 0 50px 12px oklch(0.78 0.155 85 / 0.35); }
   }
 }
 

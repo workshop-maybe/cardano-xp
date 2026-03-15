@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
 import { type Metadata, type Viewport } from "next";
-import { Inter, Space_Grotesk, Geist_Mono } from "next/font/google";
+import { Inter, DM_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: BRANDING.description,
     images: [BRANDING.logo.ogImage],
   },
-  metadataBase: new URL(BRANDING.links.website),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://cardano-xp.io"),
 };
 
 const inter = Inter({
@@ -44,11 +44,11 @@ const inter = Inter({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-display",
-  display: "optional",
-  weight: ["500", "700"],
+  display: "swap",
+  weight: ["500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -61,7 +61,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} overflow-hidden overscroll-none`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${dmSans.variable} ${geistMono.variable} overflow-hidden overscroll-none`} suppressHydrationWarning>
       <body className="font-sans overflow-hidden overscroll-none">
         <ThemeProvider
           attribute="class"

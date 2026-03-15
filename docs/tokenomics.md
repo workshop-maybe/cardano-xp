@@ -21,17 +21,23 @@ Once you hold XP, you can give it to others. Recognition flows through the netwo
 
 When you claim a project credential, your XP count is snapshotted. The credential is permanent proof — independent of your current balance. You don't need to hold XP to keep the credential.
 
+Your contribution history becomes your identity. Not your Twitter following, not who you know, not how long you've been around. What you've demonstrated, on-chain, verifiable by anyone.
+
 ## Open Platform
 
-Anyone can host a project on Cardano XP and receive an allocation of XP to distribute to contributors. You don't need permission from the Andamio team.
+Anyone can host a project on Cardano XP and receive an allocation of XP to distribute to contributors. You don't need permission from the Andamio team. The protocol enforces validity — no single entity controls who can coordinate or who gets recognized.
 
 ## Governance
 
-If this experiment works, XP holders decide what V2 looks like. Let's not get ahead of ourselves. Let's see if this works first.
+If this experiment works, XP holders decide what V2 looks like. This experiment is scaffolding — designed to be outgrown by whatever the community builds next.
+
+Let's not get ahead of ourselves. Let's see if this works first.
 
 ## What This Is Not
 
 This is not learn-to-earn. This is a feature feedback collection mechanism. "Support Cardano development, earn rewards." The reward is proof you showed up and did something useful — recorded on-chain, composable, permanent.
+
+Without verifiable proof of what people can do and have done, ecosystems default to informal reputation and relationship networks. XP replaces "take my word for it" with "check the ledger."
 
 ## Implementation Notes
 

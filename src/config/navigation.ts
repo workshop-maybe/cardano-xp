@@ -11,9 +11,10 @@ import { CARDANO_XP } from "./cardano-xp";
  * Studio link is handled conditionally in the nav bar component.
  */
 export const APP_NAVIGATION = [
-  { name: "Learn", href: CARDANO_XP.routes.course },
+  { name: "About", href: "/about" },
   { name: "Contribute", href: CARDANO_XP.routes.project },
-  { name: "Credentials", href: "/credentials" },
+  { name: "Tokenomics", href: "/xp" },
+  { name: "My XP", href: "/credentials" },
 ] as const;
 
 /**

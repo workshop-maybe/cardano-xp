@@ -11,17 +11,17 @@ export const BRANDING = {
   name: "Cardano XP",
 
   /** Secondary text */
-  tagline: "Learn. Contribute. Earn.",
+  tagline: "Put your track record on-chain.",
 
   /** Full app title for page titles */
   fullTitle: "Cardano XP",
 
   /** Short description for meta tags */
-  description: "Learn how to use Cardano XP, contribute feedback, and earn on-chain reputation tokens.",
+  description: "Do real work on Cardano. Earn reputation, not tokens to trade.",
 
   /** Longer description for landing pages */
   longDescription:
-    "Cardano XP is a single-purpose dApp built on Andamio. Complete the course, earn credentials, contribute to the feedback project, and collect XP — a reputation token on Cardano.",
+    "Five years of building on Cardano and nothing on-chain to show for it. XP changes that. Do real work, earn reputation — proven on-chain, composable, permanent.",
 
   /** URL paths for logos/icons */
   logo: {
@@ -44,13 +44,11 @@ export const BRANDING = {
   /** External links */
   links: {
     /** Main website */
-    website: "https://andamio.io",
-    /** Documentation */
+    website: process.env.NEXT_PUBLIC_SITE_URL ?? "https://cardano-xp.io",
+    /** Documentation (Andamio docs — used for transaction help) */
     docs: "https://docs.andamio.io",
     /** GitHub repository */
-    github: "https://github.com/Andamio-Platform",
-    /** Twitter/X handle */
-    twitter: "https://twitter.com/AndamioPlatform",
+    github: "https://github.com/Andamio-Platform/cardano-xp",
   },
 
   /** Support/contact info */

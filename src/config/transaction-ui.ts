@@ -112,7 +112,7 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     buttonText: "Create Access Token",
     title: "Create Access Token",
     description: [
-      "Mint your access token to participate in the Andamio protocol. This is required before you can enroll in courses or perform any other actions.",
+      "Mint your access token to participate in Cardano XP. This is required before you can enroll in courses or perform any other actions.",
     ],
     footerLink: getDocsUrl("accessTokenMint"),
     footerLinkText: "Tx Documentation",
@@ -142,7 +142,7 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     buttonText: "Create Course",
     title: "Create Course",
     description: [
-      "Create a new course on the Andamio platform. This will mint a Course NFT that represents ownership and enables on-chain course management.",
+      "Create a new course on Cardano XP. This will mint a Course NFT that represents ownership and enables on-chain course management.",
     ],
     footerLink: getDocsUrl("courseCreate"),
     footerLinkText: "Tx Documentation",
@@ -154,7 +154,7 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     buttonText: "Create Project",
     title: "Create Project",
     description: [
-      "Create a new project on the Andamio platform. This will mint a Project NFT that represents ownership and enables on-chain project management.",
+      "Create a new project on Cardano XP. This will mint a Project NFT that represents ownership and enables on-chain project management.",
     ],
     footerLink: getDocsUrl("projectCreate"),
     footerLinkText: "Tx Documentation",

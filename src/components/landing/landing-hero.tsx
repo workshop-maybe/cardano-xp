@@ -129,7 +129,7 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
 
   // Default hero view - clean vertical CTAs
   return (
-    <div className="flex flex-col items-center text-center max-w-4xl mx-auto gap-12 sm:gap-16">
+    <div className="flex flex-col items-center text-center max-w-4xl mx-auto gap-12 sm:gap-16 xp-mesh-bg">
       {/* Value prop: icon + text pairs with arrows */}
       <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-16">
         <div className="flex flex-col items-center gap-3 w-32 sm:w-44">

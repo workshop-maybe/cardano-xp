@@ -15,9 +15,9 @@ export function AppNavBar() {
   const { isAuthenticated } = useAndamioAuth();
 
   return (
-    <nav className="border-b border-border bg-background">
+    <nav className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-xl backdrop-saturate-150">
       <div className="flex h-10 items-center gap-1 px-3 sm:px-4">
-        <Link href="/" className="mr-4 text-sm font-semibold tracking-tight">
+        <Link href="/" className="mr-4 text-sm font-display font-semibold tracking-tight">
           {BRANDING.name}
         </Link>
         {APP_NAVIGATION.map((item) => (

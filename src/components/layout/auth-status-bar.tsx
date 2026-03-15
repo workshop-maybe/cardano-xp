@@ -21,6 +21,7 @@ import {
 } from "~/components/icons";
 import { getStoredJWT } from "~/lib/andamio-auth";
 import { cn } from "~/lib/utils";
+import { env } from "~/env";
 
 interface JWTPayload {
   exp?: number;
@@ -118,8 +119,18 @@ export function AuthStatusBar() {
   return (
     <div className="h-10 border-b border-primary-foreground/10 bg-primary text-primary-foreground">
       <div className="flex h-full items-center justify-between px-3 sm:px-4">
-        {/* Left: Mobile Menu + Status Indicators */}
+        {/* Left: Network Badge + Status Indicators */}
         <div className="flex items-center gap-2 sm:gap-4 min-w-0" role="status" aria-live="polite">
+          {/* Network Environment Badge */}
+          {env.NEXT_PUBLIC_CARDANO_NETWORK !== "mainnet" && (
+            <div className="flex items-center gap-1.5 rounded-sm bg-warning/90 px-2 py-0.5 text-warning-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-warning-foreground/60 animate-pulse" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider">
+                {env.NEXT_PUBLIC_CARDANO_NETWORK}
+              </span>
+            </div>
+          )}
+
           {/* Wallet Status - Hidden on very small screens */}
           <div
             className="hidden xs:flex items-center gap-2"

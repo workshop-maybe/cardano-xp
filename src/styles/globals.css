@@ -11,6 +11,7 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: var(--font-display), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 
   --breakpoint-xs: 375px;
@@ -25,7 +26,10 @@
   --ease-emphasized: cubic-bezier(0.83, 0, 0.17, 1);
   --ease-decelerated: cubic-bezier(0, 0, 0.2, 1);
   --ease-accelerated: cubic-bezier(0.4, 0, 1, 1);
+  --ease-celebration: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-settle: cubic-bezier(0.22, 1.3, 0.36, 1);
 
+  --duration-instant: 100ms;
   --duration-fast: 150ms;
   --duration-standard: 300ms;
   --duration-slow: 500ms;
@@ -77,73 +81,109 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* XP Semantic Colors */
+  --color-xp-earned: var(--xp-earned);
+  --color-xp-earned-foreground: var(--xp-earned-foreground);
+  --color-xp-staked: var(--xp-staked);
+  --color-xp-staked-foreground: var(--xp-staked-foreground);
+  --color-xp-milestone: var(--xp-milestone);
+  --color-xp-milestone-foreground: var(--xp-milestone-foreground);
+  --color-xp-streak: var(--xp-streak);
+  --color-xp-streak-foreground: var(--xp-streak-foreground);
+  --color-xp-given: var(--xp-given);
+  --color-xp-given-foreground: var(--xp-given-foreground);
+}
+
+/* ==========================================================================
+   @property — Animatable Custom Properties
+   ========================================================================== */
+
+@property --xp-hue {
+  syntax: "<number>";
+  initial-value: 248;
+  inherits: false;
 }
 
 /* ==========================================================================
    Brand Colors - Light Theme
+   Palette: Depth (indigo h248), Earned (gold h85), Milestone (teal h175)
    ========================================================================== */
 
 :root {
   --radius: 0.625rem;
+  color-scheme: light;
 
-  /* Base */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Base — blue-tinted neutrals */
+  --background: oklch(0.98 0.003 248);
+  --foreground: oklch(0.14 0.012 248);
 
   /* Cards */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.14 0.012 248);
 
   /* Popover */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.14 0.012 248);
 
-  /* Primary - Orange/Coral */
-  --primary: oklch(0.669 0.199 38.581);
+  /* Primary — Depth Indigo */
+  --primary: oklch(0.45 0.155 248);
   --primary-foreground: oklch(1 0 0);
 
-  /* Secondary - Deep Blue */
-  --secondary: oklch(0.387 0.134 250.505);
-  --secondary-foreground: oklch(1 0 0);
+  /* Secondary — Earned Gold */
+  --secondary: oklch(0.72 0.17 85);
+  --secondary-foreground: oklch(0.14 0.012 248);
 
-  /* Muted - Warm-tinted surfaces */
-  --muted: oklch(0.985 0.002 106.423);
-  --muted-foreground: oklch(0.478 0.029 255.508);
+  /* Muted */
+  --muted: oklch(0.96 0.005 248);
+  --muted-foreground: oklch(0.55 0.018 248);
 
-  /* Accent - Warm cream/yellow */
-  --accent: oklch(0.988 0.008 79.439);
-  --accent-foreground: oklch(0.145 0 0);
+  /* Accent */
+  --accent: oklch(0.96 0.005 248);
+  --accent-foreground: oklch(0.14 0.012 248);
 
   /* Status colors */
-  --destructive: oklch(0.608 0.227 27.325);
-  --success: oklch(0.52 0.15 160);
+  --destructive: oklch(0.6 0.22 25);
+  --success: oklch(0.5 0.13 175);
   --success-foreground: oklch(1 0 0);
-  --warning: oklch(0.75 0.16 70);
-  --warning-foreground: oklch(0.22 0.04 70);
-  --info: oklch(0.55 0.15 250);
+  --warning: oklch(0.78 0.155 85);
+  --warning-foreground: oklch(0.14 0.012 248);
+  --info: oklch(0.55 0.145 248);
   --info-foreground: oklch(1 0 0);
 
   /* Borders */
-  --border: oklch(0.922 0.003 106.423);
-  --input: oklch(0.922 0.003 106.423);
-  --ring: oklch(0.669 0.199 38.581);
+  --border: oklch(0.92 0.008 248);
+  --input: oklch(0.92 0.008 248);
+  --ring: oklch(0.55 0.145 248);
 
-  /* Charts */
-  --chart-1: oklch(0.719 0.140 38.581);
-  --chart-2: oklch(0.387 0.134 250.505);
-  --chart-3: oklch(0.627 0.106 181.764);
-  --chart-4: oklch(0.669 0.199 38.581);
-  --chart-5: oklch(0.387 0.134 250.505);
+  /* Charts — all three hue families */
+  --chart-1: oklch(0.55 0.145 248);
+  --chart-2: oklch(0.72 0.17 85);
+  --chart-3: oklch(0.6 0.14 175);
+  --chart-4: oklch(0.67 0.105 248);
+  --chart-5: oklch(0.78 0.155 85);
 
   /* Sidebar */
-  --sidebar: oklch(0.988 0.008 79.439);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.669 0.199 38.581);
+  --sidebar: oklch(0.96 0.005 248);
+  --sidebar-foreground: oklch(0.14 0.012 248);
+  --sidebar-primary: oklch(0.45 0.155 248);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(1 0 0);
-  --sidebar-accent-foreground: oklch(0.145 0 0);
-  --sidebar-border: oklch(0.922 0.003 106.423);
-  --sidebar-ring: oklch(0.669 0.199 38.581);
+  --sidebar-accent: oklch(0.92 0.008 248);
+  --sidebar-accent-foreground: oklch(0.14 0.012 248);
+  --sidebar-border: oklch(0.92 0.008 248);
+  --sidebar-ring: oklch(0.55 0.145 248);
+
+  /* XP Semantic Tokens */
+  --xp-earned: oklch(0.72 0.17 85);
+  --xp-earned-foreground: oklch(0.14 0.012 248);
+  --xp-staked: oklch(0.55 0.145 248);
+  --xp-staked-foreground: oklch(1 0 0);
+  --xp-milestone: oklch(0.6 0.14 175);
+  --xp-milestone-foreground: oklch(1 0 0);
+  --xp-streak: oklch(0.78 0.155 85);
+  --xp-streak-foreground: oklch(0.14 0.012 248);
+  --xp-given: oklch(0.7 0.125 175);
+  --xp-given-foreground: oklch(0.14 0.012 248);
 }
 
 /* ==========================================================================
@@ -151,53 +191,69 @@
    ========================================================================== */
 
 .dark {
-  --background: oklch(0.188 0.013 257.128);
-  --foreground: oklch(0.922 0.003 106.423);
+  color-scheme: dark;
 
-  --card: oklch(0.241 0.018 257.128);
-  --card-foreground: oklch(0.922 0.003 106.423);
+  --background: oklch(0.14 0.012 248);
+  --foreground: oklch(0.96 0.005 248);
 
-  --popover: oklch(0.241 0.018 257.128);
-  --popover-foreground: oklch(0.922 0.003 106.423);
+  --card: oklch(0.2 0.013 248);
+  --card-foreground: oklch(0.96 0.005 248);
 
-  --primary: oklch(0.719 0.174 38.581);
-  --primary-foreground: oklch(0.188 0.013 257.128);
+  --popover: oklch(0.2 0.013 248);
+  --popover-foreground: oklch(0.96 0.005 248);
 
-  --secondary: oklch(0.605 0.155 250.505);
-  --secondary-foreground: oklch(1 0 0);
+  /* Primary — Depth Indigo (lighter for dark bg) */
+  --primary: oklch(0.67 0.105 248);
+  --primary-foreground: oklch(0.14 0.012 248);
 
-  --muted: oklch(0.241 0.018 257.128);
-  --muted-foreground: oklch(0.717 0.014 257.128);
+  /* Secondary — Earned Gold */
+  --secondary: oklch(0.78 0.155 85);
+  --secondary-foreground: oklch(0.14 0.012 248);
 
-  --accent: oklch(0.338 0.024 257.128);
-  --accent-foreground: oklch(0.922 0.003 106.423);
+  --muted: oklch(0.2 0.013 248);
+  --muted-foreground: oklch(0.71 0.015 248);
 
-  --destructive: oklch(0.704 0.191 22.216);
-  --success: oklch(0.62 0.16 160);
-  --success-foreground: oklch(0.145 0 0);
-  --warning: oklch(0.80 0.15 70);
-  --warning-foreground: oklch(0.18 0.04 70);
-  --info: oklch(0.65 0.14 250);
-  --info-foreground: oklch(0.145 0 0);
+  --accent: oklch(0.27 0.013 248);
+  --accent-foreground: oklch(0.96 0.005 248);
 
-  --input: oklch(0.338 0.024 257.128);
-  --border: oklch(0.338 0.024 257.128);
-  --ring: oklch(0.719 0.174 38.581);
+  --destructive: oklch(0.7 0.185 25);
+  --success: oklch(0.7 0.125 175);
+  --success-foreground: oklch(0.14 0.012 248);
+  --warning: oklch(0.84 0.12 85);
+  --warning-foreground: oklch(0.14 0.012 248);
+  --info: oklch(0.67 0.105 248);
+  --info-foreground: oklch(0.14 0.012 248);
 
-  --chart-1: oklch(0.719 0.140 38.581);
-  --chart-2: oklch(0.605 0.155 250.505);
-  --chart-3: oklch(0.696 0.090 181.764);
-  --chart-4: oklch(0.719 0.174 38.581);
-  --chart-5: oklch(0.605 0.155 250.505);
+  --input: oklch(0.27 0.013 248);
+  --border: oklch(0.27 0.013 248);
+  --ring: oklch(0.67 0.105 248);
 
-  --sidebar: oklch(0.241 0.018 257.128);
-  --sidebar-foreground: oklch(0.922 0.003 106.423);
-  --sidebar-primary: oklch(0.719 0.174 38.581);
-  --sidebar-primary-foreground: oklch(0.188 0.013 257.128);
-  --sidebar-accent: oklch(0.338 0.024 257.128);
-  --sidebar-accent-foreground: oklch(0.922 0.003 106.423);
-  --sidebar-border: oklch(0.338 0.024 257.128);
-  --sidebar-ring: oklch(0.719 0.174 38.581);
+  --chart-1: oklch(0.67 0.105 248);
+  --chart-2: oklch(0.78 0.155 85);
+  --chart-3: oklch(0.7 0.125 175);
+  --chart-4: oklch(0.78 0.065 248);
+  --chart-5: oklch(0.84 0.12 85);
+
+  --sidebar: oklch(0.2 0.013 248);
+  --sidebar-foreground: oklch(0.96 0.005 248);
+  --sidebar-primary: oklch(0.67 0.105 248);
+  --sidebar-primary-foreground: oklch(0.14 0.012 248);
+  --sidebar-accent: oklch(0.27 0.013 248);
+  --sidebar-accent-foreground: oklch(0.96 0.005 248);
+  --sidebar-border: oklch(0.27 0.013 248);
+  --sidebar-ring: oklch(0.67 0.105 248);
+
+  /* XP Semantic Tokens — Dark */
+  --xp-earned: oklch(0.78 0.155 85);
+  --xp-earned-foreground: oklch(0.14 0.012 248);
+  --xp-staked: oklch(0.67 0.105 248);
+  --xp-staked-foreground: oklch(0.14 0.012 248);
+  --xp-milestone: oklch(0.7 0.125 175);
+  --xp-milestone-foreground: oklch(0.14 0.012 248);
+  --xp-streak: oklch(0.84 0.12 85);
+  --xp-streak-foreground: oklch(0.14 0.012 248);
+  --xp-given: oklch(0.79 0.095 175);
+  --xp-given-foreground: oklch(0.14 0.012 248);
 }
 
 /* ==========================================================================
@@ -225,6 +281,7 @@
   /* Heading defaults — no !important, fully overridable */
 
   h1 {
+    font-family: var(--font-display);
     font-size: 1.875rem;
     line-height: 2.25rem;
     font-weight: 700;
@@ -235,6 +292,7 @@
   }
 
   h2 {
+    font-family: var(--font-display);
     font-size: 1.5rem;
     line-height: 2rem;
     font-weight: 700;
@@ -249,6 +307,7 @@
   }
 
   h3 {
+    font-family: var(--font-display);
     font-size: 1.125rem;
     line-height: 1.75rem;
     font-weight: 600;
@@ -671,6 +730,22 @@
     border-bottom-width: 1px;
     border-color: var(--border);
   }
+
+  /* XP Card Glow — warm gold glow on hover */
+  .xp-card-glow {
+    box-shadow:
+      0 0 0 1px oklch(0.72 0.17 85 / 0.1),
+      0 2px 8px -2px oklch(0.72 0.17 85 / 0.08),
+      0 0 20px -4px oklch(0.72 0.17 85 / 0.05);
+    transition: box-shadow 300ms var(--ease-standard);
+  }
+
+  .xp-card-glow:hover {
+    box-shadow:
+      0 0 0 1px oklch(0.72 0.17 85 / 0.2),
+      0 4px 16px -2px oklch(0.72 0.17 85 / 0.12),
+      0 0 30px -4px oklch(0.72 0.17 85 / 0.08);
+  }
 }
 
 /* ==========================================================================
@@ -724,6 +799,70 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* Page Enter — subtle fade-up for route changes */
+  .page-enter {
+    animation: page-fade-in var(--duration-fast) var(--ease-decelerated);
+  }
+
+  @keyframes page-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mesh Gradient Background — layered radial gradients */
+  .xp-mesh-bg {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, oklch(0.45 0.155 248 / 0.08), transparent),
+      radial-gradient(ellipse 60% 70% at 80% 20%, oklch(0.72 0.17 85 / 0.06), transparent),
+      radial-gradient(ellipse 50% 60% at 50% 80%, oklch(0.6 0.14 175 / 0.05), transparent);
+  }
+
+  .dark .xp-mesh-bg {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, oklch(0.45 0.155 248 / 0.15), transparent),
+      radial-gradient(ellipse 60% 70% at 80% 20%, oklch(0.72 0.17 85 / 0.08), transparent),
+      radial-gradient(ellipse 50% 60% at 50% 80%, oklch(0.6 0.14 175 / 0.06), transparent);
+  }
+
+  /* Glass Panel */
+  .xp-glass {
+    background: oklch(1 0 0 / 0.7);
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  }
+
+  .dark .xp-glass {
+    background: oklch(0.14 0.012 248 / 0.75);
+  }
+
+  /* Ambient Gradient — slow drift for hero sections */
+  .ambient-gradient {
+    background-size: 200% 200%;
+    animation: ambient-drift 20s ease-in-out infinite;
+  }
+
+  @keyframes ambient-drift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Hue Drift — subtle living color shift */
+  .xp-hue-drift {
+    --xp-hue: 248;
+    animation: hue-drift 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes hue-drift {
+    to { --xp-hue: 265; }
+  }
 }
 
 /* ==========================================================================
@@ -752,6 +891,15 @@
     0 1px 3px 0 rgb(0 0 0 / 0.08),
     0 1px 2px -1px rgb(0 0 0 / 0.08);
   outline: 1px solid color-mix(in oklch, var(--foreground) 20%, transparent);
+}
+
+/* Button Press — tactile active state */
+[data-slot="button"]:active {
+  transform: scale(0.97) translateY(1px);
+}
+
+[data-slot="button"] {
+  transition: transform 100ms var(--ease-standard), box-shadow 100ms var(--ease-standard);
 }
 
 /* Reduced Motion — Unlayered for maximum priority */

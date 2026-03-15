@@ -2,29 +2,26 @@
  * Branding Configuration
  *
  * Centralizes app identity for easy customization.
- * Change these values to rebrand the template.
- *
- * @see docs/WHITE_LABEL_GUIDE.md for forking instructions
  */
 
 import type { Metadata } from "next";
 
 export const BRANDING = {
   /** App name displayed in header, title, etc. */
-  name: "Andamio",
+  name: "Cardano XP",
 
-  /** Secondary text (e.g., "App Template", "Platform", etc.) */
-  tagline: "App Template",
+  /** Secondary text */
+  tagline: "Learn. Contribute. Earn.",
 
   /** Full app title for page titles */
-  fullTitle: "Andamio App Template",
+  fullTitle: "Cardano XP",
 
   /** Short description for meta tags */
-  description: "A complete Cardano dApp starter with courses and projects",
+  description: "Learn how to use Cardano XP, contribute feedback, and earn on-chain reputation tokens.",
 
   /** Longer description for landing pages */
   longDescription:
-    "Build and deploy Cardano-powered learning platforms and project management systems with the Andamio T3 App Template.",
+    "Cardano XP is a single-purpose dApp built on Andamio. Complete the course, earn credentials, contribute to the feedback project, and collect XP — a reputation token on Cardano.",
 
   /** URL paths for logos/icons */
   logo: {
@@ -36,7 +33,7 @@ export const BRANDING = {
     stacked: "/logos/logo-with-typography-stacked.svg",
     /** Stacked logo for dark backgrounds */
     stackedDark: "/logos/logo-with-typography-stacked-dark.svg",
-    /** Legacy icon reference (for components that still use icons) */
+    /** Legacy icon reference */
     icon: "ModuleIcon",
     /** Favicon path */
     favicon: "/favicon.ico",
@@ -58,18 +55,14 @@ export const BRANDING = {
 
   /** Support/contact info */
   support: {
-    /** Support email */
     email: "support@andamio.io",
   },
 
   /**
    * Documentation URLs for transaction help links.
-   * Forkers can point these to their own docs or keep Andamio docs.
    */
   docs: {
-    /** Base documentation URL */
     baseUrl: "https://docs.andamio.io",
-    /** Transaction documentation paths */
     transactionPaths: {
       accessTokenMint:
         "/docs/protocol/v2/transactions/global/general/access-token/mint",
@@ -119,11 +112,6 @@ export function getPageTitle(pageTitle?: string): string {
 
 /**
  * Get full URL for transaction documentation.
- * @param path - Key from BRANDING.docs.transactionPaths
- *
- * @example
- * getDocsUrl("accessTokenMint")
- * // => "https://docs.andamio.io/docs/protocol/v2/transactions/global/general/access-token/mint"
  */
 export function getDocsUrl(
   path: keyof typeof BRANDING.docs.transactionPaths
@@ -133,11 +121,6 @@ export function getDocsUrl(
 
 /**
  * Generate consistent page metadata with brand styling.
- * Use this in page.tsx files for SEO consistency.
- *
- * @example
- * // In src/app/(app)/courses/page.tsx
- * export const metadata = getPageMetadata("Courses", "Browse available courses");
  */
 export function getPageMetadata(
   title?: string,

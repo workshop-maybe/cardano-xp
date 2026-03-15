@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AppSidebar } from "./app-sidebar";
+import { AppNavBar } from "./app-nav-bar";
 import { AuthStatusBar } from "./auth-status-bar";
 
 interface AppLayoutProps {
@@ -9,32 +9,20 @@ interface AppLayoutProps {
 }
 
 /**
- * Professional full-screen app layout with responsive design
- * - Mobile: Hamburger menu in status bar, full-width content
- * - Desktop (md+): Sidebar on left, content on right
- * - Minimal status bar at top
- * - Spacious main content area with refined padding
+ * Full-screen app layout with top nav bar.
+ * AuthStatusBar → AppNavBar → full-width content.
  */
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden overscroll-none bg-background">
-      {/* Status Bar - Minimal height */}
       <AuthStatusBar />
+      <AppNavBar />
 
-      {/* Main Container */}
-      <div className="flex min-h-0 flex-1 overflow-hidden">
-        {/* Sidebar - Hidden on mobile, visible on desktop (md+) */}
-        <div className="hidden md:flex md:flex-shrink-0">
-          <AppSidebar />
+      <main className="flex-1 overflow-y-auto overscroll-contain bg-muted/30">
+        <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 has-[.full-bleed]:max-w-none has-[.full-bleed]:p-0 has-[.full-bleed]:h-full">
+          {children}
         </div>
-
-        {/* Content Area - Scrollable, full width on mobile */}
-        <main className="flex-1 overflow-y-auto overscroll-contain bg-muted/30">
-          <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 has-[.full-bleed]:max-w-none has-[.full-bleed]:p-0 has-[.full-bleed]:h-full">
-            {children}
-          </div>
-        </main>
-      </div>
+      </main>
     </div>
   );
 }

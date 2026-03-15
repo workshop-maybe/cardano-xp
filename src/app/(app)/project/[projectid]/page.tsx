@@ -134,7 +134,7 @@ export default function ProjectDetailPage() {
   if (error || !project) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href="/project" label="Back to Projects" />
+        <AndamioBackButton href="/" label="Back to Home" />
         <AndamioErrorAlert error={error?.message ?? "Project not found"} />
       </div>
     );
@@ -183,7 +183,7 @@ export default function ProjectDetailPage() {
     <div className="space-y-8">
       {/* ── Header ────────────────────────────────────────────────── */}
       <div>
-        <AndamioBackButton href="/project" label="Back to Projects" />
+        <AndamioBackButton href="/" label="Back to Home" />
 
         <div className="mt-4">
           <AndamioPageHeader

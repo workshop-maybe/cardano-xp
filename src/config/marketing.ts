@@ -1,11 +1,7 @@
 /**
  * Marketing Configuration
  *
- * Marketing copy for landing pages and promotional content.
- * Separate from BRANDING to keep identity vs. messaging distinct.
- *
- * - BRANDING: Who we are (name, logo, links)
- * - MARKETING: What we say (headlines, descriptions, CTAs)
+ * Marketing copy for the Cardano XP landing page and promotional content.
  */
 
 import { BRANDING } from "./branding";
@@ -15,64 +11,39 @@ export const MARKETING = {
    * Hero section on landing page
    */
   hero: {
-    badge: `${BRANDING.name} Pioneers Preview`,
-    title: "Build the Future of Learning",
-    subtitle: `Help us build ${BRANDING.name} V2.`,
-    lead: `You're early. This is a preview of the next generation of ${BRANDING.name} — contribution-centered learning on Cardano. Explore, experiment, break things. Your feedback shapes what we ship.`,
+    badge: "Cardano XP",
+    title: "Learn. Contribute. Earn XP.",
+    subtitle: "A single-purpose dApp on Cardano.",
+    lead: "Complete the course, earn credentials, contribute feedback, and collect XP — a reputation token that proves what you've done.",
     primaryCta: {
-      text: "Enter the App",
-      href: "/dashboard",
+      text: "Get Started",
+      href: "/",
     },
     secondaryCta: {
-      text: "What is Pioneers?",
-      href: `${BRANDING.links.docs}/docs/pioneers`,
+      text: "What is Andamio?",
+      href: "https://andamio.io",
     },
-  },
-
-  /**
-   * Playground section explaining the demo
-   */
-  playground: {
-    title: "This is a playground",
-    description:
-      "We're building in public. This demo connects to Cardano Preprod so you can test real features without real stakes. Nothing here costs ADA. Data may reset. That's the point.",
   },
 
   /**
    * Two paths section
    */
   twoPaths: {
-    title: "Two ways to explore",
+    title: "Two ways to participate",
     discover: {
-      title: "Discover",
-      description: `Browse courses and projects. See how ${BRANDING.name} structures learning and contribution.`,
+      title: "Learn",
+      description: "Take the course to understand how Cardano XP works. Earn credentials along the way.",
       links: [
-        { text: "Browse Courses", href: "/course" },
-        { text: "Browse Projects", href: "/project" },
+        { text: "Start Learning", href: BRANDING.links.website },
       ],
     },
     create: {
-      title: "Create",
-      description:
-        "Try the creator tools. Build a course, define modules, publish tasks to a project.",
+      title: "Contribute",
+      description: "Pick up feedback tasks. Complete them. Earn XP tokens as proof of contribution.",
       links: [
-        { text: "Course Studio", href: "/studio/course" },
-        { text: "Project Studio", href: "/studio/project" },
+        { text: "View Tasks", href: BRANDING.links.website },
       ],
     },
-  },
-
-  /**
-   * Pioneer program callout
-   */
-  pioneers: {
-    title: "What are Pioneers?",
-    description: [
-      "Following patterns from Gimbalabs in 2021, we're inviting early adopters to shape Andamio V2 before mainnet. This isn't just beta testing — it's co-creation.",
-      "Your questions become documentation. Your bugs become fixes. Your ideas become features.",
-    ],
-    linkText: "Read the Pioneers documentation",
-    linkHref: `${BRANDING.links.docs}/docs/pioneers`,
   },
 
   /**
@@ -90,8 +61,8 @@ export const MARKETING = {
   finalCta: {
     title: "Ready?",
     description: "Connect a preprod wallet and start exploring.",
-    buttonText: "Go to Dashboard",
-    buttonHref: "/dashboard",
+    buttonText: "Get Started",
+    buttonHref: "/",
   },
 
   /**
@@ -106,31 +77,31 @@ export const MARKETING = {
    * Landing page hero section
    */
   landingHero: {
-    headline: "📚 → ✅ → 🚪",
-    subtext: "Complete courses. Earn credentials. Unlock funded projects.",
-    enterCta: "Enter",
-    browseCta: "Browse",
-    launchCta: "Launch a Project",
+    headline: "Learn. Contribute. Earn XP.",
+    subtext: "Complete courses. Earn credentials. Contribute to projects.",
+    enterCta: "Get Started",
+    browseCta: "Learn More",
+    launchCta: "Studio",
   },
 
   /**
-   * Landing page cards - three entry paths (legacy, kept for compatibility)
+   * Landing page cards
    */
   landingCards: {
     explore: {
-      title: "Explore",
+      title: "Learn",
       description:
-        "Browse courses and projects. No wallet required.",
+        "Take the course to understand how Cardano XP works.",
     },
     signIn: {
-      title: "Sign In",
+      title: "Contribute",
       description:
-        "Returning user? Connect your wallet to pick up where you left off.",
+        "Pick up feedback tasks and earn XP for completing them.",
     },
     getStarted: {
       title: "Get Started",
       description:
-        "New here? Connect a wallet and create your access token to begin.",
+        "Connect a wallet and create your access token to begin.",
     },
   },
 
@@ -138,15 +109,11 @@ export const MARKETING = {
    * Footer content
    */
   footer: {
-    brandText: `${BRANDING.name} Pioneer Preview`,
+    brandText: "Cardano XP",
     links: [
-      { text: "Docs", href: `${BRANDING.links.docs}/docs/pioneers`, external: true },
-      {
-        text: BRANDING.links.website.replace("https://", ""),
-        href: BRANDING.links.website,
-        external: true,
-      },
-      { text: "Sitemap", href: "/sitemap", external: false },
+      { text: "Andamio Docs", href: BRANDING.links.docs, external: true },
+      { text: "andamio.io", href: BRANDING.links.website, external: true },
+      { text: "Build Your Own", href: "https://github.com/Andamio-Platform/andamio-app-template", external: true },
     ],
   },
 

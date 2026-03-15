@@ -15,10 +15,11 @@ import {
 } from "~/components/andamio/andamio-card";
 import { AndamioAlert, AndamioAlertDescription } from "~/components/andamio/andamio-alert";
 import { MARKETING } from "~/config/marketing";
+import { CARDANO_XP } from "~/config/cardano-xp";
 
 /**
  * Landing page card for returning users.
- * Connect wallet -> auto-auth -> redirect to dashboard.
+ * Connect wallet -> auto-auth -> redirect to course.
  */
 export function LoginCard() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export function LoginCard() {
   // Auto-redirect when authenticated with an access token
   React.useEffect(() => {
     if (isAuthenticated && user?.accessTokenAlias) {
-      router.push("/dashboard");
+      router.push(CARDANO_XP.routes.course);
     }
   }, [isAuthenticated, user?.accessTokenAlias, router]);
 
@@ -49,7 +50,7 @@ export function LoginCard() {
             <SuccessIcon className="h-5 w-5 text-primary" />
           </div>
           <AndamioCardTitle>Welcome back!</AndamioCardTitle>
-          <AndamioCardDescription>Redirecting to your dashboard...</AndamioCardDescription>
+          <AndamioCardDescription>Redirecting...</AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent className="mt-auto">
           <div className="flex items-center justify-center py-4">
@@ -70,13 +71,13 @@ export function LoginCard() {
           </div>
           <AndamioCardTitle>No Access Token</AndamioCardTitle>
           <AndamioCardDescription>
-            You&apos;re signed in but don&apos;t have an access token yet. Use the Get Started card to mint one, or go directly to the dashboard.
+            You&apos;re signed in but don&apos;t have an access token yet. Use the Get Started card to mint one.
           </AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent className="mt-auto">
           <AndamioButton asChild className="w-full">
-            <a href="/dashboard">
-              <span>Go to Dashboard</span>
+            <a href={CARDANO_XP.routes.course}>
+              <span>Start Learning</span>
               <ForwardIcon className="ml-auto h-4 w-4" />
             </a>
           </AndamioButton>

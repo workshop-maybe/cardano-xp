@@ -103,13 +103,13 @@ export const ROUTE_METADATA = {
     requiresAuth: true,
   },
   "/course": {
-    label: "Courses",
-    description: "Browse available courses",
+    label: "Learn",
+    description: "The Cardano XP course",
     requiresAuth: false,
   },
   "/project": {
-    label: "Projects",
-    description: "Browse available projects",
+    label: "Contribute",
+    description: "The Cardano XP project",
     requiresAuth: false,
   },
   "/credentials": {

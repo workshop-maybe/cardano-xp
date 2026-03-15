@@ -35,6 +35,9 @@ export const env = createEnv({
     // UTXOS/Web3 SDK — client-side (wallet connect dialog)
     NEXT_PUBLIC_WEB3_SDK_PROJECT_ID: z.string().optional(),
     NEXT_PUBLIC_WEB3_SDK_NETWORK: z.enum(["mainnet", "testnet"]).default("testnet"),
+    // Cardano XP — single course and project for this app
+    NEXT_PUBLIC_COURSE_ID: z.string().min(1),
+    NEXT_PUBLIC_PROJECT_ID: z.string().min(1),
   },
 
   /**
@@ -53,6 +56,8 @@ export const env = createEnv({
     WEB3_SDK_API_KEY: process.env.WEB3_SDK_API_KEY,
     WEB3_SDK_PRIVATE_KEY: process.env.WEB3_SDK_PRIVATE_KEY,
     UTXOS_SPONSORSHIP_ID: process.env.UTXOS_SPONSORSHIP_ID,
+    NEXT_PUBLIC_COURSE_ID: process.env.NEXT_PUBLIC_COURSE_ID,
+    NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

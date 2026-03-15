@@ -2,15 +2,6 @@
  * Config Exports
  *
  * Centralized configuration for the application.
- *
- * Layer 5 (App) configuration:
- * - branding: App identity (name, logo, links)
- * - features: Feature flags
- * - navigation: Sidebar navigation structure
- * - routes: Route definitions and metadata
- * - ui-constants: UI timing and layout values
- * - transaction-ui: Transaction UI config
- * - transaction-schemas: Zod validation schemas
  */
 
 // Branding configuration
@@ -28,13 +19,7 @@ export {
 } from "./features";
 
 // Navigation configuration
-export {
-  SIDEBAR_NAVIGATION,
-  getNavigationSections,
-  getAllNavigationItems,
-  findNavigationItem,
-  isNavItemActive,
-} from "./navigation";
+export { APP_NAVIGATION, isNavItemActive } from "./navigation";
 
 // Route definitions
 export {
@@ -85,12 +70,8 @@ export {
   type TxParams,
 } from "./transaction-schemas";
 
-// Sidebar configuration
-export {
-  SIDEBAR_LAYOUT,
-  SIDEBAR_DESKTOP,
-  SIDEBAR_MOBILE,
-  WALLET_TRUNCATION,
-  SIDEBAR_COLORS,
-  truncateWalletAddress,
-} from "./sidebar";
+// Cardano XP — single course and project
+export { CARDANO_XP } from "./cardano-xp";
+
+// Wallet address truncation (moved from deleted sidebar config)
+export { WALLET_TRUNCATION, truncateWalletAddress } from "./wallet-utils";

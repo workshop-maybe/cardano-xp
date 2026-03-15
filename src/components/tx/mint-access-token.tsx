@@ -62,6 +62,7 @@ import { TRANSACTION_UI } from "~/config/transaction-ui";
 import { useUpdateAccessTokenAlias } from "~/hooks/api/use-user";
 import { getTransactionExplorerUrl } from "~/lib/constants";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { env } from "~/env";
 
 export interface MintAccessTokenProps {
@@ -269,7 +270,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
     if (ceremonyState === "welcome") {
       const timer = setTimeout(() => {
         void onSuccess?.();
-        router.push("/dashboard");
+        router.push(CARDANO_XP.routes.course);
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -363,7 +364,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
         <AndamioCardContent>
           <div className="flex flex-col items-center justify-center py-4 gap-3">
             <LoadingIcon className="h-6 w-6 animate-spin text-primary" />
-            <AndamioText variant="muted">Redirecting to your dashboard...</AndamioText>
+            <AndamioText variant="muted">Redirecting...</AndamioText>
           </div>
         </AndamioCardContent>
       </AndamioCard>

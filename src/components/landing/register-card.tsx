@@ -14,6 +14,7 @@ import {
 } from "~/components/andamio/andamio-card";
 import { MintAccessToken } from "~/components/tx/mint-access-token";
 import { MARKETING } from "~/config/marketing";
+import { CARDANO_XP } from "~/config/cardano-xp";
 
 /**
  * Landing page card for new users (grid column version).
@@ -44,8 +45,8 @@ export function RegisterCard() {
         </AndamioCardHeader>
         <AndamioCardContent className="mt-auto">
           <AndamioButton asChild className="w-full">
-            <a href="/dashboard">
-              <span>Go to Dashboard</span>
+            <a href={CARDANO_XP.routes.course}>
+              <span>Start Learning</span>
               <ForwardIcon className="ml-auto h-4 w-4" />
             </a>
           </AndamioButton>

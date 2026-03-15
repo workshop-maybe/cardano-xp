@@ -80,7 +80,7 @@ export function CourseTeachersCard({
           <div className="flex items-center gap-2">
             <TeacherIcon className="h-3.5 w-3.5 text-muted-foreground" />
             <AndamioText variant="small" className="font-medium">
-              Teachers
+              Editors
             </AndamioText>
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -95,7 +95,7 @@ export function CourseTeachersCard({
               </AndamioText>
             ) : teachers.length === 0 ? (
               <AndamioText variant="small" className="text-muted-foreground">
-                No teachers assigned
+                No editors assigned
               </AndamioText>
             ) : (
               teachers.map((teacher: string) => (

@@ -188,7 +188,7 @@ export function CourseBreadcrumb({
           <>
             <AndamioBreadcrumbSeparator />
             <AndamioBreadcrumbItem>
-              <AndamioBreadcrumbPage>Teacher</AndamioBreadcrumbPage>
+              <AndamioBreadcrumbPage>Editor</AndamioBreadcrumbPage>
             </AndamioBreadcrumbItem>
           </>
         )}

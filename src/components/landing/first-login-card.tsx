@@ -23,6 +23,7 @@ import {
 import { AndamioAlert, AndamioAlertDescription } from "~/components/andamio/andamio-alert";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { getTransactionExplorerUrl } from "~/lib/constants";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { env } from "~/env";
 
 interface FirstLoginCardProps {
@@ -65,7 +66,7 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
   React.useEffect(() => {
     if (hasLoggedOut && isAuthenticated && user?.accessTokenAlias) {
       const timer = setTimeout(() => {
-        router.push("/dashboard");
+        router.push(CARDANO_XP.routes.course);
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -84,9 +85,9 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <SuccessIcon className="h-8 w-8 text-primary" />
           </div>
-          <AndamioCardTitle className="text-2xl">Welcome to Andamio!</AndamioCardTitle>
+          <AndamioCardTitle className="text-2xl">Welcome to Cardano XP!</AndamioCardTitle>
           <AndamioCardDescription className="mx-auto max-w-sm text-center">
-            Signed in as <span className="font-mono font-semibold text-foreground">{user.accessTokenAlias}</span>. Redirecting to your dashboard...
+            Signed in as <span className="font-mono font-semibold text-foreground">{user.accessTokenAlias}</span>. Redirecting...
           </AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent>
@@ -245,10 +246,10 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           <>
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-5 text-center space-y-2">
               <AndamioText className="font-semibold text-lg">
-                Welcome to Andamio!
+                Welcome to Cardano XP!
               </AndamioText>
               <AndamioText variant="muted">
-                Now you can authenticate to Andamio
+                Now you can authenticate to Cardano XP
                 <br />
                 with your Access Token.
               </AndamioText>

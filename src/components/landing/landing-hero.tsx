@@ -12,6 +12,7 @@ import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { RegistrationFlow } from "~/components/landing/registration-flow";
 import { LoadingIcon } from "~/components/icons";
 import { MARKETING } from "~/config/marketing";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { env } from "~/env";
 
 const V2_POLICY_ID = env.NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID;
@@ -57,7 +58,7 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         if (v2Asset) {
           // User has V2 token - redirect to dashboard
           // The auth context will eventually sync the alias
-          router.push("/dashboard");
+          router.push(CARDANO_XP.routes.course);
         }
       } catch (err) {
         console.error("[LandingHero] Failed to scan for V2 token:", err);
@@ -77,13 +78,13 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
   // Auto-redirect authenticated users with access token to dashboard
   React.useEffect(() => {
     if (isAuthenticated && user?.accessTokenAlias) {
-      router.push("/dashboard");
+      router.push(CARDANO_XP.routes.course);
     }
   }, [isAuthenticated, user?.accessTokenAlias, router]);
 
   const handleEnter = () => {
     if (isAuthenticated && user?.accessTokenAlias) {
-      router.push("/dashboard");
+      router.push(CARDANO_XP.routes.course);
     } else {
       setShowEnter(true);
     }
@@ -215,22 +216,22 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
           </div>
 
           <div className="flex flex-col items-center text-center p-6 gap-4">
-            <AndamioHeading level={3} size="base">Explore</AndamioHeading>
+            <AndamioHeading level={3} size="base">Learn</AndamioHeading>
             <p className="text-sm text-muted-foreground">
-              Browse courses and projects to see what&apos;s available
+              Take the course and earn credentials
             </p>
             <AndamioButton asChild variant="outline" className="w-full mt-auto">
-              <Link href="/course">Browse</Link>
+              <Link href={CARDANO_XP.routes.course}>Learn</Link>
             </AndamioButton>
           </div>
 
           <div className="flex flex-col items-center text-center p-6 gap-4">
-            <AndamioHeading level={3} size="base">Build</AndamioHeading>
+            <AndamioHeading level={3} size="base">Contribute</AndamioHeading>
             <p className="text-sm text-muted-foreground">
-              Launch a project and onboard contributors
+              Pick up tasks and earn XP tokens
             </p>
             <AndamioButton asChild variant="outline" className="w-full mt-auto">
-              <Link href="/studio">Launch</Link>
+              <Link href={CARDANO_XP.routes.project}>Contribute</Link>
             </AndamioButton>
           </div>
         </div>

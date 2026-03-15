@@ -7,7 +7,6 @@ import { useTheme } from "next-themes";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
-import { MobileNav } from "./mobile-nav";
 import {
   WalletIcon,
   ShieldIcon,
@@ -121,9 +120,6 @@ export function AuthStatusBar() {
       <div className="flex h-full items-center justify-between px-3 sm:px-4">
         {/* Left: Mobile Menu + Status Indicators */}
         <div className="flex items-center gap-2 sm:gap-4 min-w-0" role="status" aria-live="polite">
-          {/* Mobile Menu - Visible on small screens only */}
-          <MobileNav />
-
           {/* Wallet Status - Hidden on very small screens */}
           <div
             className="hidden xs:flex items-center gap-2"

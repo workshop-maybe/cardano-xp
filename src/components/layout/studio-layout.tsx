@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { AuthStatusBar } from "./auth-status-bar";
-import { AppSidebar } from "./app-sidebar";
+import { AppNavBar } from "./app-nav-bar";
 import {
   StudioHeader,
   StudioHeaderContext,
@@ -16,33 +16,16 @@ interface BreadcrumbItem {
 
 interface StudioLayoutProps {
   children: React.ReactNode;
-  /** Initial breadcrumbs (can be updated by child pages) */
   initialBreadcrumbs?: BreadcrumbItem[];
-  /** Initial title (can be updated by child pages) */
   initialTitle?: string;
-  /** Initial status (can be updated by child pages) */
   initialStatus?: string;
-  /** Initial status variant */
   initialStatusVariant?: "default" | "secondary" | "destructive" | "outline";
-  /** Initial actions (can be updated by child pages) */
   initialActions?: React.ReactNode;
 }
 
 /**
- * Focused full-screen layout for studio/content creation
- *
- * Structure (unified app shell):
- * - AuthStatusBar at top (same as main app)
- * - AppSidebar on left (SAME navigation as main app - unified shell)
- * - Full-height content area with StudioHeader for context
- *
- * Features:
- * - Unified navigation shell - sidebar never changes across app
- * - StudioHeader provides context (breadcrumbs, actions)
- * - Context provider allows child pages to update header
- * - Responsive: sidebar hidden on mobile
- * - Full-height content for editor panels
- * - Pages control their own centering/max-width
+ * Focused full-screen layout for studio/content creation.
+ * Uses AppNavBar (top nav) instead of sidebar.
  */
 export function StudioLayout({
   children,
@@ -83,30 +66,18 @@ export function StudioLayout({
   return (
     <StudioHeaderContext.Provider value={contextValue}>
       <div className="flex h-screen w-full flex-col overflow-hidden overscroll-none bg-background">
-        {/* Status Bar - Same as main app */}
         <AuthStatusBar />
+        <AppNavBar />
 
-        {/* Main Container */}
-        <div className="flex min-h-0 flex-1 overflow-hidden">
-          {/* App Sidebar - Unified navigation shell (same as main app) */}
-          <div className="hidden md:flex md:flex-shrink-0">
-            <AppSidebar />
-          </div>
-
-          {/* Content Area - Full height for editor panels */}
-          <div className="flex flex-1 flex-col overflow-hidden">
-            {/* Studio Header - Breadcrumbs, title, actions */}
-            <StudioHeader
-              breadcrumbs={breadcrumbs}
-              title={title}
-              status={status}
-              statusVariant={statusVariant}
-              actions={actions}
-            />
-
-            {/* Main Content - Full height, pages control their own layout */}
-            <main className="flex-1 overflow-hidden">{children}</main>
-          </div>
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <StudioHeader
+            breadcrumbs={breadcrumbs}
+            title={title}
+            status={status}
+            statusVariant={statusVariant}
+            actions={actions}
+          />
+          <main className="flex-1 overflow-hidden">{children}</main>
         </div>
       </div>
     </StudioHeaderContext.Provider>

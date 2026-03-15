@@ -19,13 +19,13 @@ export default function AppNotFound() {
       />
 
       <AndamioText variant="muted">
-        Check the URL for typos, or navigate back to the dashboard to find what you need.
+        Check the URL for typos, or navigate back to the home page.
       </AndamioText>
 
       <AndamioButton asChild variant="outline">
-        <Link href="/dashboard">
+        <Link href="/">
           <DashboardIcon className="h-4 w-4 mr-2" />
-          Back to Dashboard
+          Back to Home
         </Link>
       </AndamioButton>
     </div>

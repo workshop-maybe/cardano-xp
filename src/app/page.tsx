@@ -28,7 +28,7 @@ export default function Home() {
         {/* Logo — pinned near top so it doesn't shift between states */}
         <Image
           src="/logos/logo-with-typography-stacked.svg"
-          alt="Andamio"
+          alt="Cardano XP"
           width={200}
           height={200}
           className="shrink-0"

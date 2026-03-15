@@ -6,7 +6,7 @@
  * when the count changes. Renders nothing when count is 0.
  *
  * @see src/stores/tx-watcher-store.ts - Transaction state source
- * @see src/components/layout/sidebar-user-section.tsx - Parent component
+ * @see src/components/layout/auth-status-bar.tsx - Status bar component
  */
 
 "use client";

@@ -1,8 +1,8 @@
 const STATS = [
-  { label: "Total Supply", value: "100,000", unit: "XP", detail: "Fixed. One-time mint.", accent: "text-secondary" },
-  { label: "Mint Mechanism", value: "Tasks", unit: "only", detail: "No buying. No airdrops.", accent: "text-primary" },
-  { label: "Credentials", value: "On-chain", unit: "", detail: "Composable, verifiable, permanent.", accent: "text-success" },
-  { label: "Platform", value: "Permissionless", unit: "", detail: "Host a project, distribute XP.", accent: "text-foreground" },
+  { label: "Total Supply", value: "100,000", unit: "XP", prefix: "", accent: "text-secondary" },
+  { label: "Distribution", value: "Tasks", unit: "only", prefix: "", accent: "text-primary" },
+  { label: "Credentials", value: "Andamio", unit: "", prefix: "on", accent: "text-success" },
+  { label: "Moderation", value: "Humans", unit: "", prefix: "by", accent: "text-foreground" },
 ] as const;
 
 export default function XPPage() {
@@ -18,9 +18,8 @@ export default function XPPage() {
           <span className="text-secondary">different</span> with tokens.
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          This is not for everybody. But if you want to start really using
-          Cardano — and to leave social media behind for real collaboration —
-          this is for you.
+          Whether you&apos;re a user, an expert, a tinkerer, or a curious
+          ADA holder exploring what you can do on Cardano, this is for you.
         </p>
       </div>
 
@@ -35,8 +34,7 @@ export default function XPPage() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               Pick up a feedback task. Review a feature, test a flow, tell us
               what&apos;s broken. It takes real effort to give good feedback —
-              XP is minted to your wallet as proof that effort happened. You
-              can&apos;t buy it. You can only earn it.
+              XP is released to your wallet as proof that effort happened.
             </p>
           </div>
           <div className="bg-card p-8 space-y-3">
@@ -76,6 +74,9 @@ export default function XPPage() {
               {stat.label}
             </p>
             <p className="flex items-baseline gap-1.5">
+              {stat.prefix && (
+                <span className="text-sm font-mono text-muted-foreground">{stat.prefix}</span>
+              )}
               <span className={`text-3xl font-display font-bold ${stat.accent}`}>
                 {stat.value}
               </span>
@@ -83,7 +84,6 @@ export default function XPPage() {
                 <span className="text-sm font-mono text-muted-foreground">{stat.unit}</span>
               )}
             </p>
-            <p className="text-sm text-muted-foreground">{stat.detail}</p>
           </div>
         ))}
       </div>
@@ -94,20 +94,21 @@ export default function XPPage() {
           The problem
         </h2>
         <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-8 space-y-4">
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Five and a half years of Catalyst. Hundreds of funded proposals. Thousands of
-            contributors. Nothing on-chain to show for any of it.
+          <p className="text-xl text-foreground font-display font-semibold leading-snug">
+            Developers have git commits. The rest of us have Twitter.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            Developers have git. They can point to commits, PRs, and
-            contribution graphs. But for everyone who isn&apos;t a developer —
-            designers, educators, community builders, operators — there&apos;s
-            nothing. You tell stories. You say &ldquo;take my word for it.&rdquo;
+            If you write code, you can point to your contribution graph. PRs,
+            commits, repos — verifiable proof you showed up and did something.
+            But for everyone else — community reviewers, educators, product testers,
+            facilitators — there&apos;s nothing. You post threads. You hope people
+            remember.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            If you want to build up a history of contribution on Cardano
-            and you don&apos;t have a GitHub profile to point to, this experiment
-            is a place to start.
+            Five and a half years of Catalyst. Hundreds of funded proposals.
+            Thousands of contributors. Almost nothing on-chain to show for it.
+            If you want verifiable proof of contribution and you don&apos;t have
+            a GitHub profile, this experiment is a place to start.
           </p>
         </div>
       </section>

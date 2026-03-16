@@ -2,13 +2,14 @@
 
 import React from "react";
 import { AppNavBar } from "./app-nav-bar";
+import { AppFooter } from "./app-footer";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 /**
- * Full-screen app layout with unified glass nav bar.
+ * Full-screen app layout with unified glass nav bar and system footer.
  */
 export function AppLayout({ children }: AppLayoutProps) {
   return (
@@ -22,6 +23,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           {children}
         </div>
       </main>
+
+      <AppFooter />
     </div>
   );
 }

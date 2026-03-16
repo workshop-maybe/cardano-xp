@@ -1,41 +1,31 @@
 "use client";
 
 import React from "react";
-import { useCourseParams } from "~/hooks/use-course-params";
-import { AndamioBadge } from "~/components/andamio/andamio-badge";
+import { useLearnParams } from "~/hooks/use-learn-params";
 import { AndamioCard, AndamioCardContent, AndamioCardDescription, AndamioCardHeader, AndamioCardTitle } from "~/components/andamio/andamio-card";
 import {
   AndamioPageLoading,
   AndamioNotFoundCard,
   AndamioEmptyState,
+  AndamioBackButton,
 } from "~/components/andamio";
 import { CourseIcon } from "~/components/icons";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { ContentViewer } from "~/components/editor";
-import { CourseBreadcrumb } from "~/components/courses/course-breadcrumb";
 import { LessonMediaSection } from "~/components/courses/lesson-media-section";
 import { useCourse, useCourseModule, useLesson, useSLTs } from "~/hooks/api";
-import { LessonNavigation, type LessonNavItem } from "~/components/courses/lesson-navigation";
+import { LearnLessonNavigation, type LessonNavItem } from "~/components/courses/learn-lesson-navigation";
 
 /**
- * Public page displaying lesson content
- *
- * Uses React Query for cached, deduplicated data fetching:
- * - useCourse: Course details for breadcrumb (cached)
- * - useCourseModule: Module details for breadcrumb (cached)
- * - useLesson: Lesson content
- *
- * Note: Lessons are optional content tied to SLTs. If no lesson exists,
- * this page will show "Lesson not found" message.
+ * Lesson detail page for /learn routes.
+ * Uses the single course ID from CARDANO_XP config.
  */
-
-export default function LessonDetailPage() {
-  const { courseId, moduleCode: moduleCodeParam, moduleIndex: moduleIndexParam } = useCourseParams();
+export default function LearnLessonPage() {
+  const { courseId, moduleCode: moduleCodeParam, moduleIndex: moduleIndexParam } = useLearnParams();
   const moduleCode = moduleCodeParam!;
   const moduleIndex = moduleIndexParam!;
 
-  // React Query hooks - data is cached and shared across components
   const { data: course } = useCourse(courseId);
   const { data: courseModule } = useCourseModule(courseId, moduleCode);
   const {
@@ -44,10 +34,8 @@ export default function LessonDetailPage() {
     error: lessonError,
   } = useLesson(courseId, moduleCode, moduleIndex);
 
-  // Fetch all SLTs for this module to build prev/next navigation
   const { data: slts } = useSLTs(courseId, moduleCode);
 
-  // Build navigation list: SLTs that have lessons, sorted by index
   const lessonsWithNav: LessonNavItem[] = React.useMemo(() => {
     if (!slts) return [];
     return slts
@@ -63,25 +51,14 @@ export default function LessonDetailPage() {
 
   const error = lessonError?.message ?? null;
 
-  // Loading state
   if (isLoading) {
     return <AndamioPageLoading variant="content" />;
   }
 
-  // Error state
   if (error || !lesson) {
     return (
       <div className="space-y-6">
-        {/* Breadcrumb Navigation */}
-        {course && courseModule && (
-          <CourseBreadcrumb
-            mode="public"
-            course={{ nftPolicyId: courseId, title: course.title ?? "Course" }}
-            courseModule={{ code: courseModule.moduleCode ?? "", title: courseModule.title ?? "Module" }}
-            lesson={{ index: moduleIndex }}
-            currentPage="lesson"
-          />
-        )}
+        <AndamioBackButton href={`/learn/${moduleCode}`} label="Back to Module" />
 
         <AndamioNotFoundCard
           title="Lesson Not Found"
@@ -102,19 +79,9 @@ export default function LessonDetailPage() {
     );
   }
 
-  // Lesson display
   return (
     <div className="space-y-6">
-      {/* Breadcrumb Navigation */}
-      {course && courseModule && (
-        <CourseBreadcrumb
-          mode="public"
-          course={{ nftPolicyId: courseId, title: course.title ?? "Course" }}
-          courseModule={{ code: courseModule.moduleCode ?? "", title: courseModule.title ?? "Module" }}
-          lesson={{ index: moduleIndex, title: typeof lesson.title === "string" ? lesson.title : undefined }}
-          currentPage="lesson"
-        />
-      )}
+      <AndamioBackButton href={`/learn/${moduleCode}`} label="Back to Module" />
 
       {/* Student Learning Target */}
       <AndamioCard>
@@ -179,10 +146,9 @@ export default function LessonDetailPage() {
       )}
 
       {/* Prev/Next Lesson Navigation */}
-      <LessonNavigation
+      <LearnLessonNavigation
         currentIndex={moduleIndex}
         lessonsWithNav={lessonsWithNav}
-        courseId={courseId}
         moduleCode={moduleCode}
       />
     </div>

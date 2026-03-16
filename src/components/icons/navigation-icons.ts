@@ -1,8 +1,10 @@
+"use client";
+
 /**
  * Navigation Icons - Navigation & Direction
  *
- * These icons represent navigation actions and directions.
- * Import from ~/components/icons instead of lucide-react directly.
+ * Phosphor icons for navigation actions and directions.
+ * Import from ~/components/icons instead of @phosphor-icons/react directly.
  */
 
 // =============================================================================
@@ -10,40 +12,40 @@
 // =============================================================================
 
 /** Back - navigate to previous page/step */
-export { ArrowLeft as BackIcon } from "lucide-react";
+export { ArrowLeft as BackIcon } from "@phosphor-icons/react";
 
 /** Forward - navigate to next page/step */
-export { ArrowRight as ForwardIcon } from "lucide-react";
+export { ArrowRight as ForwardIcon } from "@phosphor-icons/react";
 
 /** Next - proceed to next item (chevron style) */
-export { ChevronRight as NextIcon } from "lucide-react";
+export { CaretRight as NextIcon } from "@phosphor-icons/react";
 
 /** Previous - go to previous item (chevron style) */
-export { ChevronLeft as PreviousIcon } from "lucide-react";
+export { CaretLeft as PreviousIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Expand & Collapse
 // =============================================================================
 
 /** Expand - show more content */
-export { ChevronDown as ExpandIcon } from "lucide-react";
+export { CaretDown as ExpandIcon } from "@phosphor-icons/react";
 
 /** Collapse - hide content */
-export { ChevronUp as CollapseIcon } from "lucide-react";
+export { CaretUp as CollapseIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // External & Links
 // =============================================================================
 
 /** External Link - open in new tab/window */
-export { ExternalLink as ExternalLinkIcon } from "lucide-react";
+export { ArrowSquareOut as ExternalLinkIcon } from "@phosphor-icons/react";
 
 /** More Options - additional actions menu */
-export { MoreHorizontal as MoreIcon } from "lucide-react";
+export { DotsThree as MoreIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Close & Dismiss
 // =============================================================================
 
 /** Close - dismiss dialog/modal/panel */
-export { X as CloseIcon } from "lucide-react";
+export { X as CloseIcon } from "@phosphor-icons/react";

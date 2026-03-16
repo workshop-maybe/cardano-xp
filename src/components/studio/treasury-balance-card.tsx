@@ -9,7 +9,6 @@ import {
 } from "~/components/andamio/andamio-card";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { TreasuryIcon } from "~/components/icons";
-import { formatLovelace } from "~/lib/cardano-utils";
 import type { TreasuryFunding } from "~/hooks/api/project/use-project";
 import { cn } from "~/lib/utils";
 
@@ -22,33 +21,30 @@ export interface TreasuryBalanceCardProps {
 }
 
 export function TreasuryBalanceCard({
-  treasuryFundings,
   treasuryAddress,
-  treasuryBalance,
   className,
 }: TreasuryBalanceCardProps) {
-  // Use API's treasury_balance if available, otherwise fall back to summing fundings
-  const totalLovelace = treasuryBalance ?? treasuryFundings.reduce(
-    (sum, f) => sum + (f.lovelaceAmount ?? 0),
-    0,
-  );
+  // Fixed XP total supply for this experiment
+  const totalSupply = 100_000;
 
   return (
     <AndamioCard className={cn("", className)}>
       <AndamioCardHeader className="pb-3">
         <AndamioCardTitle className="text-base flex items-center gap-2">
           <TreasuryIcon className="h-4 w-4" />
-          Treasury Balance
+          XP Treasury
         </AndamioCardTitle>
       </AndamioCardHeader>
       <AndamioCardContent className="space-y-3">
-        {totalLovelace === 0 && treasuryFundings.length === 0 ? (
-          <AndamioText variant="muted">No funds yet</AndamioText>
-        ) : (
-          <div className="text-3xl font-bold">
-            {formatLovelace(totalLovelace)}
-          </div>
-        )}
+        <div className="flex items-baseline gap-2">
+          <span className="text-3xl font-bold text-secondary">
+            {totalSupply.toLocaleString()}
+          </span>
+          <span className="text-lg font-medium text-muted-foreground">XP</span>
+        </div>
+        <AndamioText variant="small" className="text-muted-foreground">
+          Fixed supply — tasks are the only mint
+        </AndamioText>
         {treasuryAddress && (
           <div className="pt-2 border-t">
             <AndamioText variant="small" className="text-muted-foreground">

@@ -43,12 +43,12 @@ export const MARKETING = {
   },
 
   /**
-   * Preprod warning
+   * Cost info (replaces former preprod warning)
    */
-  preprodWarning: {
-    title: "This is Cardano Preprod",
+  costInfo: {
+    title: "What it costs",
     description:
-      "Use a preprod wallet. Transactions are free. Data may be wiped during development.",
+      "Minting an access token costs approximately 8 ADA. We recommend a fresh wallet funded with about 25 ADA. You'll earn ADA and tokens as you go, but each on-chain action has a transaction fee.",
   },
 
   /**
@@ -56,7 +56,7 @@ export const MARKETING = {
    */
   finalCta: {
     title: "Ready?",
-    description: "Connect a preprod wallet and start exploring.",
+    description: "Connect a wallet and mint your access token to get started.",
     buttonText: "Get Started",
     buttonHref: "/",
   },
@@ -97,7 +97,7 @@ export const MARKETING = {
     getStarted: {
       title: "Get Started",
       description:
-        "Connect a wallet and create your access token to begin.",
+        "Connect a wallet and mint your access token (~8 ADA) to begin.",
     },
   },
 

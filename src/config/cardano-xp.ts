@@ -10,8 +10,8 @@ export const CARDANO_XP = {
   courseId: env.NEXT_PUBLIC_COURSE_ID,
   projectId: env.NEXT_PUBLIC_PROJECT_ID,
   routes: {
-    course: `/course/${env.NEXT_PUBLIC_COURSE_ID}`,
-    project: `/project/${env.NEXT_PUBLIC_PROJECT_ID}`,
+    course: `/learn`,
+    project: `/tasks`,
   },
   /** XP token identity on-chain */
   xpToken: {
@@ -21,4 +21,8 @@ export const CARDANO_XP = {
   },
   /** Fixed ADA reward per task (2.5 ADA in lovelace) */
   fixedAdaPerTask: 2_500_000,
+  /** Project wallet — public address for transparency and donations */
+  projectWallet: {
+    address: "addr_test1qz2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj83ws8lhrn648jjxtwq2ytjqp",
+  },
 } as const;

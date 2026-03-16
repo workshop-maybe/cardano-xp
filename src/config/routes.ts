@@ -117,6 +117,11 @@ export const ROUTE_METADATA = {
     description: "View your earned credentials",
     requiresAuth: true,
   },
+  "/wallet": {
+    label: "Wallet",
+    description: "Project wallet transparency and donation address",
+    requiresAuth: false,
+  },
   "/studio": {
     label: "Studio",
     description: "Creator tools hub",

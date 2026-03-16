@@ -7,7 +7,7 @@ import type { Wallet } from "@meshsdk/common";
 import { Web3Wallet } from "@utxos/sdk";
 import type { EnableWeb3WalletOptions } from "@utxos/sdk";
 import { WalletIcon, LoadingIcon } from "~/components/icons";
-import { Button } from "~/components/ui/button";
+import { AndamioButton } from "~/components/andamio/andamio-button";
 import {
   Dialog,
   DialogContent,
@@ -204,7 +204,7 @@ function ConnectedDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <AndamioButton variant="outline" size="sm">
           {connectedWallet?.icon ? (
             <Image
               src={connectedWallet.icon}
@@ -219,7 +219,7 @@ function ConnectedDropdown() {
           <span>
             {address.slice(0, 6)}...{address.slice(-6)}
           </span>
-        </Button>
+        </AndamioButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Wallet</DropdownMenuLabel>
@@ -343,17 +343,17 @@ export function ConnectWalletButton({
   // Defer Dialog rendering until after hydration to prevent radix ID mismatch
   if (!mounted) {
     return (
-      <Button variant="outline" className={className}>
+      <AndamioButton size="sm" className={className}>
         {label}
-      </Button>
+      </AndamioButton>
     );
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className={className}>
+        <AndamioButton size="sm" className={className}>
           {label}
-        </Button>
+        </AndamioButton>
       </DialogTrigger>
 
       <DialogContent

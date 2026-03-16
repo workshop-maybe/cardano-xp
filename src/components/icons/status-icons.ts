@@ -1,8 +1,10 @@
+"use client";
+
 /**
  * Status Icons - State Indicators
  *
- * These icons represent various states and statuses.
- * Import from ~/components/icons instead of lucide-react directly.
+ * Phosphor icons for various states and statuses.
+ * Import from ~/components/icons instead of @phosphor-icons/react directly.
  */
 
 // =============================================================================
@@ -10,58 +12,68 @@
 // =============================================================================
 
 /** Success - operation completed successfully */
-export { CheckCircle as SuccessIcon } from "lucide-react";
+export { CheckCircle as SuccessIcon } from "@phosphor-icons/react";
 
 /** Completed - task/step is done (minimal checkmark) */
-export { Check as CompletedIcon } from "lucide-react";
+export { Check as CompletedIcon } from "@phosphor-icons/react";
 
 /** Check - generic checkmark (alias for CompletedIcon) */
-export { Check as CheckIcon } from "lucide-react";
+export { Check as CheckIcon } from "@phosphor-icons/react";
 
 /** Verified - verified/validated state */
-export { CheckCircle2 as VerifiedIcon } from "lucide-react";
+export { SealCheck as VerifiedIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Error & Warning States
 // =============================================================================
 
 /** Error - operation failed or error state */
-export { XCircle as ErrorIcon } from "lucide-react";
+export { XCircle as ErrorIcon } from "@phosphor-icons/react";
 
 /** Warning/Alert (circle) - attention needed, general alerts */
-export { AlertCircle as AlertIcon } from "lucide-react";
+export { WarningCircle as AlertIcon } from "@phosphor-icons/react";
 
 /** Warning (triangle) - caution, important warnings */
-export { AlertTriangle as WarningIcon } from "lucide-react";
+export { Warning as WarningIcon } from "@phosphor-icons/react";
 
 /** Info - informational messages */
-export { Info as InfoIcon } from "lucide-react";
+export { Info as InfoIcon } from "@phosphor-icons/react";
 
 /** Security Alert - security-related warnings */
-export { ShieldAlert as SecurityAlertIcon } from "lucide-react";
+export { ShieldWarning as SecurityAlertIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Progress & Loading States
 // =============================================================================
 
 /** Loading - async operation in progress */
-export { Loader2 as LoadingIcon } from "lucide-react";
+export { CircleNotch as LoadingIcon } from "@phosphor-icons/react";
 
 /** Pending - waiting for action or confirmation */
-export { Clock as PendingIcon } from "lucide-react";
+export { Clock as PendingIcon } from "@phosphor-icons/react";
 
 /** Neutral/Empty - neutral state indicator */
-export { Circle as NeutralIcon } from "lucide-react";
+export { Circle as NeutralIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Availability States
 // =============================================================================
 
 /** Locked - unavailable or restricted */
-export { Lock as LockedIcon } from "lucide-react";
+export { Lock as LockedIcon } from "@phosphor-icons/react";
 
 /** Live/Active - published and available */
-export { CheckCircle as LiveIcon } from "lucide-react";
+export { Broadcast as LiveIcon } from "@phosphor-icons/react";
 
 /** Draft - not yet published */
-export { FileEdit as DraftIcon } from "lucide-react";
+export { NotePencil as DraftIcon } from "@phosphor-icons/react";
+
+// =============================================================================
+// Activity States
+// =============================================================================
+
+/** Online/Active - system is running */
+export { Pulse as ActiveIcon } from "@phosphor-icons/react";
+
+/** Ready - system ready for input */
+export { Terminal as ReadyIcon } from "@phosphor-icons/react";

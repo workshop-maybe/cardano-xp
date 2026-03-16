@@ -49,8 +49,8 @@ export function AppNavBar() {
         {/* Left: Brand mark + nav links */}
         <div className="flex items-center gap-1 sm:gap-2">
           <Link href="/" className="flex items-center gap-2 mr-3 sm:mr-5">
-            <div className="h-7 w-7 bg-secondary flex items-center justify-center">
-              <span className="font-display font-bold text-xs text-secondary-foreground">XP</span>
+            <div className="h-7 w-7 rounded-full border-2 border-secondary flex items-center justify-center">
+              <span className="font-display font-bold text-xs text-secondary">XP</span>
             </div>
             <span className="hidden sm:block font-display font-semibold text-sm tracking-tight text-foreground">
               Cardano XP
@@ -133,16 +133,13 @@ export function AppNavBar() {
               variant="ghost"
               size="sm"
               onClick={handleLogout}
-              className="hidden sm:flex h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+              leftIcon={<LogOutIcon className="h-3 w-3" />}
+              className="hidden sm:flex"
             >
-              <LogOutIcon className="mr-1.5 h-3 w-3" />
               Sign Out
             </AndamioButton>
           ) : (
-            <ConnectWalletButton
-              label="Connect"
-              className="h-7 px-3 text-xs rounded-sm border-0 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-medium"
-            />
+            <ConnectWalletButton label="Connect" />
           )}
         </div>
       </div>

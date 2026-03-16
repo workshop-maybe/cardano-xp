@@ -1,8 +1,10 @@
+"use client";
+
 /**
  * UI Icons - General User Interface Elements
  *
- * These icons represent common UI elements and controls.
- * Import from ~/components/icons instead of lucide-react directly.
+ * Phosphor icons for common UI elements and controls.
+ * Import from ~/components/icons instead of @phosphor-icons/react directly.
  */
 
 // =============================================================================
@@ -10,124 +12,130 @@
 // =============================================================================
 
 /** Search - search functionality */
-export { Search as SearchIcon } from "lucide-react";
+export { MagnifyingGlass as SearchIcon } from "@phosphor-icons/react";
 
 /** Filter - filter options */
-export { Filter as FilterIcon } from "lucide-react";
+export { Funnel as FilterIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Settings & Configuration
 // =============================================================================
 
 /** Settings - configuration options */
-export { Settings as SettingsIcon } from "lucide-react";
+export { Gear as SettingsIcon } from "@phosphor-icons/react";
 
 /** Security/Shield - security settings */
-export { Shield as ShieldIcon } from "lucide-react";
+export { Shield as ShieldIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // View Options
 // =============================================================================
 
 /** List View - display as list */
-export { List as ListViewIcon } from "lucide-react";
+export { List as ListViewIcon } from "@phosphor-icons/react";
 
 /** Table View - display as table */
-export { Table as TableViewIcon } from "lucide-react";
+export { Table as TableViewIcon } from "@phosphor-icons/react";
 
 /** Grid View - display as grid */
-export { Grid3x3 as GridViewIcon } from "lucide-react";
+export { GridFour as GridViewIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Empty & Placeholder States
 // =============================================================================
 
 /** Empty/Inbox - no content state */
-export { Inbox as EmptyIcon } from "lucide-react";
+export { Tray as EmptyIcon } from "@phosphor-icons/react";
 
 /** Image Placeholder - missing image */
-export { ImageIcon as ImagePlaceholderIcon } from "lucide-react";
+export { Image as ImagePlaceholderIcon } from "@phosphor-icons/react";
 
 /** Video Placeholder - video content */
-export { Video as VideoIcon } from "lucide-react";
+export { VideoCamera as VideoIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Data & Analytics
 // =============================================================================
 
 /** Chart/Analytics - data visualization */
-export { BarChart3 as ChartIcon } from "lucide-react";
+export { ChartBar as ChartIcon } from "@phosphor-icons/react";
 
 /** History - transaction/activity history */
-export { History as HistoryIcon } from "lucide-react";
+export { ClockCounterClockwise as HistoryIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Layout & Structure
 // =============================================================================
 
 /** Dashboard/Layout - dashboard view */
-export { LayoutDashboard as DashboardIcon } from "lucide-react";
+export { SquaresFour as DashboardIcon } from "@phosphor-icons/react";
 
 /** Layout - generic layout icon */
-export { Layout as LayoutIcon } from "lucide-react";
+export { Layout as LayoutIcon } from "@phosphor-icons/react";
 
 /** Menu - navigation menu */
-export { Menu as MenuIcon } from "lucide-react";
+export { List as MenuIcon } from "@phosphor-icons/react";
 
 /** Sidebar - sidebar toggle */
-export { PanelLeft as SidebarIcon } from "lucide-react";
+export { Sidebar as SidebarIcon } from "@phosphor-icons/react";
 
 /** Monitor - display/screen */
-export { Monitor as MonitorIcon } from "lucide-react";
+export { Monitor as MonitorIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Theme & Display Mode
 // =============================================================================
 
 /** Light Mode - sun icon for light theme */
-export { Sun as LightModeIcon } from "lucide-react";
+export { Sun as LightModeIcon } from "@phosphor-icons/react";
 
 /** Dark Mode - moon icon for dark theme */
-export { Moon as DarkModeIcon } from "lucide-react";
+export { Moon as DarkModeIcon } from "@phosphor-icons/react";
 
 /** Theme/Palette - theme customization */
-export { Palette as ThemeIcon } from "lucide-react";
+export { Palette as ThemeIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Navigation & Discovery
 // =============================================================================
 
 /** Sitemap - site structure/navigation */
-export { Map as SitemapIcon } from "lucide-react";
+export { MapTrifold as SitemapIcon } from "@phosphor-icons/react";
 
 /** Global - worldwide/public scope */
-export { Globe as GlobalIcon } from "lucide-react";
+export { Globe as GlobalIcon } from "@phosphor-icons/react";
 
 /** Explore - discovery/exploration */
-export { Compass as ExploreIcon } from "lucide-react";
+export { Compass as ExploreIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Data & System
 // =============================================================================
 
 /** Database - data storage */
-export { Database as DatabaseIcon } from "lucide-react";
+export { Database as DatabaseIcon } from "@phosphor-icons/react";
 
 /** Server - backend/server */
-export { Server as ServerIcon } from "lucide-react";
+export { HardDrives as ServerIcon } from "@phosphor-icons/react";
 
 /** Sort - ascending/descending sort */
-export { ArrowUpDown as SortIcon } from "lucide-react";
+export { SortAscending as SortIcon } from "@phosphor-icons/react";
 
 /** Link/Chain - linked relationships */
-export { Link as LinkIcon } from "lucide-react";
+export { Link as LinkIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Special & Misc
 // =============================================================================
 
 /** Test/Experiment - testing functionality */
-export { Beaker as TestIcon } from "lucide-react";
+export { Flask as TestIcon } from "@phosphor-icons/react";
 
 /** Calendar - date/schedule */
-export { Calendar as CalendarIcon } from "lucide-react";
+export { Calendar as CalendarIcon } from "@phosphor-icons/react";
+
+/** Terminal - command line / system */
+export { Terminal as TerminalIcon } from "@phosphor-icons/react";
+
+/** Code - source code */
+export { Code as CodeIcon } from "@phosphor-icons/react";

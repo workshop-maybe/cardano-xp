@@ -38,6 +38,8 @@ export interface SLTLessonTableProps {
   moduleCode: string;
   /** On-chain module data for verification badges (flattened format) */
   onChainModule?: CourseModule | null;
+  /** Base path for links (defaults to /course) */
+  basePath?: string;
 }
 
 /**
@@ -52,6 +54,7 @@ export function SLTLessonTable({
   courseId,
   moduleCode,
   onChainModule,
+  basePath = "/course",
 }: SLTLessonTableProps) {
   const onChainSltTexts = new Set(onChainModule?.onChainSlts ?? []);
 
@@ -110,7 +113,7 @@ export function SLTLessonTable({
                         </div>
                       )}
                     </div>
-                    <Link href={`/course/${courseId}/${moduleCode}/${item.module_index}`}>
+                    <Link href={basePath === "/learn" ? `/learn/${moduleCode}/${item.module_index}` : `/course/${courseId}/${moduleCode}/${item.module_index}`}>
                       <AndamioButton variant="outline" size="sm" rightIcon={<NextIcon className="h-3.5 w-3.5" />}>
                         Open Lesson
                       </AndamioButton>

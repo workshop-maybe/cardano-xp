@@ -1,0 +1,28 @@
+{
+  "721": {
+    "POLICY_ID_PLACEHOLDER": {
+      "5850": {
+        "name": "Cardano XP V1",
+        "description": [
+          "100,000 XP. Fixed supply, one-time mint.",
+          "Earned by completing tasks. Circulated by giving.",
+          "On-chain proof of contribution to the Cardano ecosystem."
+        ],
+        "ticker": "XP",
+        "url": "https://cardano-xp.io",
+        "decimals": 0,
+        "image": "IPFS_HASH_PLACEHOLDER",
+        "mediaType": "image/png",
+        "files": [
+          {
+            "name": "Cardano XP V1",
+            "mediaType": "image/png",
+            "src": "IPFS_HASH_PLACEHOLDER"
+          }
+        ],
+        "supply": "100000",
+        "version": "1"
+      }
+    }
+  }
+}

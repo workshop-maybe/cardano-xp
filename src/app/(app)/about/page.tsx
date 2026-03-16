@@ -10,19 +10,26 @@ export default function AboutPage() {
           About
         </p>
         <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
-          What is this?
+          Your feedback is{" "}
+          <span className="text-secondary">the product.</span>
         </h1>
       </div>
 
-      {/* The story */}
+      {/* The pitch */}
       <section className="space-y-6">
         <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-8 space-y-5">
           <p className="text-lg text-foreground leading-relaxed font-medium">
-            This app was built in about three hours of vibe coding on a Sunday afternoon.
+            This app was built in about three hours of vibe coding on a Sunday
+            afternoon. It&apos;s rough. It needs your help.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            It runs on the Andamio protocol and it was built with Claude Code.
-            The entire process is documented in the{" "}
+            Forgive the AI slop — that&apos;s the point. We shipped something
+            imperfect on purpose so that the first thing you can do on Cardano
+            XP is tell us what&apos;s wrong with it. Your feedback makes this
+            better, and you earn XP for every piece of it.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            The entire build process is documented in the{" "}
             <a
               href="https://github.com/Andamio-Platform/cardano-xp"
               target="_blank"
@@ -34,76 +41,86 @@ export default function AboutPage() {
             . Every decision, every prompt, every commit — anyone can follow
             along and reproduce the whole thing.
           </p>
-          <p className="text-muted-foreground leading-relaxed">
-            Forgive the AI slop. That&apos;s the point.
-          </p>
         </div>
       </section>
 
-      {/* What you can do */}
+      {/* The user journey */}
       <section className="space-y-6">
         <h2 className="font-display font-bold text-2xl text-foreground">
-          What you can do here
+          How it works
         </h2>
         <div className="space-y-4">
           <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-6 space-y-2">
             <h3 className="font-display font-semibold text-foreground">
-              Give feedback
+              1. Pick up a feedback task
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              See something broken? Something confusing? Something that could be
-              better? Pick up a feedback task and tell us what you think. Every
-              piece of feedback improves this app.
+              Browse the project tasks. Each one asks you to review something
+              specific — a page, a flow, a feature. Try it, find what&apos;s
+              confusing or broken, and write up what you think. It takes real
+              effort to give good feedback, and that effort should count.
             </p>
           </div>
 
           <div className="border-l-4 border-l-primary bg-card border border-border shadow-lg p-6 space-y-2">
             <h3 className="font-display font-semibold text-foreground">
-              Earn XP
+              2. Submit your feedback, earn XP
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Complete feedback tasks and earn XP — a reputation token on
-              Cardano. XP is not a financial instrument. It&apos;s proof that
-              you showed up and did something useful, recorded permanently
-              on-chain.
+              Submit your evidence on-chain. A reviewer looks at what you
+              submitted. If it&apos;s constructive, you earn XP — a reputation
+              token minted directly to your wallet. You can&apos;t buy XP. You
+              can only earn it by doing useful work.
             </p>
           </div>
 
           <div className="border-l-4 border-l-success bg-card border border-border shadow-lg p-6 space-y-2">
             <h3 className="font-display font-semibold text-foreground">
-              Build your track record
+              3. Build a track record
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
+              Your contribution history becomes your identity. Not your Twitter
+              following, not who you know, not how long you&apos;ve been around.
+              What you&apos;ve demonstrated — on-chain, verifiable by anyone.
               When you claim a credential, your XP balance is snapshotted
-              permanently. That credential lives on-chain — composable,
-              verifiable, independent of this app. Your reputation is yours.
+              permanently.
+            </p>
+          </div>
+
+          <div className="border-l-4 border-l-muted-foreground bg-card border border-border shadow-lg p-6 space-y-2">
+            <h3 className="font-display font-semibold text-foreground">
+              4. Recognize others
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Once you hold XP, you can give it to other people whose work
+              you respect. Reputation flows through the network — not from a
+              central authority deciding who matters.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Why this exists */}
+      {/* Why feedback */}
       <section className="space-y-6">
         <h2 className="font-display font-bold text-2xl text-foreground">
-          Why this exists
+          Why feedback?
         </h2>
         <div className="bg-card border border-border shadow-lg p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
-            Five and a half years of Catalyst. Hundreds of funded proposals.
-            Thousands of contributors. Nothing on-chain to show for any of it.
+            Developers have git. They can point to commits, PRs, and
+            contribution graphs. But most of the work that makes an ecosystem
+            run isn&apos;t code — it&apos;s testing, reviewing, explaining,
+            organizing, and giving honest feedback.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            If you want to prove you&apos;ve been building on Cardano, you share
-            screenshots of your git commit history. You tell stories. You
-            say &ldquo;take my word for it.&rdquo;
-          </p>
-          <p className="text-muted-foreground leading-relaxed">
-            We have a public ledger. We should use it. XP is the experiment —
-            can we use Cardano to build real, verifiable reputation for
-            non-financial work?
+            None of that shows up on-chain today. Without verifiable proof of
+            what people can do and have done, ecosystems default to informal
+            reputation and relationship networks. XP replaces &ldquo;take my
+            word for it&rdquo; with &ldquo;check the ledger.&rdquo;
           </p>
           <p className="text-foreground font-display font-semibold text-lg">
-            Not DeFi. Not NFTs. Proof that you did something useful.
+            This experiment is scaffolding — designed to be outgrown by
+            whatever the community builds next.
           </p>
         </div>
       </section>
@@ -111,12 +128,12 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="space-y-6 pb-12">
         <h2 className="font-display font-bold text-2xl text-foreground">
-          Get started
+          Start giving feedback
         </h2>
         <div className="bg-card border border-border shadow-lg p-8 space-y-5">
           <p className="text-muted-foreground leading-relaxed">
-            Connect a Cardano wallet, mint an access token, and start
-            contributing. The access token is free to mint on preprod — you
+            Connect a Cardano wallet, mint an access token, and pick up your
+            first feedback task. The access token is free on preprod — you
             just need a preprod wallet with test ADA.
           </p>
           <div className="flex flex-wrap gap-4 pt-2">
@@ -130,13 +147,7 @@ export default function AboutPage() {
               href={CARDANO_XP.routes.project}
               className="inline-flex items-center px-5 py-2.5 border border-border text-foreground font-display font-semibold text-sm shadow-lg hover:shadow-xl transition-all hover:bg-foreground/5"
             >
-              View Tasks
-            </Link>
-            <Link
-              href="/xp"
-              className="inline-flex items-center px-5 py-2.5 border border-border text-foreground font-display font-semibold text-sm shadow-lg hover:shadow-xl transition-all hover:bg-foreground/5"
-            >
-              Read Tokenomics
+              Browse Feedback Tasks
             </Link>
           </div>
         </div>

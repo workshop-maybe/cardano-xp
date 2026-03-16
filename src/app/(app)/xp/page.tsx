@@ -24,28 +24,31 @@ export default function XPPage() {
         </p>
       </div>
 
-      {/* The mechanism */}
+      {/* The mechanism — framed as a feedback journey */}
       <section className="space-y-6">
         <div className="grid gap-px md:grid-cols-3 bg-border">
           <div className="bg-card p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-secondary/30">01</span>
             <h3 className="font-display font-bold text-xl text-foreground">
-              Earn XP
+              Give feedback, earn XP
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Do real work. Give feedback, submit improvements, complete tasks.
-              XP is minted to your wallet — you can&apos;t buy it, only earn it.
+              Pick up a feedback task. Review a feature, test a flow, tell us
+              what&apos;s broken. It takes real effort to give good feedback —
+              XP is minted to your wallet as proof that effort happened. You
+              can&apos;t buy it. You can only earn it.
             </p>
           </div>
           <div className="bg-card p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-primary/30">02</span>
             <h3 className="font-display font-bold text-xl text-foreground">
-              Build reputation
+              Build a track record
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Your XP balance is your track record. Claim a credential and your
-              balance is snapshotted permanently on-chain. That credential is
-              yours — it doesn&apos;t depend on this app.
+              Your contribution history becomes your identity. Not your Twitter
+              following, not who you know. What you&apos;ve demonstrated —
+              on-chain, verifiable by anyone. Claim a credential and your XP
+              balance is snapshotted permanently.
             </p>
           </div>
           <div className="bg-card p-8 space-y-3">
@@ -54,9 +57,9 @@ export default function XPPage() {
               Let others earn it too
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Once you hold XP, you can give it to others. Recognize people
-              who are doing good work. Reputation flows through the network,
-              not from a central authority.
+              Once you hold XP, you can give it to others. See someone doing
+              good work? Recognize them. Reputation flows through the network,
+              not from a central authority deciding who matters.
             </p>
           </div>
         </div>
@@ -122,10 +125,10 @@ export default function XPPage() {
         <div className="bg-card border border-border shadow-lg p-8">
           <div className="flex flex-col gap-4 font-mono text-sm">
             {[
-              { step: "1", action: "Complete a task", result: "Earn XP" },
-              { step: "2", action: "Hit a threshold", result: "Claim credential" },
-              { step: "3", action: "Credential recognized", result: "Unlock prerequisites" },
-              { step: "4", action: "Hold XP", result: "Give to others" },
+              { step: "1", action: "Pick up a feedback task", result: "Review something real" },
+              { step: "2", action: "Submit your feedback", result: "Earn XP on-chain" },
+              { step: "3", action: "Accumulate XP", result: "Claim a credential" },
+              { step: "4", action: "Hold XP", result: "Give it to others" },
             ].map((item) => (
               <div key={item.step} className="flex items-center gap-4">
                 <span className="text-2xl font-bold text-secondary/30 w-8">
@@ -151,11 +154,16 @@ export default function XPPage() {
             market value and is not designed to be traded.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            XP is a reputation token. The reward is proof you showed up and did
-            something useful — recorded on-chain, composable, permanent.
+            This is a feedback collection mechanism. It takes time to give good
+            feedback, and that time should be rewarded. The reward is proof you
+            showed up and did something useful — recorded on-chain, composable,
+            permanent.
           </p>
-          <p className="font-display font-semibold text-secondary text-lg">
-            Put your track record on-chain.
+          <p className="text-muted-foreground leading-relaxed">
+            Without verifiable proof of what people can do and have done,
+            ecosystems default to informal reputation and relationship networks.
+            XP replaces &ldquo;take my word for it&rdquo; with &ldquo;check
+            the ledger.&rdquo;
           </p>
         </div>
       </section>
@@ -174,6 +182,32 @@ export default function XPPage() {
           <p className="text-muted-foreground leading-relaxed">
             If it does, we continue with V2 of this token. The people who
             earned XP in V1 will have a say in what that looks like.
+          </p>
+        </div>
+      </section>
+
+      {/* CTA for devs */}
+      <section className="space-y-6">
+        <div className="space-y-2">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            For developers
+          </p>
+          <h2 className="font-display font-bold text-2xl text-foreground">
+            Want feedback on what you&apos;re building?
+          </h2>
+        </div>
+        <div className="bg-card border border-border shadow-lg p-8 space-y-4">
+          <p className="text-muted-foreground leading-relaxed">
+            Set up a project on the Andamio protocol, create feedback tasks,
+            and distribute XP to the people who help you improve your work.
+            You get real, structured feedback from the community. They get
+            on-chain proof they contributed.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            This experiment is scaffolding — designed to be outgrown by
+            whatever the community builds next. The protocol is open. The
+            tools are ready. If you&apos;re building on Cardano and want
+            community input, this is a way to make that exchange real.
           </p>
         </div>
       </section>

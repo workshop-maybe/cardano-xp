@@ -144,7 +144,9 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         </h1>
 
         <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          It&apos;s time to start doing real experiments with how we use Cardano. Not DeFi. Not trading. Actual work, tracked on-chain, reputation you own.
+          Your feedback matters — and it takes real work to give it well.
+          Review what we&apos;re building, tell us what&apos;s broken, and earn
+          on-chain reputation for your contribution.
         </p>
       </div>
 

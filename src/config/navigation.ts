@@ -16,6 +16,7 @@ export const APP_NAVIGATION = [
   { name: "Contribute", href: CARDANO_XP.routes.project },
   { name: "Tokenomics", href: "/xp" },
   { name: "My XP", href: "/credentials" },
+  { name: "Wallet", href: "/wallet" },
 ] as const;
 
 /**

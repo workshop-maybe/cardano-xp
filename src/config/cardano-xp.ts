@@ -21,4 +21,8 @@ export const CARDANO_XP = {
   },
   /** Fixed ADA reward per task (2.5 ADA in lovelace) */
   fixedAdaPerTask: 2_500_000,
+  /** Project wallet — public address for transparency and donations */
+  projectWallet: {
+    address: "addr_test1qz2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj83ws8lhrn648jjxtwq2ytjqp",
+  },
 } as const;

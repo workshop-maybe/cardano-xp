@@ -12,6 +12,7 @@ import { CARDANO_XP } from "./cardano-xp";
  */
 export const APP_NAVIGATION = [
   { name: "About", href: "/about" },
+  { name: "Access Token", href: "/andamio-access-token" },
   { name: "Contribute", href: CARDANO_XP.routes.project },
   { name: "Tokenomics", href: "/xp" },
   { name: "My XP", href: "/credentials" },

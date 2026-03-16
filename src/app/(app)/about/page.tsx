@@ -4,7 +4,7 @@ import { CARDANO_XP } from "~/config/cardano-xp";
 
 export default function AboutPage() {
   return (
-    <div className="space-y-12 max-w-2xl">
+    <div className="space-y-12 max-w-2xl mx-auto">
       {/* Header */}
       <div className="space-y-4 pt-4">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
@@ -12,7 +12,7 @@ export default function AboutPage() {
         </p>
         <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
           A tiny experiment in{" "}
-          <span className="text-secondary">developer feedback.</span>
+          <span className="text-secondary">getting feedback.</span>
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
           This is a mini-app built on the Andamio protocol. We&apos;re testing

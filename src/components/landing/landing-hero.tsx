@@ -144,9 +144,8 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         </h1>
 
         <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          A tiny experiment in developer feedback. We&apos;re building tools
-          for on-chain learning and we need devs to break them. Tell us
-          what&apos;s wrong, earn XP for your trouble.
+          A tiny experiment in giving feedback. Share what works and what
+          doesn&apos;t. Earn XP for your trouble.
         </p>
       </div>
 
@@ -159,16 +158,16 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
           Connect Wallet
         </AndamioButton>
         <AndamioButton
+          onClick={() => router.push("/andamio-access-token")}
+          className="w-full lg:w-auto"
+        >
+          Get an Access Token
+        </AndamioButton>
+        <AndamioButton
           onClick={() => router.push("/about")}
           className="w-full lg:w-auto"
         >
           What is this?
-        </AndamioButton>
-        <AndamioButton
-          onClick={() => router.push("/xp")}
-          className="w-full lg:w-auto"
-        >
-          Tokenomics
         </AndamioButton>
       </div>
     </div>

@@ -227,7 +227,14 @@ export function RegistrationFlow({ onMinted, onBack }: RegistrationFlowProps) {
                 <AndamioText className="font-medium text-sm">Your Access Token</AndamioText>
               </div>
               <AndamioText variant="small" className="text-xs text-muted-foreground">
-                An NFT that proves your identity on Cardano. Use it to earn credentials, join projects, and build your on-chain reputation.
+                An NFT that proves your identity on Cardano. Minting costs approximately 8 ADA. Use it to earn credentials, complete tasks, and build your on-chain reputation.
+              </AndamioText>
+            </div>
+
+            <div className="rounded-lg border border-secondary/30 bg-secondary/5 p-3 space-y-1.5">
+              <AndamioText className="font-medium text-sm">Wallet tip</AndamioText>
+              <AndamioText variant="small" className="text-xs text-muted-foreground">
+                We recommend starting a new wallet for this experiment and funding it with about 25 ADA. You&apos;ll earn ADA and tokens as you go, but each on-chain action has a transaction fee.
               </AndamioText>
             </div>
 
@@ -383,7 +390,7 @@ export function RegistrationFlow({ onMinted, onBack }: RegistrationFlowProps) {
           </div>
           <AndamioCardTitle className="text-xl">Create Your On-Chain Identity</AndamioCardTitle>
           <AndamioCardDescription>
-            Choose an alias and mint your access token
+            Choose an alias and mint your access token (~8 ADA)
           </AndamioCardDescription>
         </AndamioCardHeader>
 

@@ -13,4 +13,12 @@ export const CARDANO_XP = {
     course: `/course/${env.NEXT_PUBLIC_COURSE_ID}`,
     project: `/project/${env.NEXT_PUBLIC_PROJECT_ID}`,
   },
+  /** XP token identity on-chain */
+  xpToken: {
+    policyId: env.NEXT_PUBLIC_XP_POLICY_ID,
+    assetName: "5850", // hex-encoded "XP"
+    displayName: "XP",
+  },
+  /** Fixed ADA reward per task (2.5 ADA in lovelace) */
+  fixedAdaPerTask: 2_500_000,
 } as const;

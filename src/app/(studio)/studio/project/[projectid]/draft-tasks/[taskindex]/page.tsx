@@ -24,6 +24,7 @@ import {
   useUpdateTask,
 } from "~/hooks/api/project/use-project-manager";
 import { TaskForm, type TaskFormValues } from "~/components/studio";
+import { CARDANO_XP } from "~/config/cardano-xp";
 
 export default function EditTaskPage() {
   const params = useParams();
@@ -69,6 +70,11 @@ export default function EditTaskPage() {
         lovelaceAmount: values.lovelaceAmount,
         expirationTime: values.expirationTime,
         contentJson: values.contentJson,
+        tokens: values.xpAmount > 0 ? [{
+          policy_id: CARDANO_XP.xpToken.policyId,
+          asset_name: CARDANO_XP.xpToken.assetName,
+          quantity: values.xpAmount.toString(),
+        }] : undefined,
       });
       showSuccess();
     } catch (err) {

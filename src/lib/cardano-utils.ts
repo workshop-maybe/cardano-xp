@@ -79,6 +79,18 @@ export function lovelaceToAda(lovelace: number | string): number {
   return numericValue / LOVELACE_PER_ADA;
 }
 
+/**
+ * Format XP token quantity as a display string
+ *
+ * @param quantity - XP amount (string or number, whole units)
+ * @returns Formatted string with XP suffix (e.g., "50 XP")
+ */
+export function formatXP(quantity: string | number): string {
+  const num = typeof quantity === "string" ? parseInt(quantity, 10) : quantity;
+  if (isNaN(num) || num === 0) return "0 XP";
+  return `${num.toLocaleString()} XP`;
+}
+
 /** Shelley-era genesis parameters: each slot is 1 second post-Shelley */
 const SHELLEY_GENESIS: Record<string, { startSlot: number; startUnix: number }> = {
   mainnet: { startSlot: 4_492_800, startUnix: 1_596_059_091 },

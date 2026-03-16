@@ -28,6 +28,7 @@ import type { JSONContent } from "@tiptap/core";
 import type { Task } from "~/hooks/api/project/use-project";
 import { setPreAssignment } from "~/lib/task-metadata";
 import { AliasListInput } from "~/components/tx/alias-list-input";
+import { CARDANO_XP } from "~/config/cardano-xp";
 
 // =============================================================================
 // Types
@@ -41,6 +42,7 @@ export interface TaskFormValues {
   title: string;
   content: string;
   lovelaceAmount: string;
+  xpAmount: number;
   expirationTime: string;
   contentJson: JSONContent | null;
   preAssignedAlias: string | null;
@@ -78,7 +80,8 @@ export function TaskForm({
   // ---------------------------------------------------------------------------
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [lovelace, setLovelace] = useState("");
+  const lovelace = CARDANO_XP.fixedAdaPerTask.toString(); // locked at 2.5 ADA
+  const [xpAmount, setXpAmount] = useState(10);
   const [expirationTime, setExpirationTime] = useState("");
   const [contentJson, setContentJson] = useState<JSONContent | null>(null);
   const [formInitialized, setFormInitialized] = useState(!initialTask);
@@ -90,37 +93,40 @@ export function TaskForm({
     if (!initialTask || formInitialized) return;
     setTitle(initialTask.title ?? "");
     setContent(initialTask.description ?? "");
-    setLovelace(initialTask.lovelaceAmount ?? "1000000");
     setExpirationTime(initialTask.expirationTime ?? "");
     setContentJson((initialTask.contentJson as JSONContent) ?? null);
     const existingAlias = initialTask.preAssignedAlias;
     setPreAssignedAliases(existingAlias ? [existingAlias] : []);
+    // Populate XP from existing task tokens
+    const xpToken = initialTask.tokens?.find(
+      (t) => t.policyId === CARDANO_XP.xpToken.policyId
+    );
+    if (xpToken) setXpAmount(xpToken.quantity);
     setFormInitialized(true);
   }, [initialTask, formInitialized]);
 
   // ---------------------------------------------------------------------------
   // Derived values
   // ---------------------------------------------------------------------------
-  const adaValue = lovelace ? (parseInt(lovelace) || 0) / 1_000_000 : "";
-
   const isValid =
     title.trim().length > 0 &&
-    parseInt(lovelace) >= 1000000 &&
+    xpAmount >= 0 &&
+    Number.isInteger(xpAmount) &&
     expirationTime.trim().length > 0;
 
   // ---------------------------------------------------------------------------
   // Handlers
   // ---------------------------------------------------------------------------
-  const handleAdaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleXpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
     if (raw === "") {
-      setLovelace("");
+      setXpAmount(0);
       return;
     }
-    // Allow only digits and a single decimal point
-    if (!/^\d*\.?\d*$/.test(raw)) return;
-    const ada = parseFloat(raw) || 0;
-    setLovelace(Math.floor(ada * 1_000_000).toString());
+    const parsed = parseInt(raw, 10);
+    if (!isNaN(parsed) && parsed >= 0) {
+      setXpAmount(parsed);
+    }
   };
 
   const handleSubmit = () => {
@@ -131,6 +137,7 @@ export function TaskForm({
       title: title.trim(),
       content: content.trim(),
       lovelaceAmount: lovelace,
+      xpAmount,
       expirationTime,
       contentJson: finalContentJson,
       preAssignedAlias: alias,
@@ -164,27 +171,40 @@ export function TaskForm({
             </AndamioText>
           </div>
 
-          {/* Reward & Expiration — two-column on md+ */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Reward (Lovelace) */}
+          {/* Rewards & Expiration */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* ADA Reward (locked) */}
           <div className="space-y-2">
-            <AndamioLabel htmlFor="lovelace">
-              Reward Amount (ADA) *
+            <AndamioLabel>ADA Reward</AndamioLabel>
+            <div className="flex items-center gap-2 h-9 px-3 border border-border bg-muted/50 text-sm text-muted-foreground">
+              2.5 ADA
+            </div>
+            <AndamioText variant="small" className="text-xs">
+              Fixed per task
+            </AndamioText>
+          </div>
+
+          {/* XP Reward (editable) */}
+          <div className="space-y-2">
+            <AndamioLabel htmlFor="xpAmount">
+              XP Reward *
             </AndamioLabel>
             <div className="flex items-center gap-2">
               <AndamioInput
-                id="lovelace"
-                type="text"
-                inputMode="decimal"
-                value={adaValue}
-                onChange={handleAdaChange}
+                id="xpAmount"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={1}
+                value={xpAmount}
+                onChange={handleXpChange}
                 onFocus={(e) => e.target.select()}
-                placeholder="1"
+                placeholder="10"
               />
-              <AndamioText variant="small">ADA</AndamioText>
+              <AndamioText variant="small">XP</AndamioText>
             </div>
             <AndamioText variant="small" className="text-xs">
-              Minimum 1 ADA ({lovelace || "0"} lovelace)
+              XP tokens earned by contributor
             </AndamioText>
           </div>
 

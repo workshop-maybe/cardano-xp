@@ -43,7 +43,8 @@ import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useContributorCommitments } from "~/hooks/api/project/use-project-contributor";
 import { useStudentCompletionsForPrereqs } from "~/hooks/api/course/use-student-completions-for-prereqs";
 import { checkProjectEligibility } from "~/lib/project-eligibility";
-import { formatLovelace } from "~/lib/cardano-utils";
+import { formatLovelace, formatXP } from "~/lib/cardano-utils";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { NextIcon, PendingIcon } from "~/components/icons";
 
 /**
@@ -179,6 +180,13 @@ export default function ProjectDetailPage() {
     0,
   );
 
+  const availableXp = availableTasks.reduce((sum, t) => {
+    const xpToken = t.tokens?.find(
+      (tok) => tok.policyId === CARDANO_XP.xpToken.policyId
+    );
+    return sum + (xpToken?.quantity ?? 0);
+  }, 0);
+
   return (
     <div className="space-y-8">
       {/* ── Header ────────────────────────────────────────────────── */}
@@ -268,6 +276,11 @@ export default function ProjectDetailPage() {
           <AndamioText className="text-2xl font-bold">
             {formatLovelace(availableRewards)}
           </AndamioText>
+          {availableXp > 0 && (
+            <AndamioText className="text-lg font-bold text-secondary">
+              {formatXP(availableXp)}
+            </AndamioText>
+          )}
           <AndamioText variant="small" className="text-muted-foreground">
             across {availableTasks.length} task{availableTasks.length !== 1 ? "s" : ""}
           </AndamioText>
@@ -403,10 +416,24 @@ export default function ProjectDetailPage() {
                         )}
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right">
-                        <AndamioBadge variant="outline">
-                          {formatLovelace(task.lovelaceAmount ?? "0")}
-                          {group.count > 1 && ` each`}
-                        </AndamioBadge>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <AndamioBadge variant="outline">
+                            {formatLovelace(task.lovelaceAmount ?? "0")}
+                          </AndamioBadge>
+                          {(() => {
+                            const xpToken = task.tokens?.find(
+                              (t) => t.policyId === CARDANO_XP.xpToken.policyId
+                            );
+                            return xpToken ? (
+                              <AndamioBadge variant="secondary">
+                                {formatXP(xpToken.quantity)}
+                              </AndamioBadge>
+                            ) : null;
+                          })()}
+                          {group.count > 1 && (
+                            <AndamioText variant="small" className="text-muted-foreground">each</AndamioText>
+                          )}
+                        </div>
                       </AndamioTableCell>
                     </AndamioTableRow>
                   );

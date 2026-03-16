@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useProject } from "~/hooks/api/project/use-project";
 import { useCreateTask } from "~/hooks/api/project/use-project-manager";
 import { TaskForm, type TaskFormValues } from "~/components/studio";
+import { CARDANO_XP } from "~/config/cardano-xp";
 
 export default function NewTaskPage() {
   const params = useParams();
@@ -60,6 +61,11 @@ export default function NewTaskPage() {
         lovelaceAmount: values.lovelaceAmount,
         expirationTime: values.expirationTime,
         contentJson: values.contentJson,
+        tokens: values.xpAmount > 0 ? [{
+          policy_id: CARDANO_XP.xpToken.policyId,
+          asset_name: CARDANO_XP.xpToken.assetName,
+          quantity: values.xpAmount.toString(),
+        }] : undefined,
       });
 
       toast.success("Task Created!", {

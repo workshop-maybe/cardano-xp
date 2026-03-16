@@ -25,7 +25,8 @@ import { ContentDisplay } from "~/components/content-display";
 import { ContentEditor, ContentViewer } from "~/components/editor";
 import { PendingIcon, TokenIcon, TeacherIcon, EditIcon, SuccessIcon, ContributorIcon, CredentialIcon, AlertIcon, OnChainIcon, RefreshIcon, CourseIcon } from "~/components/icons";
 import type { JSONContent } from "@tiptap/core";
-import { formatLovelace } from "~/lib/cardano-utils";
+import { formatLovelace, formatXP } from "~/lib/cardano-utils";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { formatCommitmentStatus, formatTaskStatus } from "~/lib/format-status";
 import { TaskCommit, TaskAction, ProjectCredentialClaim } from "~/components/tx";
 import { ConnectWalletPrompt } from "~/components/auth/connect-wallet-prompt";
@@ -259,12 +260,20 @@ export default function TaskDetailPage() {
       />
 
       {/* Task Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <AndamioDashboardStat
           icon={TokenIcon}
-          label="Reward"
+          label="ADA Reward"
           value={formatLovelace(task.lovelaceAmount ?? "0")}
           iconColor="success"
+        />
+        <AndamioDashboardStat
+          icon={TokenIcon}
+          label="XP Reward"
+          value={formatXP(
+            task.tokens?.find((t) => t.policyId === CARDANO_XP.xpToken.policyId)?.quantity ?? 0
+          )}
+          iconColor="warning"
         />
         <AndamioDashboardStat
           icon={PendingIcon}
@@ -300,23 +309,26 @@ export default function TaskDetailPage() {
         </AndamioCard>
       )}
 
-      {/* Token Rewards (if any) */}
+      {/* XP Reward */}
       {task.tokens && task.tokens.length > 0 && (
         <AndamioCard>
           <AndamioCardHeader>
-            <AndamioCardTitle>Additional Token Rewards</AndamioCardTitle>
-            <AndamioCardDescription>Native tokens included with this task</AndamioCardDescription>
+            <AndamioCardTitle>XP Reward</AndamioCardTitle>
+            <AndamioCardDescription>Reputation tokens earned on completion</AndamioCardDescription>
           </AndamioCardHeader>
           <AndamioCardContent>
             <div className="space-y-2">
               {task.tokens.map((token, idx) => {
-                const displayName = token.assetName || (token.policyId ? token.policyId.slice(0, 16) : `Token ${idx + 1}`);
+                const isXp = token.policyId === CARDANO_XP.xpToken.policyId;
+                const displayName = isXp ? "XP" : (token.assetName || token.policyId?.slice(0, 16) || `Token ${idx + 1}`);
                 return (
-                  <div key={token.policyId || idx} className="flex items-center justify-between p-2 border rounded">
-                    <AndamioText className="font-medium font-mono text-sm">
+                  <div key={token.policyId || idx} className="flex items-center justify-between p-3 border bg-card">
+                    <AndamioText className="font-display font-semibold">
                       {displayName}
                     </AndamioText>
-                    <AndamioBadge variant="outline">{token.quantity}</AndamioBadge>
+                    <AndamioBadge variant={isXp ? "secondary" : "outline"}>
+                      {isXp ? formatXP(token.quantity) : token.quantity}
+                    </AndamioBadge>
                   </div>
                 );
               })}

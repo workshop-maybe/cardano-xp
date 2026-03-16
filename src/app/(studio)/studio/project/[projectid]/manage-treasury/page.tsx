@@ -38,6 +38,7 @@ import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import { TreasuryBalanceCard } from "~/components/studio/treasury-balance-card";
 import { TasksManage, TreasuryAddFunds } from "~/components/tx";
 import { formatLovelace } from "~/lib/cardano-utils";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { toast } from "sonner";
 import type { Task } from "~/hooks/api/project/use-project";
 import { useProject, projectKeys } from "~/hooks/api/project/use-project";
@@ -235,11 +236,17 @@ export default function ManageTreasuryPage() {
       expirationMs = expirationMs * 1000;
     }
 
+    // Build native_assets from task tokens (e.g., XP tokens)
+    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
+      `${t.policyId}.${t.assetName}`,
+      t.quantity,
+    ]);
+
     const projectData: ProjectData = {
       project_content: projectContent,
       expiration_posix: expirationMs,
       lovelace_amount: parseInt(task.lovelaceAmount) || 5000000,
-      native_assets: [], // Empty for now - could add native tokens later
+      native_assets: nativeAssets,
     };
 
     return projectData;
@@ -264,11 +271,17 @@ export default function ManageTreasuryPage() {
       expirationMs = expirationMs * 1000;
     }
 
+    // Reconstruct native_assets from on-chain task tokens
+    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
+      `${t.policyId}.${t.assetName}`,
+      t.quantity,
+    ]);
+
     return {
       project_content: projectContent,
       expiration_posix: expirationMs,
       lovelace_amount: parseInt(task.lovelaceAmount) || 5000000,
-      native_assets: [],
+      native_assets: nativeAssets,
     };
   });
 
@@ -276,17 +289,32 @@ export default function ManageTreasuryPage() {
   const addLovelace = tasksToAdd.reduce((sum, t) => sum + t.lovelace_amount, 0);
   const removeLovelace = tasksToRemove.reduce((sum, t) => sum + t.lovelace_amount, 0);
   // Use API's treasury_balance (actual on-chain balance minus min-UTxO reserve)
-  // instead of summing treasuryFundings (which only reflects historical deposits,
-  // not accounting for funds already paid out to contributors).
   const treasuryBalance = projectDetail?.treasuryBalance ?? 0;
   const onChainCommitted = onChainTasks.reduce(
     (sum, t) => sum + (parseInt(t.lovelaceAmount) || 0),
     0,
   );
   const availableFunds = treasuryBalance - onChainCommitted;
-  // Publishing: manager deposits the shortfall (removals handled separately, no deposit needed)
   const publishDepositAmount = Math.max(0, addLovelace - availableFunds);
-  const publishDepositValue: ListValue = publishDepositAmount > 0 ? [["lovelace", publishDepositAmount]] : [];
+
+  // Calculate XP deposit needed (sum XP across all tasks being published)
+  const addXp = tasksToAdd.reduce((sum, t) => {
+    const xpAsset = t.native_assets.find(([assetClass]) =>
+      typeof assetClass === "string" && assetClass.includes(CARDANO_XP.xpToken.assetName)
+    );
+    return sum + (xpAsset ? (typeof xpAsset[1] === "number" ? xpAsset[1] : 0) : 0);
+  }, 0);
+
+  const publishDepositValue: ListValue = [];
+  if (publishDepositAmount > 0) {
+    publishDepositValue.push(["lovelace", publishDepositAmount]);
+  }
+  if (addXp > 0) {
+    publishDepositValue.push([
+      `${CARDANO_XP.xpToken.policyId}.${CARDANO_XP.xpToken.assetName}`,
+      addXp,
+    ]);
+  }
 
   return (
     <AndamioScrollArea className="h-full">

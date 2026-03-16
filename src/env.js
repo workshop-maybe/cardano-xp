@@ -38,6 +38,8 @@ export const env = createEnv({
     // Cardano XP — single course and project for this app
     NEXT_PUBLIC_COURSE_ID: z.string().min(1),
     NEXT_PUBLIC_PROJECT_ID: z.string().min(1),
+    // XP token policy ID (56-char hex)
+    NEXT_PUBLIC_XP_POLICY_ID: z.string().length(56),
   },
 
   /**
@@ -58,6 +60,7 @@ export const env = createEnv({
     UTXOS_SPONSORSHIP_ID: process.env.UTXOS_SPONSORSHIP_ID,
     NEXT_PUBLIC_COURSE_ID: process.env.NEXT_PUBLIC_COURSE_ID,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
+    NEXT_PUBLIC_XP_POLICY_ID: process.env.NEXT_PUBLIC_XP_POLICY_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

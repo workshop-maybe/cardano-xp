@@ -498,6 +498,7 @@ export function useCreateTask() {
       lovelaceAmount: string;
       expirationTime: string;
       contentJson?: unknown;
+      tokens?: Array<{ policy_id: string; asset_name: string; quantity: string }>;
     }) => {
       // Endpoint: POST /project/manager/task/create
       // API expects: contributor_state_id (required), title, lovelace_amount, expiration_time
@@ -513,6 +514,7 @@ export function useCreateTask() {
             lovelace_amount: input.lovelaceAmount,
             expiration_time: input.expirationTime,
             content_json: input.contentJson,
+            tokens: input.tokens,
           }),
         }
       );
@@ -580,6 +582,7 @@ export function useUpdateTask() {
       lovelaceAmount: string;
       expirationTime: string;
       contentJson?: unknown;
+      tokens?: Array<{ policy_id: string; asset_name: string; quantity: string }>;
     }) => {
       // Endpoint: POST /project/manager/task/update
       // API expects: contributor_state_id (required), index (required)
@@ -596,6 +599,7 @@ export function useUpdateTask() {
             lovelace_amount: input.lovelaceAmount,
             expiration_time: input.expirationTime,
             content_json: input.contentJson,
+            tokens: input.tokens,
           }),
         }
       );

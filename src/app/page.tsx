@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { env } from "~/env";
 import { LandingHero } from "~/components/landing/landing-hero";
 import { FirstLoginCard } from "~/components/landing/first-login-card";
 import { AppNavBar } from "~/components/layout/app-nav-bar";
+import { AppFooter } from "~/components/layout/app-footer";
 
 interface MintedInfo {
   alias: string;
@@ -12,7 +12,6 @@ interface MintedInfo {
 }
 
 export default function Home() {
-  const network = env.NEXT_PUBLIC_CARDANO_NETWORK;
   const [mintedInfo, setMintedInfo] = useState<MintedInfo | null>(null);
 
   const handleMinted = useCallback((info: MintedInfo) => {
@@ -44,21 +43,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 py-4 px-6 border-t border-border/30">
-        <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground/70 font-mono">
-          <span className="uppercase tracking-wider">{network}</span>
-          <span className="text-border/50">·</span>
-          <a
-            href="https://andamio.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            Powered by Andamio
-          </a>
-        </div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

@@ -1,7 +1,9 @@
+"use client";
+
 /**
- * Centralized Icon System
+ * Centralized Icon System — Phosphor Icons
  *
- * All icons should be imported from this module, not directly from lucide-react.
+ * All icons should be imported from this module, not directly from @phosphor-icons/react.
  * This enables:
  * 1. Easy customization of icon sets
  * 2. Consistent semantic naming across the app
@@ -10,22 +12,15 @@
  * @example
  * ```tsx
  * // ✅ CORRECT - Import from centralized icons
- * import { CredentialIcon, SLTIcon, CourseIcon } from "~/components/icons";
+ * import { TaskIcon, XPIcon, FeedbackIcon } from "~/components/icons";
  *
- * // ❌ WRONG - Direct lucide-react imports
- * import { Award, Target, BookOpen } from "lucide-react";
+ * // ❌ WRONG - Direct phosphor imports
+ * import { Lightning, ChatCircleText } from "@phosphor-icons/react";
  * ```
- *
- * Icon Categories:
- * - Entity Icons: Andamio domain concepts (Course, Module, Credential, SLT, etc.)
- * - Status Icons: State indicators (Success, Error, Pending, Loading, etc.)
- * - Action Icons: User operations (Add, Edit, Delete, Save, etc.)
- * - Navigation Icons: Direction and navigation (Back, Forward, Expand, etc.)
- * - UI Icons: General interface elements (Search, Settings, Menu, etc.)
  */
 
 // =============================================================================
-// Entity Icons - Andamio Domain Concepts
+// Entity Icons - XP Domain Concepts
 // =============================================================================
 export {
   // Course & Learning
@@ -41,6 +36,7 @@ export {
   // Users & Roles
   LearnerIcon,
   TeacherIcon,
+  EditorIcon,
   InstructorIcon,
   OwnerIcon,
   AccessTokenIcon,
@@ -62,6 +58,11 @@ export {
   TransactionIcon,
   TokenIcon,
   SignatureIcon,
+  // XP-Specific
+  XPIcon,
+  FeedbackIcon,
+  IssueIcon,
+  GitHubIcon,
 } from "./entity-icons";
 
 // =============================================================================
@@ -87,6 +88,9 @@ export {
   LockedIcon,
   LiveIcon,
   DraftIcon,
+  // Activity
+  ActiveIcon,
+  ReadyIcon,
 } from "./status-icons";
 
 // =============================================================================
@@ -119,6 +123,9 @@ export {
   AssessIcon,
   // Session Actions
   LogOutIcon,
+  // Feedback Actions
+  ReportIcon,
+  CommentIcon,
 } from "./action-icons";
 
 // =============================================================================
@@ -183,9 +190,11 @@ export {
   // Special & Misc
   TestIcon,
   CalendarIcon,
+  TerminalIcon,
+  CodeIcon,
 } from "./ui-icons";
 
 // =============================================================================
 // Type Export for Icon Components
 // =============================================================================
-export type { LucideIcon } from "lucide-react";
+export type { Icon as PhosphorIcon } from "@phosphor-icons/react";

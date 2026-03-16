@@ -94,20 +94,21 @@ export default function XPPage() {
           The problem
         </h2>
         <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-8 space-y-4">
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Five and a half years of Catalyst. Hundreds of funded proposals. Thousands of
-            contributors. Nothing on-chain to show for any of it.
+          <p className="text-xl text-foreground font-display font-semibold leading-snug">
+            Developers have git commits. The rest of us have Twitter.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            Developers have git. They can point to commits, PRs, and
-            contribution graphs. But for everyone who isn&apos;t a developer —
-            designers, educators, community builders, operators — there&apos;s
-            nothing. You tell stories. You say &ldquo;take my word for it.&rdquo;
+            If you write code, you can point to your contribution graph. PRs,
+            commits, repos — verifiable proof you showed up and did something.
+            But for everyone else — designers, educators, community builders,
+            operators — there&apos;s nothing. You post threads. You hope people
+            remember.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            If you want to build up a history of contribution on Cardano
-            and you don&apos;t have a GitHub profile to point to, this experiment
-            is a place to start.
+            Five and a half years of Catalyst. Hundreds of funded proposals.
+            Thousands of contributors. Almost nothing on-chain to show for it.
+            If you want verifiable proof of contribution and you don&apos;t have
+            a GitHub profile, this experiment is a place to start.
           </p>
         </div>
       </section>

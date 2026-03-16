@@ -128,8 +128,8 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
     <div className="flex flex-col items-center text-center gap-10">
       {/* Brand mark */}
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 bg-secondary flex items-center justify-center">
-          <span className="font-display font-bold text-lg text-secondary-foreground">XP</span>
+        <div className="h-10 w-10 rounded-full border-[3px] border-secondary flex items-center justify-center">
+          <span className="font-display font-bold text-lg text-secondary">XP</span>
         </div>
         <span className="font-display font-semibold text-xl tracking-tight text-foreground">
           Cardano XP
@@ -144,38 +144,32 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         </h1>
 
         <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          Your feedback matters — and it takes real work to give it well.
-          Review what we&apos;re building, tell us what&apos;s broken, and earn
-          on-chain reputation for your contribution.
+          A tiny experiment in developer feedback. We&apos;re building tools
+          for on-chain learning and we need devs to break them. Tell us
+          what&apos;s wrong, earn XP for your trouble.
         </p>
       </div>
 
       {/* CTA */}
-      <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col lg:flex-row items-center lg:justify-between gap-3 w-full max-w-xs lg:max-w-none mt-6">
         <AndamioButton
           onClick={handleEnter}
-          size="lg"
-          className="xp-pulse-glow px-10 py-6 text-base font-display font-semibold tracking-wide shadow-xl shadow-secondary/25 hover:shadow-2xl hover:shadow-secondary/40 transition-all"
+          className="w-full lg:w-auto"
         >
           Connect Wallet
         </AndamioButton>
-
-        <div className="flex items-center gap-6">
-          <Link
-            href="/about"
-            className="group text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            What is this?{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
-          </Link>
-          <Link
-            href="/xp"
-            className="group text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Tokenomics{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
-          </Link>
-        </div>
+        <AndamioButton
+          onClick={() => router.push("/about")}
+          className="w-full lg:w-auto"
+        >
+          What is this?
+        </AndamioButton>
+        <AndamioButton
+          onClick={() => router.push("/xp")}
+          className="w-full lg:w-auto"
+        >
+          Tokenomics
+        </AndamioButton>
       </div>
     </div>
   );

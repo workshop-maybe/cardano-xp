@@ -5,7 +5,7 @@ import {
   PendingIcon,
   AlertIcon,
   NeutralIcon,
-  type LucideIcon,
+  type PhosphorIcon,
 } from "~/components/icons";
 
 /**
@@ -35,7 +35,7 @@ export type StatusPreset =
   | "archived";
 
 interface StatusConfig {
-  icon: LucideIcon;
+  icon: PhosphorIcon;
   variant: StatusVariant;
   animate?: boolean;
 }
@@ -72,7 +72,7 @@ export interface AndamioStatusIconProps {
   /**
    * Custom icon (overrides preset)
    */
-  icon?: LucideIcon;
+  icon?: PhosphorIcon;
   /**
    * Whether to animate the icon (pulse)
    */

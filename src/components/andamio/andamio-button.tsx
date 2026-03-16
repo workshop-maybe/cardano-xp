@@ -1,29 +1,45 @@
 /**
  * Andamio wrapper for shadcn/ui Button
  *
- * Enhanced button component with Andamio-specific features:
+ * XP-branded button with pill shape and outlined style:
+ * - rounded-full with thick secondary border
+ * - No fill, blue text
  * - Loading state support
- * - Icon support (uses base Button's gap-2 for consistent spacing)
- * - Consistent styling defaults
+ * - Icon support
  *
  * Usage:
  * import { AndamioButton } from "~/components/andamio";
- *
- * Future (after extraction to @andamio/ui):
- * import { AndamioButton } from "@andamio/ui";
  */
 
 import * as React from "react";
-import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { LoadingIcon } from "~/components/icons";
 
-// Re-export variants
-export { buttonVariants } from "~/components/ui/button";
+/**
+ * XP button base styles - pill shape
+ */
+const xpButtonBase =
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-display font-semibold tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-secondary/50";
+
+const xpButtonSizes = {
+  sm: "h-7 px-4 text-xs",
+  default: "h-9 px-6 text-sm",
+  lg: "h-11 px-8 text-base",
+  "icon-sm": "h-8 w-8 p-0",
+  icon: "h-9 w-9 p-0",
+} as const;
+
+const xpButtonVariants = {
+  default: "border-2 border-secondary bg-transparent text-secondary hover:bg-secondary/10",
+  secondary: "border-2 border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/90",
+  outline: "border-2 border-border bg-transparent text-foreground hover:bg-foreground/5",
+  ghost: "border-0 text-muted-foreground hover:text-foreground hover:bg-foreground/5",
+  destructive: "border-2 border-destructive bg-transparent text-destructive hover:bg-destructive/10",
+  link: "border-0 text-secondary underline-offset-4 hover:underline",
+} as const;
 
 /**
  * Standard icon sizes for buttons based on button size variant.
- * Use these when rendering icons inside buttons for consistency.
  */
 export const BUTTON_ICON_SIZES = {
   sm: "h-3.5 w-3.5",
@@ -32,7 +48,15 @@ export const BUTTON_ICON_SIZES = {
 } as const;
 
 export interface AndamioButtonProps
-  extends React.ComponentPropsWithoutRef<typeof Button> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Button size variant
+   */
+  size?: keyof typeof xpButtonSizes;
+  /**
+   * Button style variant
+   */
+  variant?: keyof typeof xpButtonVariants;
   /**
    * Show loading spinner and disable button
    */
@@ -45,6 +69,10 @@ export interface AndamioButtonProps
    * Icon to display after children
    */
   rightIcon?: React.ReactNode;
+  /**
+   * Render as child element (for composition with Link, etc.)
+   */
+  asChild?: boolean;
 }
 
 export const AndamioButton = React.forwardRef<
@@ -55,66 +83,53 @@ export const AndamioButton = React.forwardRef<
     {
       className,
       children,
+      size = "default",
+      variant = "default",
       isLoading,
       leftIcon,
       rightIcon,
       disabled,
-      asChild,
+      asChild = false,
       ...props
     },
     ref
   ) => {
-    // Base Button already has gap-2 for icon spacing, so we don't need
-    // manual margins. Just render icons and content directly.
-    if (asChild && React.isValidElement(children)) {
-      // Type-assert props to access nested children for asChild pattern
-      const childProps = children.props as { children?: React.ReactNode };
-      const content = isLoading ? (
-        <>
-          <LoadingIcon className="h-4 w-4 animate-spin" />
-          Loading...
-        </>
-      ) : (
-        <>
-          {leftIcon}
-          {childProps.children}
-          {rightIcon}
-        </>
-      );
+    const buttonClassName = cn(
+      xpButtonBase,
+      xpButtonSizes[size],
+      xpButtonVariants[variant],
+      className
+    );
 
-      return (
-        <Button
-          ref={ref}
-          className={cn("font-semibold", className)}
-          disabled={isLoading || disabled}
-          asChild
-          {...props}
-        >
-          {React.cloneElement(children, undefined, content)}
-        </Button>
-      );
+    // When asChild, clone the child element with merged className
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children as React.ReactElement<{ className?: string }>, {
+        className: cn(buttonClassName, (children.props as { className?: string }).className),
+      });
     }
 
+    const content = isLoading ? (
+      <>
+        <LoadingIcon className="h-4 w-4 animate-spin" />
+        Loading...
+      </>
+    ) : (
+      <>
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </>
+    );
+
     return (
-      <Button
+      <button
         ref={ref}
-        className={cn("font-semibold", className)}
+        className={buttonClassName}
         disabled={isLoading || disabled}
         {...props}
       >
-        {isLoading ? (
-          <>
-            <LoadingIcon className="h-4 w-4 animate-spin" />
-            Loading...
-          </>
-        ) : (
-          <>
-            {leftIcon}
-            {children}
-            {rightIcon}
-          </>
-        )}
-      </Button>
+        {content}
+      </button>
     );
   }
 );

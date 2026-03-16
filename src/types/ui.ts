@@ -2,7 +2,7 @@
  * Shared UI Types
  *
  * Common type definitions for UI components, especially those involving
- * Lucide icons and navigation patterns.
+ * Phosphor icons and navigation patterns.
  *
  * @example
  * ```tsx
@@ -14,13 +14,13 @@
  * ```
  */
 
-import type { LucideIcon } from "~/components/icons";
+import type { PhosphorIcon } from "~/components/icons";
 
 /**
- * Type alias for Lucide icon components.
- * Use this instead of importing LucideIcon directly for consistency.
+ * Type alias for Phosphor icon components.
+ * Use this instead of importing PhosphorIcon directly for consistency.
  */
-export type IconComponent = LucideIcon;
+export type IconComponent = PhosphorIcon;
 
 /**
  * Navigation item for sidebar and mobile navigation.
@@ -30,7 +30,7 @@ export interface NavItem {
   name: string;
   /** Route path */
   href: string;
-  /** Lucide icon component */
+  /** Phosphor icon component */
   icon: IconComponent;
   /** Optional description shown below the name */
   description?: string;
@@ -40,7 +40,7 @@ export interface NavItem {
  * Generic item with an icon, useful for feature lists, value props, etc.
  */
 export interface IconListItem {
-  /** Lucide icon component */
+  /** Phosphor icon component */
   icon: IconComponent;
   /** Title/heading text */
   title: string;
@@ -58,7 +58,7 @@ export interface StepItem {
   title: string;
   /** Whether this step is completed */
   completed: boolean;
-  /** Lucide icon component */
+  /** Phosphor icon component */
   icon: IconComponent;
   /** Optional link to navigate when clicking the step */
   link?: string;

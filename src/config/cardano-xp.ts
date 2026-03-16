@@ -10,8 +10,8 @@ export const CARDANO_XP = {
   courseId: env.NEXT_PUBLIC_COURSE_ID,
   projectId: env.NEXT_PUBLIC_PROJECT_ID,
   routes: {
-    course: `/course/${env.NEXT_PUBLIC_COURSE_ID}`,
-    project: `/project/${env.NEXT_PUBLIC_PROJECT_ID}`,
+    course: `/learn`,
+    project: `/tasks`,
   },
   /** XP token identity on-chain */
   xpToken: {

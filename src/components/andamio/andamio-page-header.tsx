@@ -70,15 +70,15 @@ export function AndamioPageHeader({
 }: AndamioPageHeaderProps) {
   if (centered) {
     return (
-      <div className={cn("text-center max-w-3xl mx-auto space-y-2 sm:space-y-4 px-4 sm:px-0", className)}>
-        <AndamioHeading level={1} size="5xl">{title}</AndamioHeading>
+      <div className={cn("text-center max-w-3xl mx-auto space-y-2 sm:space-y-3 px-4 sm:px-0", className)}>
+        <AndamioHeading level={1} size="3xl">{title}</AndamioHeading>
         {description && (
-          <AndamioText variant="lead">
+          <AndamioText variant="muted" className="text-base">
             {description}
           </AndamioText>
         )}
         {action && (
-          <div className="pt-2 sm:pt-4">
+          <div className="pt-2 sm:pt-3">
             {action}
           </div>
         )}
@@ -89,14 +89,14 @@ export function AndamioPageHeader({
   // Layout with action: flex container that stacks on mobile
   if (action) {
     return (
-      <div className={cn("flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4", className)}>
-        <div className="space-y-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <AndamioHeading level={1} size="5xl">{title}</AndamioHeading>
+      <div className={cn("flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3", className)}>
+        <div className="space-y-0.5 min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <AndamioHeading level={1} size="2xl">{title}</AndamioHeading>
             {badge}
           </div>
           {description && (
-            <AndamioText variant="small">
+            <AndamioText variant="small" className="text-muted-foreground">
               {description}
             </AndamioText>
           )}
@@ -110,13 +110,13 @@ export function AndamioPageHeader({
 
   // Simple layout without action
   return (
-    <div className={cn("space-y-1", className)}>
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-        <AndamioHeading level={1} size="5xl">{title}</AndamioHeading>
+    <div className={cn("space-y-0.5", className)}>
+      <div className="flex flex-wrap items-center gap-2">
+        <AndamioHeading level={1} size="2xl">{title}</AndamioHeading>
         {badge}
       </div>
       {description && (
-        <AndamioText variant="small">
+        <AndamioText variant="small" className="text-muted-foreground">
           {description}
         </AndamioText>
       )}

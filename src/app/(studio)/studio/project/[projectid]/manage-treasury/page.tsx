@@ -37,7 +37,15 @@ import { TaskIcon, OnChainIcon, AddIcon, DeleteIcon } from "~/components/icons";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import { TreasuryBalanceCard } from "~/components/studio/treasury-balance-card";
 import { TasksManage, TreasuryAddFunds } from "~/components/tx";
-import { formatLovelace } from "~/lib/cardano-utils";
+/**
+ * Get XP reward amount from task tokens
+ */
+function getTaskXpReward(task: Task): number {
+  const xpToken = task.tokens?.find(
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId && t.assetName === CARDANO_XP.xpToken.assetName
+  );
+  return xpToken?.quantity ?? 0;
+}
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { toast } from "sonner";
 import type { Task } from "~/hooks/api/project/use-project";
@@ -442,7 +450,7 @@ export default function ManageTreasuryPage() {
                               {task.taskHash ? `${task.taskHash.slice(0, 16)}...` : "-"}
                             </AndamioTableCell>
                             <AndamioTableCell className="text-center">
-                              <AndamioBadge variant="outline">{formatLovelace(task.lovelaceAmount)}</AndamioBadge>
+                              <AndamioBadge variant="outline">{getTaskXpReward(task)} XP</AndamioBadge>
                             </AndamioTableCell>
                           </AndamioTableRow>
                         );
@@ -456,7 +464,7 @@ export default function ManageTreasuryPage() {
                   <>
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-6 space-y-3">
                       <AndamioText className="font-semibold text-base">Transaction Summary</AndamioText>
-                      <div className="grid gap-3 sm:grid-cols-3">
+                      <div className="grid gap-3 sm:grid-cols-2">
                         <div className="space-y-1">
                           <AndamioText variant="small" className="text-sm text-muted-foreground">Publishing</AndamioText>
                           <AndamioText className="text-xl font-bold text-primary">
@@ -464,24 +472,11 @@ export default function ManageTreasuryPage() {
                           </AndamioText>
                         </div>
                         <div className="space-y-1">
-                          <AndamioText variant="small" className="text-sm text-muted-foreground">Total Rewards</AndamioText>
-                          <AndamioText className="text-xl font-bold text-primary">
-                            {addLovelace / 1_000_000} ADA
+                          <AndamioText variant="small" className="text-sm text-muted-foreground">Total XP Rewards</AndamioText>
+                          <AndamioText className="text-xl font-bold text-secondary">
+                            {addXp.toLocaleString()} XP
                           </AndamioText>
                         </div>
-                        <div className="space-y-1">
-                          <AndamioText variant="small" className="text-sm text-muted-foreground">Treasury Available</AndamioText>
-                          <AndamioText className="text-xl font-bold">
-                            {availableFunds / 1_000_000} ADA
-                          </AndamioText>
-                        </div>
-                      </div>
-                      <div className="pt-2 border-t">
-                        <AndamioText variant="small" className={`text-sm ${publishDepositAmount > 0 ? "text-muted-foreground" : "text-primary font-medium"}`}>
-                          {publishDepositAmount > 0
-                            ? `Wallet deposit required: ${publishDepositAmount / 1_000_000} ADA`
-                            : "No additional deposit needed — treasury covers it"}
-                        </AndamioText>
                       </div>
                     </div>
 
@@ -581,7 +576,7 @@ export default function ManageTreasuryPage() {
                               {taskHash ? `${taskHash.slice(0, 16)}...` : "-"}
                             </AndamioTableCell>
                             <AndamioTableCell className="text-center">
-                              <AndamioBadge variant="outline">{formatLovelace(task.lovelaceAmount)}</AndamioBadge>
+                              <AndamioBadge variant="outline">{getTaskXpReward(task)} XP</AndamioBadge>
                             </AndamioTableCell>
                             <AndamioTableCell className="hidden sm:table-cell text-center text-xs text-muted-foreground">
                               {expirationDate.toLocaleDateString()}
@@ -598,7 +593,9 @@ export default function ManageTreasuryPage() {
                   <>
                     <div className="rounded-md border border-destructive/20 bg-destructive/5 p-3 text-xs space-y-1">
                       <div className="font-medium">Removal Summary</div>
-                      <div className="text-destructive">Removing {tasksToRemove.length} task{tasksToRemove.length !== 1 ? "s" : ""} ({removeLovelace / 1_000_000} ADA returned)</div>
+                      <div className="text-destructive">
+                        Removing {tasksToRemove.length} task{tasksToRemove.length !== 1 ? "s" : ""} (XP returned to treasury)
+                      </div>
                     </div>
 
                     <TasksManage

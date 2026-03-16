@@ -1,8 +1,10 @@
+"use client";
+
 /**
  * Action Icons - User Actions & Operations
  *
- * These icons represent actions users can take.
- * Import from ~/components/icons instead of lucide-react directly.
+ * Phosphor icons for actions users can take.
+ * Import from ~/components/icons instead of @phosphor-icons/react directly.
  */
 
 // =============================================================================
@@ -10,80 +12,90 @@
 // =============================================================================
 
 /** Add/Create - add new item */
-export { Plus as AddIcon } from "lucide-react";
+export { Plus as AddIcon } from "@phosphor-icons/react";
 
 /** Edit - modify existing item */
-export { Pencil as EditIcon } from "lucide-react";
+export { Pencil as EditIcon } from "@phosphor-icons/react";
 
 /** Delete - remove item */
-export { Trash2 as DeleteIcon } from "lucide-react";
+export { Trash as DeleteIcon } from "@phosphor-icons/react";
 
 /** Save - persist changes */
-export { Save as SaveIcon } from "lucide-react";
+export { FloppyDisk as SaveIcon } from "@phosphor-icons/react";
 
 /** Undo/Discard - revert changes */
-export { Undo2 as UndoIcon } from "lucide-react";
+export { ArrowCounterClockwise as UndoIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Content Actions
 // =============================================================================
 
 /** Send/Submit - submit content or form */
-export { Send as SendIcon } from "lucide-react";
+export { PaperPlaneTilt as SendIcon } from "@phosphor-icons/react";
 
 /** Copy - copy to clipboard */
-export { Copy as CopyIcon } from "lucide-react";
+export { Copy as CopyIcon } from "@phosphor-icons/react";
 
 /** Download - download/import content */
-export { Download as DownloadIcon } from "lucide-react";
+export { DownloadSimple as DownloadIcon } from "@phosphor-icons/react";
 
 /** Upload - upload/export content */
-export { Upload as UploadIcon } from "lucide-react";
+export { UploadSimple as UploadIcon } from "@phosphor-icons/react";
 
 /** Folder - folder/directory */
-export { Folder as FolderIcon } from "lucide-react";
+export { Folder as FolderIcon } from "@phosphor-icons/react";
 
 /** Share - share content with others */
-export { Share as ShareIcon } from "lucide-react";
+export { ShareNetwork as ShareIcon } from "@phosphor-icons/react";
 
 /** Star/Favorite - mark as favorite */
-export { Star as StarIcon } from "lucide-react";
+export { Star as StarIcon } from "@phosphor-icons/react";
 
 /** Refresh/Retry - reload or retry operation */
-export { RefreshCw as RefreshIcon } from "lucide-react";
+export { ArrowsClockwise as RefreshIcon } from "@phosphor-icons/react";
 
 /** Preview/View - view content */
-export { Eye as PreviewIcon } from "lucide-react";
+export { Eye as PreviewIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Reordering & Organization
 // =============================================================================
 
 /** Drag Handle - drag to reorder */
-export { GripVertical as DragHandleIcon } from "lucide-react";
+export { DotsSixVertical as DragHandleIcon } from "@phosphor-icons/react";
 
 /** Skip - skip step or item */
-export { SkipForward as SkipIcon } from "lucide-react";
+export { SkipForward as SkipIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Special Actions
 // =============================================================================
 
 /** Sparkle/Magic - special action, AI-assisted, or highlight */
-export { Sparkles as SparkleIcon } from "lucide-react";
+export { Sparkle as SparkleIcon } from "@phosphor-icons/react";
 
 /** Celebrate - success celebration */
-export { PartyPopper as CelebrateIcon } from "lucide-react";
+export { Confetti as CelebrateIcon } from "@phosphor-icons/react";
 
 /** Tip/Idea - helpful information */
-export { Lightbulb as TipIcon } from "lucide-react";
+export { Lightbulb as TipIcon } from "@phosphor-icons/react";
 
 /** Assess/Review - evaluate or review */
-export { ClipboardCheck as AssessIcon } from "lucide-react";
+export { ClipboardText as AssessIcon } from "@phosphor-icons/react";
 
 // =============================================================================
 // Session Actions
 // =============================================================================
 
 /** Log Out - sign out / disconnect */
-export { LogOut as LogOutIcon } from "lucide-react";
+export { SignOut as LogOutIcon } from "@phosphor-icons/react";
+
+// =============================================================================
+// Feedback Actions
+// =============================================================================
+
+/** Report - file a report or issue */
+export { Flag as ReportIcon } from "@phosphor-icons/react";
+
+/** Comment - add a comment */
+export { ChatText as CommentIcon } from "@phosphor-icons/react";

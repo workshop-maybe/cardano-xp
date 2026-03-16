@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useCourseParams } from "~/hooks/use-course-params";
+import { useLearnParams } from "~/hooks/use-learn-params";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
@@ -13,44 +13,26 @@ import {
   AndamioNotFoundCard,
   AndamioCard,
   AndamioCardContent,
+  AndamioBackButton,
 } from "~/components/andamio";
-import { SettingsIcon, OnChainIcon, AssignmentIcon, NextIcon } from "~/components/icons";
+import { OnChainIcon, AssignmentIcon, NextIcon } from "~/components/icons";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { useCourse, useCourseModule, useSLTs } from "~/hooks/api";
-import { useTeacherCourses } from "~/hooks/api/course/use-course-teacher";
 import { useStudentAssignmentCommitments, getModuleCommitmentStatus } from "~/hooks/api/course/use-student-assignment-commitments";
 import { useStudentCredentials, type StudentCourseCredential } from "~/hooks/api/course/use-student-credentials";
 import { AssignmentStatusBadge } from "~/components/learner/assignment-status-badge";
-import { CourseBreadcrumb } from "~/components/courses/course-breadcrumb";
 import { SLTLessonTable, type CombinedSLTLesson } from "~/components/courses/slt-lesson-table";
 
 /**
- * Public page displaying module details with SLTs and lessons
- *
- * Uses React Query for cached, deduplicated data fetching:
- * - useCourse: Course details for breadcrumb
- * - useCourseModule: Module details
- * - useSLTs: Student Learning Targets
- * - useLessons: Lesson content
- *
- * Benefits: Automatic caching, background refetching, request deduplication
+ * Module detail page for /learn routes.
+ * Uses the single course ID from CARDANO_XP config.
  */
-
-export default function ModuleLessonsPage() {
-  const { courseId, moduleCode: moduleCodeParam } = useCourseParams();
+export default function LearnModulePage() {
+  const { courseId, moduleCode: moduleCodeParam } = useLearnParams();
   const moduleCode = moduleCodeParam!;
   const { isAuthenticated } = useAndamioAuth();
 
-  // Check if user is a teacher for this course (cache hit if already fetched)
-  const { data: teacherCourses } = useTeacherCourses();
-  const isTeacher = useMemo(
-    () => teacherCourses?.some((c) => c.courseId === courseId) ?? false,
-    [teacherCourses, courseId],
-  );
-
-  // React Query hooks - data is cached and shared across components
-  // useCourse returns merged data with both on-chain and off-chain content
   const { data: course } = useCourse(courseId);
   const {
     data: courseModule,
@@ -59,16 +41,12 @@ export default function ModuleLessonsPage() {
   } = useCourseModule(courseId, moduleCode);
   const { data: slts, isLoading: sltsLoading } = useSLTs(courseId, moduleCode);
 
-  // Fetch student commitments for this course (cache hit if already fetched on detail page)
   const { data: studentCommitments } = useStudentAssignmentCommitments(
     isAuthenticated ? courseId : undefined,
   );
 
-  // Fetch student credentials to detect claimed credentials (gated on isAuthenticated internally)
-  // Commitment API stays at ACCEPTED after claim — credentials are separate on-chain tokens
   const { data: studentCredentials } = useStudentCredentials();
 
-  // Derive commitment status for this specific module, cross-referencing credential data
   const moduleCommitmentStatus = useMemo(() => {
     if (!studentCommitments) return null;
     const moduleCommitments = studentCommitments.filter(
@@ -76,9 +54,6 @@ export default function ModuleLessonsPage() {
     );
     const commitmentStatus = getModuleCommitmentStatus(moduleCommitments);
 
-    // If status is ASSIGNMENT_ACCEPTED, check if credential has actually been claimed.
-    // The commitment API stays at ACCEPTED permanently — credential claiming is a
-    // separate on-chain transaction that does not update the commitment record.
     if (commitmentStatus === "ASSIGNMENT_ACCEPTED") {
       const hasClaimedCredential = hasClaimedModuleCredential(
         studentCredentials ?? [],
@@ -91,16 +66,12 @@ export default function ModuleLessonsPage() {
     return commitmentStatus;
   }, [studentCommitments, studentCredentials, moduleCode, courseId]);
 
-  // Get on-chain modules from the merged course data - memoized to stabilize reference
   const onChainModules = useMemo(() => course?.modules ?? [], [course?.modules]);
 
-  // Combine SLTs and Lessons - derived from query data
-  // Note: In the new API, lessons are nested inside SLTs
   const combinedData = useMemo<CombinedSLTLesson[]>(() => {
     if (!slts) return [];
 
     return slts.map((slt) => {
-      // SLT and Lesson use camelCase (transformed from API)
       const lesson = slt.lesson;
       return {
         module_index: slt.moduleIndex ?? 1,
@@ -118,8 +89,6 @@ export default function ModuleLessonsPage() {
     });
   }, [slts]);
 
-  // Find matching on-chain module by SLT content overlap
-  // Note: onChainSlts contains SLT hashes/IDs from the chain
   const onChainModule = useMemo(() => {
     if (onChainModules.length === 0 || combinedData.length === 0) return null;
 
@@ -128,7 +97,6 @@ export default function ModuleLessonsPage() {
     for (const mod of onChainModules) {
       const modSlts = mod.onChainSlts ?? [];
       const onChainTexts = new Set(modSlts);
-      // Check if there's significant overlap (comparing texts with chain data)
       const intersection = [...dbSltTexts].filter((t) => onChainTexts.has(t));
       if (intersection.length > 0 && modSlts.length > 0 && intersection.length >= modSlts.length * 0.5) {
         return mod;
@@ -138,15 +106,12 @@ export default function ModuleLessonsPage() {
     return null;
   }, [onChainModules, combinedData]);
 
-  // Combined loading state
   const isLoading = moduleLoading || sltsLoading;
 
-  // Loading state
   if (isLoading) {
     return <AndamioPageLoading variant="detail" />;
   }
 
-  // Error state
   if (moduleError || !courseModule) {
     return (
       <AndamioNotFoundCard
@@ -158,35 +123,16 @@ export default function ModuleLessonsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb Navigation */}
-      {course && (
-        <CourseBreadcrumb
-          mode="public"
-          course={{ nftPolicyId: courseId, title: course.title ?? "Course" }}
-          courseModule={{ code: courseModule.moduleCode ?? "", title: courseModule.title ?? "Module" }}
-          currentPage="module"
-        />
-      )}
+      <AndamioBackButton href="/learn" label="Back to Course" />
 
       <AndamioPageHeader
         title={courseModule.title ?? "Module"}
         description={typeof courseModule.description === "string" ? courseModule.description : undefined}
-        action={
-          isTeacher ? (
-            <Link href={`/studio/course/${courseId}/${moduleCode}/slts`}>
-              <AndamioButton variant="outline">
-                <SettingsIcon className="h-4 w-4 mr-2" />
-                Manage SLTs
-              </AndamioButton>
-            </Link>
-          ) : undefined
-        }
       />
       <AndamioBadge variant="outline" className="font-mono text-xs">
         {courseModule.moduleCode}
       </AndamioBadge>
 
-      {/* Student Learning Targets & Lessons Combined */}
       <AndamioCard>
         <AndamioCardContent className="pt-6 space-y-4">
           <div className="flex items-center gap-2">
@@ -206,13 +152,12 @@ export default function ModuleLessonsPage() {
             courseId={courseId}
             moduleCode={moduleCode}
             onChainModule={onChainModule}
+            basePath="/learn"
           />
         </AndamioCardContent>
       </AndamioCard>
 
-      {/* Assignment CTA - context-aware based on commitment status */}
-      <AssignmentCTA
-        courseId={courseId}
+      <LearnAssignmentCTA
         moduleCode={moduleCode}
         commitmentStatus={moduleCommitmentStatus}
       />
@@ -220,16 +165,6 @@ export default function ModuleLessonsPage() {
   );
 }
 
-// =============================================================================
-// Helpers
-// =============================================================================
-
-/**
- * Returns true if the student has a claimed credential for the given module.
- *
- * Cross-references the flat claimedCredentials hash list against the module
- * entries to determine whether any SLT for this module has been claimed.
- */
 function hasClaimedModuleCredential(
   credentials: StudentCourseCredential[],
   courseId: string,
@@ -247,21 +182,15 @@ function hasClaimedModuleCredential(
   );
 }
 
-// =============================================================================
-// Assignment CTA - adapts heading and button based on commitment status
-// =============================================================================
-
-interface AssignmentCTAProps {
-  courseId: string;
+interface LearnAssignmentCTAProps {
   moduleCode: string;
   commitmentStatus: string | null;
 }
 
-function AssignmentCTA({
-  courseId,
+function LearnAssignmentCTA({
   moduleCode,
   commitmentStatus,
-}: AssignmentCTAProps) {
+}: LearnAssignmentCTAProps) {
   const ctaConfig = getAssignmentCTAConfig(commitmentStatus);
 
   return (
@@ -284,7 +213,7 @@ function AssignmentCTA({
           </div>
           {ctaConfig.buttonLabel && (
             <div className="flex-shrink-0">
-              <Link href={`/course/${courseId}/${moduleCode}/assignment`}>
+              <Link href={`/learn/${moduleCode}/assignment`}>
                 <AndamioButton size="lg">
                   {ctaConfig.buttonLabel}
                   <NextIcon className="h-4 w-4 ml-2" />

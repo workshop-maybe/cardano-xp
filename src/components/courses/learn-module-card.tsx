@@ -39,7 +39,7 @@ export interface LearnModuleCardProps {
 }
 
 /**
- * LearnModuleCard - Displays a course module with its learning targets.
+ * LearnModuleCard - Displays a credential with its SLTs.
  * Links to /learn routes (no course ID in URL).
  */
 export function LearnModuleCard({
@@ -84,7 +84,7 @@ export function LearnModuleCard({
                 <AssignmentStatusBadge status={commitmentStatus} />
               ) : (
                 <AndamioButton size="sm" rightIcon={<NextIcon className="h-3.5 w-3.5" />}>
-                  Earn Credential
+                  Give Feedback
                 </AndamioButton>
               )}
             </div>
@@ -94,7 +94,7 @@ export function LearnModuleCard({
       <AndamioCardContent className="pt-0 border-t bg-muted/30">
         <div className="pt-4">
           <AndamioText variant="overline" className="mb-3">
-            Learning Targets
+            SLTs
           </AndamioText>
           <ul className="space-y-2">
             {slts.map((slt, sltIndex) => {

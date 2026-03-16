@@ -651,27 +651,19 @@ export default function TaskDetailPage() {
             </div>
           ) : eligibility?.eligible === false ? (
             <div className="py-6 space-y-4">
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-secondary/10 mx-auto">
-                  <CourseIcon className="h-6 w-6 text-secondary" />
-                </div>
-                <AndamioText className="font-medium">
-                  Complete onboarding to start earning XP
+              <div className="space-y-1">
+                <AndamioText className="text-lg font-semibold">
+                  Get Started as a Feedback Provider
                 </AndamioText>
                 <AndamioText variant="muted">
-                  New feedback providers complete a quick intro before joining tasks
+                  This app is moderated by humans. It moves at the speed of people.
                 </AndamioText>
-                <div>
-                  <AndamioBadge variant="outline">
-                    {eligibility.totalCompleted} of {eligibility.totalRequired} done
-                  </AndamioBadge>
-                </div>
               </div>
               <PrerequisiteList
                 prerequisites={prerequisites}
                 completions={prereqCompletions}
               />
-              <div className="text-center">
+              <div>
                 <Link href="/learn">
                   <AndamioButton
                     size="sm"

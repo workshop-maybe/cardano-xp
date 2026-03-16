@@ -278,14 +278,11 @@ export default function TasksPage() {
         <AndamioCard>
           <AndamioCardHeader>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CourseIcon className="h-5 w-5" />
-                <div>
-                  <AndamioCardTitle>Get Started as a Feedback Provider</AndamioCardTitle>
-                  <AndamioCardDescription>
-                    Complete a quick onboarding to start earning XP
-                  </AndamioCardDescription>
-                </div>
+              <div>
+                <AndamioCardTitle className="text-lg">Get Started as a Feedback Provider</AndamioCardTitle>
+                <AndamioCardDescription>
+                  This app is moderated by humans. It moves at the speed of people.
+                </AndamioCardDescription>
               </div>
               {eligibility && (
                 eligibility.eligible ? (
@@ -295,7 +292,6 @@ export default function TasksPage() {
                   </AndamioBadge>
                 ) : (
                   <AndamioBadge variant="outline" className="gap-1 text-muted-foreground">
-                    <AlertIcon className="h-3.5 w-3.5" />
                     {eligibility.totalCompleted}/{eligibility.totalRequired} done
                   </AndamioBadge>
                 )

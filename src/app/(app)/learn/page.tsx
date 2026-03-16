@@ -2,13 +2,13 @@
 
 import { Suspense, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
-  AndamioSectionHeader,
   AndamioPageLoading,
   AndamioNotFoundCard,
   AndamioEmptyState,
 } from "~/components/andamio";
-import { CourseIcon, SLTIcon } from "~/components/icons";
+import { SLTIcon } from "~/components/icons";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
@@ -18,10 +18,9 @@ import { OnChainSltsBadge } from "~/components/courses/on-chain-slts-viewer";
 import { LearnModuleCard } from "~/components/courses/learn-module-card";
 import { useCourse, useCourseModules, useTeacherCourseModules } from "~/hooks/api";
 import { useStudentAssignmentCommitments, getModuleCommitmentStatus, groupCommitmentsByModule } from "~/hooks/api/course/use-student-assignment-commitments";
-import { CourseTeachersCard } from "~/components/studio/course-teachers-card";
 
 /**
- * Learn page — displays course details and module list.
+ * Learn page — displays credentials to earn and their SLTs.
  * Uses the single course ID from CARDANO_XP config.
  */
 export default function LearnPage() {
@@ -87,27 +86,27 @@ function LearnContent() {
   if (error || !course) {
     return (
       <AndamioNotFoundCard
-        title="Course Not Found"
-        message={error?.message ?? "Course not found"}
+        title="Not Found"
+        message={error?.message ?? "Content not found"}
       />
     );
   }
 
-  const courseTitle = course.title ?? "Course";
-  const courseDescription = course.description;
+  const pageTitle = course.title ?? "Earn Credentials";
+  const pageDescription = course.description;
 
   if (resolvedModules.length === 0) {
     return (
       <div className="space-y-6">
         <div>
-          <AndamioHeading level={1} size="2xl">{courseTitle}</AndamioHeading>
-          {courseDescription && (
-            <AndamioText variant="lead">{courseDescription}</AndamioText>
+          <AndamioHeading level={1} size="2xl">{pageTitle}</AndamioHeading>
+          {pageDescription && (
+            <AndamioText variant="lead">{pageDescription}</AndamioText>
           )}
         </div>
         <AndamioEmptyState
-          icon={CourseIcon}
-          title="No modules found for this course"
+          icon={SLTIcon}
+          title="No credentials available yet"
           className="border rounded-md"
         />
       </div>
@@ -122,23 +121,19 @@ function LearnContent() {
 
   return (
     <div className="space-y-8">
-      {/* Course Header */}
+      {/* Header */}
       <div>
         <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-3 mb-2">
-          <AndamioHeading level={1} size="2xl">{courseTitle}</AndamioHeading>
+          <AndamioHeading level={1} size="2xl">{pageTitle}</AndamioHeading>
           <OnChainSltsBadge courseId={courseId} />
         </div>
-        {courseDescription && (
-          <AndamioText variant="lead">{courseDescription}</AndamioText>
+        {pageDescription && (
+          <AndamioText variant="lead">{pageDescription}</AndamioText>
         )}
         <div className="flex flex-wrap gap-3 sm:gap-4 mt-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <CourseIcon className="h-4 w-4 shrink-0" />
-            <span>{resolvedModules.length} {resolvedModules.length === 1 ? "Module" : "Modules"}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <SLTIcon className="h-4 w-4 shrink-0" />
-            <span>{totalSlts} Learning {totalSlts === 1 ? "Target" : "Targets"}</span>
+            <span>{totalSlts} {totalSlts === 1 ? "SLT" : "SLTs"} across {resolvedModules.length} {resolvedModules.length === 1 ? "credential" : "credentials"}</span>
           </div>
         </div>
       </div>
@@ -146,52 +141,48 @@ function LearnContent() {
       {/* Progress */}
       <UserCourseStatus courseId={courseId} />
 
-      {/* Course Outline + Course Team */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 lg:gap-8">
-        <div className="space-y-6">
-          <div>
-            <AndamioSectionHeader title="Course Outline" />
-            <AndamioText variant="muted" className="mt-2">
-              Each module covers a set of learning goals. Complete modules to earn credentials toward project access.
-            </AndamioText>
-          </div>
-
-          <div className="space-y-4">
-            {resolvedModules.map((courseModule, moduleIndex) => {
-              const dbSlts = (courseModule.slts ?? [])
-                .filter((s) => !!s.sltText)
-                .map((s) => ({ sltText: s.sltText! }));
-
-              const chainSlts = (courseModule.onChainSlts ?? [])
-                .map((text) => ({ sltText: text }));
-
-              const displaySlts = dbSlts.length > 0 ? dbSlts : chainSlts;
-
-              const hasOnChain = (courseModule.onChainSlts ?? []).length > 0;
-              const onChainSltsSet = new Set(courseModule.onChainSlts ?? []);
-
-              const moduleCommitments = commitmentsByModule.get(courseModule.moduleCode ?? "") ?? [];
-              const moduleCommitmentStatus = getModuleCommitmentStatus(moduleCommitments);
-
-              return (
-                <LearnModuleCard
-                  key={courseModule.moduleCode ?? courseModule.sltHash}
-                  moduleCode={courseModule.moduleCode ?? ""}
-                  title={courseModule.title ?? "Untitled Module"}
-                  index={moduleIndex + 1}
-                  sltHash={courseModule.sltHash}
-                  slts={displaySlts}
-                  onChainSlts={onChainSltsSet}
-                  isOnChain={hasOnChain}
-                  commitmentStatus={moduleCommitmentStatus}
-                />
-              );
-            })}
-          </div>
+      {/* Credentials */}
+      <div className="space-y-6">
+        <div>
+          <AndamioText variant="muted">
+            Request access by giving quick feedback on each SLT. Feedback will be stored by Andamio.{" "}
+            <Link href="/about" className="text-primary hover:underline">
+              Learn more
+            </Link>
+          </AndamioText>
         </div>
 
-        <div className="lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
-          <CourseTeachersCard courseId={courseId} />
+        <div className="space-y-4">
+          {resolvedModules.map((courseModule, moduleIndex) => {
+            const dbSlts = (courseModule.slts ?? [])
+              .filter((s) => !!s.sltText)
+              .map((s) => ({ sltText: s.sltText! }));
+
+            const chainSlts = (courseModule.onChainSlts ?? [])
+              .map((text) => ({ sltText: text }));
+
+            const displaySlts = dbSlts.length > 0 ? dbSlts : chainSlts;
+
+            const hasOnChain = (courseModule.onChainSlts ?? []).length > 0;
+            const onChainSltsSet = new Set(courseModule.onChainSlts ?? []);
+
+            const moduleCommitments = commitmentsByModule.get(courseModule.moduleCode ?? "") ?? [];
+            const moduleCommitmentStatus = getModuleCommitmentStatus(moduleCommitments);
+
+            return (
+              <LearnModuleCard
+                key={courseModule.moduleCode ?? courseModule.sltHash}
+                moduleCode={courseModule.moduleCode ?? ""}
+                title={courseModule.title ?? "Credential"}
+                index={moduleIndex + 1}
+                sltHash={courseModule.sltHash}
+                slts={displaySlts}
+                onChainSlts={onChainSltsSet}
+                isOnChain={hasOnChain}
+                commitmentStatus={moduleCommitmentStatus}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

@@ -11,68 +11,94 @@ export default function AboutPage() {
           About
         </p>
         <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
-          A tiny experiment in{" "}
-          <span className="text-secondary">getting feedback.</span>
+          We need your{" "}
+          <span className="text-secondary">feedback.</span>
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
-          This is a mini-app built on the Andamio protocol. We&apos;re testing
-          whether on-chain reputation tokens can make feedback loops work better.
+          This app was vibe coded on a Sunday afternoon. Devs are gonna
+          dev — but the way we build connections is through feedback.
         </p>
       </div>
 
-      {/* What this is */}
+      {/* What you can give feedback on */}
       <section className="space-y-4">
         <h2 className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
-          What this is
+          Earn XP by giving feedback on
         </h2>
-        <div className="space-y-3 text-muted-foreground leading-relaxed">
-          <p>
-            <strong className="text-foreground">100,000 XP tokens.</strong>{" "}
-            Fixed supply. Distributed through feedback tasks.
-          </p>
-          <p>
-            <strong className="text-foreground">No buying, no airdrops.</strong>{" "}
-            You earn XP by reviewing what we&apos;re building and telling us
-            what&apos;s broken.
-          </p>
-          <p>
-            <strong className="text-foreground">On-chain proof.</strong>{" "}
-            Your contribution history is permanent and verifiable. No
-            &ldquo;take my word for it.&rdquo;
-          </p>
+        <div className="space-y-4">
+          <div className="border border-border rounded-lg p-5 space-y-2">
+            <p className="font-medium text-foreground">Apps</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Devs build apps and post them here. Try them out, find bugs,
+              report confusing flows, suggest improvements.
+            </p>
+          </div>
+          <div className="border border-border rounded-lg p-5 space-y-2">
+            <p className="font-medium text-foreground">Andamio</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              The{" "}
+              <a
+                href="https://andamio.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-secondary hover:underline"
+              >
+                platform
+              </a>
+              {" "}this app is built on. Tell us how it feels to use —
+              what&apos;s clear, what&apos;s confusing, what&apos;s missing.
+            </p>
+          </div>
+          <div className="border border-border rounded-lg p-5 space-y-2">
+            <p className="font-medium text-foreground">Courses</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Try a learning path and tell us where you got stuck or what
+              could be explained better. More examples coming soon.
+            </p>
+          </div>
+          <div className="border border-border rounded-lg p-5 space-y-2">
+            <p className="font-medium text-foreground">Proposals</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Review proposals from Andamio, Gimbalabs, and the Cardano
+              Treasury. Does the scope make sense? Is anything unclear?
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* How to give feedback */}
+      {/* How it works */}
       <section className="space-y-4">
         <h2 className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
-          How to give feedback
+          How it works
         </h2>
         <div className="border border-border rounded-lg p-6 space-y-4">
           <div className="flex items-start gap-4">
             <span className="font-mono text-xl font-bold text-secondary/50">1</span>
             <div>
-              <p className="font-medium text-foreground">Find something broken</p>
+              <p className="font-medium text-foreground">Pick something to review</p>
               <p className="text-sm text-muted-foreground">
-                Use the app. Click around. Find bugs, confusing flows, missing features.
+                Choose one of the feedback targets above, or browse available
+                tasks.
               </p>
             </div>
           </div>
           <div className="flex items-start gap-4">
             <span className="font-mono text-xl font-bold text-secondary/50">2</span>
             <div>
-              <p className="font-medium text-foreground">Log an issue on GitHub</p>
+              <p className="font-medium text-foreground">Share what you find</p>
               <p className="text-sm text-muted-foreground">
-                Go to the repo and create an issue. Be specific — screenshots help.
+                Open a GitHub issue with your feedback. Be specific —
+                screenshots and steps to reproduce help.
               </p>
             </div>
           </div>
           <div className="flex items-start gap-4">
             <span className="font-mono text-xl font-bold text-secondary/50">3</span>
             <div>
-              <p className="font-medium text-foreground">Submit proof on-chain</p>
+              <p className="font-medium text-foreground">Earn XP on-chain</p>
               <p className="text-sm text-muted-foreground">
-                Pick up a feedback task, link your GitHub issue, and claim your XP.
+                Complete a feedback task, link your issue, and receive XP
+                tokens as permanent proof of your contribution.
               </p>
             </div>
           </div>
@@ -95,40 +121,23 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Built on Andamio */}
+      {/* Why feedback matters */}
       <section className="space-y-4">
         <h2 className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
-          Built on Andamio
+          Why this matters
         </h2>
         <div className="space-y-3 text-muted-foreground leading-relaxed">
           <p>
-            Cardano XP runs on the{" "}
-            <a
-              href="https://andamio.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-secondary hover:underline"
-            >
-              Andamio protocol
-            </a>
-            {" "}— an open infrastructure for on-chain credentials, tasks, and
-            contribution tracking.
+            Most projects ask for feedback after they ship. We&apos;re asking
+            now, while everything is still being built. Your input shapes
+            what this becomes.
           </p>
           <p>
-            This experiment is scaffolding. The protocol is designed to be
-            used by anyone building contribution-based systems on Cardano.
+            XP is how we track who contributed. It&apos;s on-chain,
+            permanent, and yours. No one can take it away or claim your work.
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <AndamioButton asChild variant="outline">
-            <a
-              href="https://andamio.io"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn about Andamio
-            </a>
-          </AndamioButton>
           <AndamioButton asChild variant="outline">
             <a
               href="https://github.com/Andamio-Platform/cardano-xp"

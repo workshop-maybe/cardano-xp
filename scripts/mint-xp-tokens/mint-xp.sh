@@ -98,6 +98,7 @@ cardano-cli conway transaction build \
   --mint-script-file "$POLICY_DIR/xp-policy.script" \
   --metadata-json-file "$METADATA_FILE" \
   --invalid-hereafter "$LOCK_AFTER_SLOT" \
+  --witness-override 4 \
   --change-address "$PAYMENT_ADDR" \
   --out-file "$SCRIPT_DIR/mint-xp.raw"
 

@@ -27,9 +27,6 @@ export {
   AUTH_ROUTES,
   STUDIO_ROUTES,
   API_ROUTES,
-  ROUTE_METADATA,
-  getRouteMetadata,
-  routeRequiresAuth,
 } from "./routes";
 
 // UI constants

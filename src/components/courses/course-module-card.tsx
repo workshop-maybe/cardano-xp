@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { OnChainIcon, NextIcon, SuccessIcon } from "~/components/icons";
+import { PUBLIC_ROUTES } from "~/config/routes";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import {
@@ -62,8 +63,8 @@ export function CourseModuleCard({
 
   // Link destination: use moduleCode if available, otherwise sltHash for chain_only modules
   const linkPath = moduleCode
-    ? `/learn/${courseId}/${moduleCode}`
-    : `/learn/${courseId}/${sltHash}`;
+    ? PUBLIC_ROUTES.moduleDetail(courseId, moduleCode)
+    : PUBLIC_ROUTES.moduleDetail(courseId, sltHash!);
 
   return (
     <AndamioCard className="overflow-hidden">

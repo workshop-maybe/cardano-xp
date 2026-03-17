@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { PreviousIcon, NextIcon, AssignmentIcon } from "~/components/icons";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 export interface LessonNavItem {
   /** SLT module_index (1-based) */
@@ -51,7 +52,7 @@ export function LessonNavigation({
       {/* Previous */}
       <div className="flex-1">
         {prev && (
-          <Link href={`/learn/${courseId}/${moduleCode}/${prev.index}`} className="block">
+          <Link href={PUBLIC_ROUTES.lessonDetail(courseId, moduleCode, prev.index)} className="block">
             <AndamioButton variant="outline" className="w-full justify-start h-auto py-3">
               <PreviousIcon className="h-4 w-4 mr-2 shrink-0" />
               <div className="text-left">
@@ -68,7 +69,7 @@ export function LessonNavigation({
       {/* Next or Go to Assignment */}
       <div className="flex-1">
         {next ? (
-          <Link href={`/learn/${courseId}/${moduleCode}/${next.index}`} className="block">
+          <Link href={PUBLIC_ROUTES.lessonDetail(courseId, moduleCode, next.index)} className="block">
             <AndamioButton variant="outline" className="w-full justify-end h-auto py-3">
               <div className="text-right">
                 <div className="text-sm">Next</div>
@@ -80,7 +81,7 @@ export function LessonNavigation({
             </AndamioButton>
           </Link>
         ) : isLastLesson ? (
-          <Link href={`/learn/${courseId}/${moduleCode}/assignment`} className="block">
+          <Link href={PUBLIC_ROUTES.assignment(courseId, moduleCode)} className="block">
             <AndamioButton className="w-full justify-end h-auto py-3">
               <div className="text-right">
                 <div className="text-sm">Go to Assignment</div>

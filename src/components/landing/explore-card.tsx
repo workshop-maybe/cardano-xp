@@ -11,6 +11,7 @@ import {
   AndamioCardTitle,
 } from "~/components/andamio/andamio-card";
 import { MARKETING } from "~/config/marketing";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * Landing page card for exploring courses and projects without authentication.
@@ -29,14 +30,14 @@ export function ExploreCard() {
       </AndamioCardHeader>
       <AndamioCardContent className="mt-auto space-y-3">
         <AndamioButton asChild variant="outline" className="w-full">
-          <Link href="/learn">
+          <Link href={PUBLIC_ROUTES.courses}>
             <CourseIcon className="h-4 w-4" />
             <span>Browse Courses</span>
             <ForwardIcon className="ml-auto h-4 w-4" />
           </Link>
         </AndamioButton>
         <AndamioButton asChild variant="outline" className="w-full">
-          <Link href="/tasks">
+          <Link href={PUBLIC_ROUTES.projects}>
             <ProjectIcon className="h-4 w-4" />
             <span>Browse Projects</span>
             <ForwardIcon className="ml-auto h-4 w-4" />

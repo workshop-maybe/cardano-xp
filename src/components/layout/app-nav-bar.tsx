@@ -16,6 +16,7 @@ import {
 } from "~/components/icons";
 import { cn } from "~/lib/utils";
 import { env } from "~/env";
+import { STUDIO_ROUTES } from "~/config/routes";
 
 /**
  * Unified glass nav bar for all app routes.
@@ -73,10 +74,10 @@ export function AppNavBar() {
           ))}
           {isAuthenticated && (
             <Link
-              href="/studio"
+              href={STUDIO_ROUTES.hub}
               className={cn(
                 "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
-                isNavItemActive(pathname, "/studio")
+                isNavItemActive(pathname, STUDIO_ROUTES.hub)
                   ? "bg-foreground/10 text-foreground"
                   : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
               )}

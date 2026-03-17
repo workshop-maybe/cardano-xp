@@ -24,6 +24,7 @@ import {
 } from "~/components/icons";
 import { useDashboardData } from "~/contexts/dashboard-context";
 import type { DashboardCredentialSummary } from "~/hooks/api";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 interface StudentAccomplishmentsProps {
   accessTokenAlias: string | null | undefined;
@@ -105,7 +106,7 @@ export function StudentAccomplishments({ accessTokenAlias }: StudentAccomplishme
             title="No Courses Yet"
             description="Enroll in a course to start your learning journey on-chain."
             action={
-              <Link href="/learn">
+              <Link href={PUBLIC_ROUTES.courses}>
                 <AndamioButton size="sm">
                   <CourseIcon className="mr-2 h-3 w-3" />
                   Browse Courses
@@ -179,7 +180,7 @@ export function StudentAccomplishments({ accessTokenAlias }: StudentAccomplishme
 
         {/* Footer */}
         <div className="pt-2">
-          <Link href="/learn" className="block">
+          <Link href={PUBLIC_ROUTES.courses} className="block">
             <AndamioButton variant="outline" size="sm" className="w-full">
               <CourseIcon className="mr-2 h-3 w-3" />
               Browse More Courses
@@ -203,7 +204,7 @@ function CredentialRow({ courseId, courseTitle, isCompleted, credentialCount }: 
 
   return (
     <Link
-      href={`/learn/${courseId}`}
+      href={PUBLIC_ROUTES.courseDetail(courseId)}
       className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
     >
       <div className="flex items-center gap-2 min-w-0">

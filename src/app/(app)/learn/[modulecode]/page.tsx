@@ -23,6 +23,7 @@ import { useStudentAssignmentCommitments, getModuleCommitmentStatus } from "~/ho
 import { useStudentCredentials, type StudentCourseCredential } from "~/hooks/api/course/use-student-credentials";
 import { AssignmentStatusBadge } from "~/components/learner/assignment-status-badge";
 import { SLTLessonTable, type CombinedSLTLesson } from "~/components/courses/slt-lesson-table";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * Module detail page for /learn routes.
@@ -123,7 +124,7 @@ export default function LearnModulePage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href="/learn" label="Back to Course" />
+      <AndamioBackButton href={PUBLIC_ROUTES.courses} label="Back to Course" />
 
       <AndamioPageHeader
         title={courseModule.title ?? "Module"}
@@ -152,7 +153,7 @@ export default function LearnModulePage() {
             courseId={courseId}
             moduleCode={moduleCode}
             onChainModule={onChainModule}
-            basePath="/learn"
+            basePath={PUBLIC_ROUTES.courses}
           />
         </AndamioCardContent>
       </AndamioCard>
@@ -213,7 +214,7 @@ function LearnAssignmentCTA({
           </div>
           {ctaConfig.buttonLabel && (
             <div className="flex-shrink-0">
-              <Link href={`/learn/${moduleCode}/assignment`}>
+              <Link href={`${PUBLIC_ROUTES.courses}/${moduleCode}/assignment`}>
                 <AndamioButton size="lg">
                   {ctaConfig.buttonLabel}
                   <NextIcon className="h-4 w-4 ml-2" />

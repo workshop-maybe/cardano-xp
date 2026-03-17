@@ -41,6 +41,7 @@ import { useStudentCompletionsForPrereqs } from "~/hooks/api/course/use-student-
 import { checkProjectEligibility } from "~/lib/project-eligibility";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { NextIcon, PendingIcon } from "~/components/icons";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * Tasks page — public view of all available tasks.
@@ -332,7 +333,7 @@ export default function TasksPage() {
                     <AndamioTableRow key={group.taskHash}>
                       <AndamioTableCell>
                         {task.taskHash ? (
-                          <Link href={`/tasks/${task.taskHash}`}>
+                          <Link href={PUBLIC_ROUTES.projectDetail(task.taskHash)}>
                             <div className="flex items-center gap-2">
                               <AndamioText className="font-medium hover:underline">
                                 {task.title || "Untitled Task"}
@@ -410,7 +411,7 @@ export default function TasksPage() {
                   return (
                     <AndamioTableRow key={group.taskHash} className="opacity-70">
                       <AndamioTableCell>
-                        <Link href={`/tasks/${task.taskHash}`}>
+                        <Link href={PUBLIC_ROUTES.projectDetail(task.taskHash)}>
                           <div className="flex items-center gap-2">
                             <AndamioText className="font-medium hover:underline">
                               {task.title || "Untitled Task"}

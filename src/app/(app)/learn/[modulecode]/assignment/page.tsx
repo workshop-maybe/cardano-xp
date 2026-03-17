@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import { useLearnParams } from "~/hooks/use-learn-params";
+import { PUBLIC_ROUTES } from "~/config/routes";
 import { ContentViewer } from "~/components/editor";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioText } from "~/components/andamio/andamio-text";
@@ -92,7 +93,7 @@ export default function LearnAssignmentPage() {
   if (error || !assignment) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={`/learn/${moduleCode}`} label="Back to Module" />
+        <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
         <AndamioNotFoundCard
           title="Assignment Not Found"
           message={error ?? "No assignment found for this module"}
@@ -103,7 +104,7 @@ export default function LearnAssignmentPage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href={`/learn/${moduleCode}`} label="Back to Module" />
+      <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
 
       <AndamioPageHeader
         title={assignment.title ?? "Assignment"}

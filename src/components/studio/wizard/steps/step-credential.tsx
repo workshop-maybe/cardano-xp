@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { STUDIO_ROUTES } from "~/config/routes";
 import { motion } from "framer-motion";
 import { SparkleIcon, CredentialIcon, SLTIcon, TipIcon, CopyIcon } from "~/components/icons";
 import { useWizard } from "../module-wizard";
@@ -231,7 +232,7 @@ export function StepCredential({ config, direction }: StepCredentialProps) {
       // Close dialog and navigate to new module
       setShowDuplicateDialog(false);
       setDuplicateModuleCode("");
-      router.push(`/studio/course/${courseId}/${newCode}`);
+      router.push(STUDIO_ROUTES.moduleWizard(courseId, newCode));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to duplicate module");
     } finally {

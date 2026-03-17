@@ -46,6 +46,7 @@ import { useProject, projectKeys } from "~/hooks/api/project/use-project";
 import { useManagerTasks, useManagerCommitments, projectManagerKeys } from "~/hooks/api/project/use-project-manager";
 import { useUpdateProject } from "~/hooks/api/project/use-project-owner";
 import { useQueryClient } from "@tanstack/react-query";
+import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
 
 /**
  * Project Dashboard - Edit project details and access management areas
@@ -228,7 +229,7 @@ export default function ProjectDashboardPage() {
             size="sm"
             asChild
           >
-            <Link href={`/tasks/${projectId}`}>
+            <Link href={PUBLIC_ROUTES.projectDetail(projectId)}>
               <PreviewIcon className="h-3.5 w-3.5 mr-1" />
               Preview
             </Link>
@@ -349,7 +350,7 @@ export default function ProjectDashboardPage() {
                     )}
                   </span>
                 </div>
-                <Link href={`/studio/project/${projectId}/manage-treasury`}>
+                <Link href={STUDIO_ROUTES.treasury(projectId)}>
                   <AndamioButton variant="outline" size="sm" className="w-full mt-1">
                     <TreasuryIcon className="h-4 w-4 mr-2" />
                     Manage Treasury
@@ -391,7 +392,7 @@ export default function ProjectDashboardPage() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 {draftTasks === 0 && liveTasks === 0 ? (
-                  <Link href={`/studio/project/${projectId}/draft-tasks/new`}>
+                  <Link href={STUDIO_ROUTES.newTask(projectId)}>
                     <AndamioButton className="w-full sm:w-auto">
                       <TaskIcon className="h-4 w-4 mr-2" />
                       Create Your First Task
@@ -399,10 +400,10 @@ export default function ProjectDashboardPage() {
                   </Link>
                 ) : (
                   <>
-                    <Link href={`/studio/project/${projectId}/draft-tasks/new`}>
+                    <Link href={STUDIO_ROUTES.newTask(projectId)}>
                       <AndamioAddButton label="Create Task" />
                     </Link>
-                    <Link href={`/studio/project/${projectId}/draft-tasks`}>
+                    <Link href={STUDIO_ROUTES.draftTasks(projectId)}>
                       <AndamioButton variant="outline" className="w-full sm:w-auto">
                         <TaskIcon className="h-4 w-4 mr-2" />
                         Manage Tasks
@@ -411,7 +412,7 @@ export default function ProjectDashboardPage() {
                   </>
                 )}
                 {draftTasks > 0 && (
-                  <Link href={`/studio/project/${projectId}/manage-treasury`}>
+                  <Link href={STUDIO_ROUTES.treasury(projectId)}>
                     <AndamioButton variant="outline" className="w-full sm:w-auto">
                       <OnChainIcon className="h-4 w-4 mr-2" />
                       Manage Treasury
@@ -460,7 +461,7 @@ export default function ProjectDashboardPage() {
                   <ContributorIcon className="h-3.5 w-3.5" />
                   Contributors
                 </AndamioLabel>
-                <Link href={`/studio/project/${projectId}/manage-contributors`}>
+                <Link href={STUDIO_ROUTES.manageContributors(projectId)}>
                   <AndamioButton variant="outline" size="sm">
                     <ContributorIcon className="h-3.5 w-3.5 mr-1.5" />
                     View Contributors ({onChainContributorCount})
@@ -487,7 +488,7 @@ export default function ProjectDashboardPage() {
                 {pendingCommitments.map((commitment, i) => (
                   <Link
                     key={`${commitment.taskHash}-${commitment.submittedBy}-${i}`}
-                    href={`/studio/project/${projectId}/commitments`}
+                    href={STUDIO_ROUTES.commitments(projectId)}
                     className="block rounded-xl border p-4 bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors"
                   >
                     <div className="flex items-center justify-between">
@@ -589,7 +590,7 @@ export default function ProjectDashboardPage() {
           {/* Full Review Page Link */}
           {allCommitments.length > 0 && (
             <div className="flex justify-center pt-2">
-              <Link href={`/studio/project/${projectId}/commitments`}>
+              <Link href={STUDIO_ROUTES.commitments(projectId)}>
                 <AndamioButton variant="outline">
                   <AssignmentIcon className="h-4 w-4 mr-2" />
                   Open Full Review Page

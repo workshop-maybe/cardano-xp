@@ -18,6 +18,7 @@ import { AndamioEmptyState } from "~/components/andamio/andamio-empty-state";
 import { AndamioProgress } from "~/components/andamio/andamio-progress";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { ProjectIcon, SuccessIcon, NextIcon, CredentialIcon } from "~/components/icons";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 const MAX_IN_PROGRESS_SHOWN = 3;
 
@@ -189,7 +190,7 @@ export function ProjectUnlockProgress() {
             title="Project Opportunities"
             description="As you complete course modules, you will unlock real project opportunities here."
             action={
-              <Link href="/tasks">
+              <Link href={PUBLIC_ROUTES.projects}>
                 <AndamioButton size="sm"><ProjectIcon className="mr-2 h-3 w-3" />Browse Projects</AndamioButton>
               </Link>
             }
@@ -243,7 +244,7 @@ export function ProjectUnlockProgress() {
           return (
             <Link
               key={item.projectId}
-              href={`/tasks/${item.projectId}`}
+              href={PUBLIC_ROUTES.projectDetail(item.projectId)}
               className="block rounded-md border p-4 bg-muted/30 hover:border-primary/30 hover:bg-accent/5 transition-colors group"
             >
               <div className="flex items-center justify-between gap-3">
@@ -293,7 +294,7 @@ export function ProjectUnlockProgress() {
 
         {/* Overflow link when more than MAX_IN_PROGRESS_SHOWN in-progress */}
         {hiddenInProgressCount > 0 && (
-          <Link href="/tasks" className="flex items-center justify-center gap-1 py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <Link href={PUBLIC_ROUTES.projects} className="flex items-center justify-center gap-1 py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
             View {hiddenInProgressCount} more {hiddenInProgressCount === 1 ? "project" : "projects"}
             <NextIcon className="h-3.5 w-3.5" />
           </Link>

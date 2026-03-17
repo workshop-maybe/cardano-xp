@@ -76,6 +76,10 @@ export const STUDIO_ROUTES = {
     `/studio/project/${projectId}/draft-tasks/${taskIndex}`,
   treasury: (projectId: string) =>
     `/studio/project/${projectId}/manage-treasury`,
+  manageContributors: (projectId: string) =>
+    `/studio/project/${projectId}/manage-contributors`,
+  manageLearners: (courseId: string) =>
+    `/studio/course/${courseId}/manage-learners`,
 } as const;
 
 /**
@@ -88,75 +92,3 @@ export const API_ROUTES = {
   trpc: "/api/trpc",
 } as const;
 
-/**
- * Route metadata for documentation and validation
- */
-export const ROUTE_METADATA = {
-  "/": {
-    label: "Home",
-    description: "Landing page",
-    requiresAuth: false,
-  },
-  "/dashboard": {
-    label: "Dashboard",
-    description: "Your personal hub with wallet info and activity",
-    requiresAuth: true,
-  },
-  "/learn": {
-    label: "Learn",
-    description: "The Cardano XP course",
-    requiresAuth: false,
-  },
-  "/tasks": {
-    label: "Contribute",
-    description: "The Cardano XP project",
-    requiresAuth: false,
-  },
-  "/credentials": {
-    label: "Credentials",
-    description: "View your earned credentials",
-    requiresAuth: true,
-  },
-  "/wallet": {
-    label: "Wallet",
-    description: "Project wallet transparency and donation address",
-    requiresAuth: false,
-  },
-  "/studio": {
-    label: "Studio",
-    description: "Creator tools hub",
-    requiresAuth: true,
-  },
-  "/studio/course": {
-    label: "Course Studio",
-    description: "Manage your courses",
-    requiresAuth: true,
-  },
-  "/studio/project": {
-    label: "Project Studio",
-    description: "Manage your projects",
-    requiresAuth: true,
-  },
-} as const;
-
-/**
- * Get route metadata by path
- */
-export function getRouteMetadata(path: string) {
-  return ROUTE_METADATA[path as keyof typeof ROUTE_METADATA];
-}
-
-/**
- * Check if a route requires authentication
- */
-export function routeRequiresAuth(path: string): boolean {
-  const metadata = getRouteMetadata(path);
-  return metadata?.requiresAuth ?? false;
-}
-
-/**
- * Parameter naming conventions (for reference):
- * - URL paths: kebab-case (draft-tasks, my-learning)
- * - Dynamic params: camelCase (courseId, projectId)
- * - API params: snake_case (course_id, project_id)
- */

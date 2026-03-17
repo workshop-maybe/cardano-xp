@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { type CourseModule } from "~/hooks/api";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * Combined SLT + Lesson data type
@@ -54,7 +55,7 @@ export function SLTLessonTable({
   courseId,
   moduleCode,
   onChainModule,
-  basePath = "/learn",
+  basePath = PUBLIC_ROUTES.courses,
 }: SLTLessonTableProps) {
   const onChainSltTexts = new Set(onChainModule?.onChainSlts ?? []);
 

@@ -8,6 +8,7 @@ import { AndamioPageLoading, AndamioAlert, AndamioAlertDescription, AndamioButto
 import { AlertIcon, BackIcon, SecurityAlertIcon } from "~/components/icons";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { useOwnerProjects, useManagerProjects } from "~/hooks/api";
+import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
 
 interface RequireProjectAccessProps {
   /** Project ID to check access for */
@@ -113,14 +114,14 @@ export function RequireProjectAccess({
         <div className="flex gap-3">
           <AndamioButton
             variant="outline"
-            onClick={() => router.push("/studio/project")}
+            onClick={() => router.push(STUDIO_ROUTES.projects)}
           >
             <BackIcon className="h-4 w-4 mr-2" />
             Back to Project Studio
           </AndamioButton>
           <AndamioButton
             variant="secondary"
-            onClick={() => router.push(`/tasks/${projectId}`)}
+            onClick={() => router.push(PUBLIC_ROUTES.projectDetail(projectId))}
           >
             View Project
           </AndamioButton>

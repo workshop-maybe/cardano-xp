@@ -21,6 +21,7 @@ import {
   OnChainIcon,
   LoadingIcon,
 } from "~/components/icons";
+import { AUTH_ROUTES } from "~/config/routes";
 
 /**
  * User Course Status Component
@@ -114,7 +115,7 @@ export function UserCourseStatus({ courseId }: UserCourseStatusProps) {
             </AndamioText>
           )}
 
-          <Link href="/credentials">
+          <Link href={AUTH_ROUTES.credentials}>
             <AndamioButton variant="outline" size="sm">
               View All Credentials
             </AndamioButton>

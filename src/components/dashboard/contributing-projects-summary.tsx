@@ -20,6 +20,7 @@ import {
   ExternalLinkIcon,
 } from "~/components/icons";
 import { useDashboardData } from "~/contexts/dashboard-context";
+import { PUBLIC_ROUTES, AUTH_ROUTES } from "~/config/routes";
 
 interface ContributingProjectsSummaryProps {
   accessTokenAlias: string | null | undefined;
@@ -90,7 +91,7 @@ export function ContributingProjectsSummary({ accessTokenAlias }: ContributingPr
             title="No Contributions Yet"
             description="Join a project to start contributing and earning rewards."
             action={
-              <Link href="/tasks">
+              <Link href={PUBLIC_ROUTES.projects}>
                 <AndamioButton size="sm">
                   <ProjectIcon className="mr-2 h-3 w-3" />
                   Browse Projects
@@ -135,7 +136,7 @@ export function ContributingProjectsSummary({ accessTokenAlias }: ContributingPr
           {contributingProjects.slice(0, 3).map((project) => (
             <Link
               key={project.projectId}
-              href={`/tasks/${project.projectId}/contributor`}
+              href={AUTH_ROUTES.contributor(project.projectId)}
               className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
             >
               <div className="flex items-center gap-2 min-w-0">
@@ -156,7 +157,7 @@ export function ContributingProjectsSummary({ accessTokenAlias }: ContributingPr
 
         {/* Browse more link */}
         <div className="pt-2">
-          <Link href="/tasks" className="block">
+          <Link href={PUBLIC_ROUTES.projects} className="block">
             <AndamioButton variant="outline" size="sm" className="w-full">
               <ProjectIcon className="mr-2 h-3 w-3" />
               Browse More Projects

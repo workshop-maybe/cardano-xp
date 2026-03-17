@@ -9,6 +9,7 @@ import {
   AndamioBreadcrumbPage,
   AndamioBreadcrumbSeparator,
 } from "~/components/andamio";
+import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
 
 /**
  * Breadcrumb navigation for course pages (public and studio views)
@@ -77,9 +78,9 @@ export function CourseBreadcrumb({
   lesson,
   currentPage = "course",
 }: CourseBreadcrumbProps) {
-  const basePath = mode === "studio" ? "/studio/course" : "/learn";
+  const basePath = mode === "studio" ? STUDIO_ROUTES.courses : PUBLIC_ROUTES.courses;
   const coursesLabel = mode === "studio" ? "Course Studio" : "Course Catalog";
-  const coursesPath = mode === "studio" ? "/studio/course" : "/learn";
+  const coursesPath = mode === "studio" ? STUDIO_ROUTES.courses : PUBLIC_ROUTES.courses;
 
   return (
     <AndamioBreadcrumb className="mb-4">

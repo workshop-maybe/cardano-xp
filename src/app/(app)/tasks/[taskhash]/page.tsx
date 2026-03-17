@@ -38,6 +38,7 @@ import { getTransactionExplorerUrl } from "~/lib/constants";
 import { useStudentCompletionsForPrereqs } from "~/hooks/api/course/use-student-completions-for-prereqs";
 import { checkProjectEligibility } from "~/lib/project-eligibility";
 import { PrerequisiteList } from "~/components/project/prerequisite-list";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 // ── Pure helpers ──────────────────────────────────────────────────────────
 
@@ -183,7 +184,7 @@ export default function TaskDetailPage() {
   if (errorMessage || !task) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href="/tasks" label="Back to Tasks" />
+        <AndamioBackButton href={PUBLIC_ROUTES.projects} label="Back to Tasks" />
         <AndamioErrorAlert error={errorMessage ?? "Task not found"} />
       </div>
     );
@@ -223,7 +224,7 @@ export default function TaskDetailPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <AndamioBackButton href="/tasks" label="Back to Tasks" />
+        <AndamioBackButton href={PUBLIC_ROUTES.projects} label="Back to Tasks" />
         <div className="flex items-center gap-2">
           <AndamioBadge variant="outline" className="font-mono text-xs">
             #{task.index}
@@ -368,7 +369,7 @@ export default function TaskDetailPage() {
 
               {!showClaimFlow ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Link href="/tasks" className="block">
+                  <Link href={PUBLIC_ROUTES.projects} className="block">
                     <div className="rounded-lg border p-4 space-y-3 hover:border-primary/50 transition-colors cursor-pointer h-full">
                       <div className="flex items-center gap-2">
                         <ContributorIcon className="h-5 w-5 text-primary" />
@@ -664,7 +665,7 @@ export default function TaskDetailPage() {
                 completions={prereqCompletions}
               />
               <div>
-                <Link href="/learn">
+                <Link href={PUBLIC_ROUTES.courses}>
                   <AndamioButton
                     size="sm"
                     className="cursor-pointer"
@@ -689,7 +690,7 @@ export default function TaskDetailPage() {
                   Only they can commit to this task.
                 </AndamioText>
               </div>
-              <Link href="/tasks">
+              <Link href={PUBLIC_ROUTES.projects}>
                 <AndamioButton
                   variant="outline"
                   size="sm"

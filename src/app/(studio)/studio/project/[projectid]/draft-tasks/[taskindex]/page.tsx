@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { STUDIO_ROUTES } from "~/config/routes";
 import { useSuccessNotification } from "~/hooks/ui/use-success-notification";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import {
@@ -53,7 +54,7 @@ export default function EditTaskPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const { isSuccess: saveSuccess, showSuccess } = useSuccessNotification();
 
-  const backHref = `/studio/project/${projectId}/draft-tasks`;
+  const backHref = STUDIO_ROUTES.draftTasks(projectId);
 
   const handleSave = async (values: TaskFormValues) => {
     if (!isAuthenticated || !contributorStateId || !taskData) return;

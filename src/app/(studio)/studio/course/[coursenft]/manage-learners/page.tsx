@@ -27,6 +27,7 @@ import {
   AndamioScrollArea,
 } from "~/components/andamio";
 import { LearnerIcon, AssignmentIcon, SuccessIcon } from "~/components/icons";
+import { STUDIO_ROUTES } from "~/config/routes";
 import { RequireCourseAccess } from "~/components/auth/require-course-access";
 
 /**
@@ -89,7 +90,7 @@ function ManageLearnersContent({ courseId }: { courseId: string }) {
   if (courseError || !course) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        <AndamioBackButton href={`/studio/course/${courseId}`} label="Back to Course" />
+        <AndamioBackButton href={STUDIO_ROUTES.courseEditor(courseId)} label="Back to Course" />
         <AndamioPageHeader title="Learners" />
         <AndamioErrorAlert error={courseError?.message ?? "Course not found"} />
       </div>
@@ -100,7 +101,7 @@ function ManageLearnersContent({ courseId }: { courseId: string }) {
     <AndamioScrollArea className="h-full">
     <div className="min-h-full">
     <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-      <AndamioBackButton href={`/studio/course/${courseId}`} label="Back to Course" />
+      <AndamioBackButton href={STUDIO_ROUTES.courseEditor(courseId)} label="Back to Course" />
 
       <AndamioPageHeader
         title="Learners"

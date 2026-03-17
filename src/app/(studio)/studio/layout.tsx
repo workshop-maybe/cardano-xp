@@ -42,6 +42,7 @@ import {
 } from "~/components/icons";
 import { cn } from "~/lib/utils";
 import { StudioProvider, useStudioContext } from "./studio-context";
+import { STUDIO_ROUTES } from "~/config/routes";
 
 // =============================================================================
 // Studio Sidebar Layout
@@ -221,8 +222,8 @@ function StudioSidebarLayoutInner({
                 count={filteredCourses.length}
                 icon={<CourseIcon className="h-4 w-4" />}
                 onCreate={() => {
-                  if (pathname !== "/studio") {
-                    router.push("/studio");
+                  if (pathname !== STUDIO_ROUTES.hub) {
+                    router.push(STUDIO_ROUTES.hub);
                   }
                   showCreateCourse();
                 }}
@@ -261,8 +262,8 @@ function StudioSidebarLayoutInner({
                 count={filteredProjects.length}
                 icon={<ProjectIcon className="h-4 w-4" />}
                 onCreate={() => {
-                  if (pathname !== "/studio") {
-                    router.push("/studio");
+                  if (pathname !== STUDIO_ROUTES.hub) {
+                    router.push(STUDIO_ROUTES.hub);
                   }
                   showCreateProject();
                 }}
@@ -362,7 +363,7 @@ function CourseListItem({ course, isSelected }: CourseListItemProps) {
 
   return (
     <Link
-      href={`/studio/course/${course.courseId}`}
+      href={STUDIO_ROUTES.courseEditor(course.courseId)}
       className={cn(
         "group flex w-full items-center gap-3 px-3 py-3 text-left rounded-lg border transition-all duration-150",
         isSelected
@@ -431,7 +432,7 @@ function ProjectListItem({ project, isSelected }: ProjectListItemProps) {
 
   return (
     <Link
-      href={`/studio/project/${project.projectId}`}
+      href={STUDIO_ROUTES.projectDashboard(project.projectId)}
       title={tooltipText}
       className={cn(
         "group flex w-full items-center gap-3 px-3 py-3 text-left rounded-lg border transition-all duration-150",

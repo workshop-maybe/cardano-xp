@@ -38,6 +38,7 @@ import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
 import { useStudioContext } from "./studio-context";
+import { STUDIO_ROUTES } from "~/config/routes";
 
 // =============================================================================
 // ChecklistStep — vertical stepper item with numbered circle / checkmark
@@ -110,10 +111,10 @@ export default function StudioHomePage() {
     if (createParam === "course") {
       showCreateCourse();
       // Clear the query param
-      router.replace("/studio", { scroll: false });
+      router.replace(STUDIO_ROUTES.hub, { scroll: false });
     } else if (createParam === "project") {
       showCreateProject();
-      router.replace("/studio", { scroll: false });
+      router.replace(STUDIO_ROUTES.hub, { scroll: false });
     }
   }, [searchParams, showCreateCourse, showCreateProject, router]);
 
@@ -135,7 +136,7 @@ export default function StudioHomePage() {
       <CreateProjectPanel
         onCancel={cancelCreate}
         onSuccess={(projectId) => {
-          router.push(`/studio/project/${projectId}`);
+          router.push(STUDIO_ROUTES.projectDashboard(projectId));
         }}
       />
     );
@@ -312,7 +313,7 @@ function CreateCoursePanel({ onCancel }: CreateCoursePanelProps) {
                 description: `"${metadata.title}" is now live`,
                 action: {
                   label: "Open Course",
-                  onClick: () => router.push(`/studio/course/${metadata.policyId}`),
+                  onClick: () => router.push(STUDIO_ROUTES.courseEditor(metadata.policyId)),
                 },
               });
             } else {

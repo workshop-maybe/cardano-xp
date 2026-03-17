@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SuccessIcon, PendingIcon, NeutralIcon, NextIcon, DeleteIcon, OnChainIcon } from "~/components/icons";
 import { type CourseModule, type CourseModuleStatus } from "~/hooks/api/course/use-course-module";
+import { STUDIO_ROUTES } from "~/config/routes";
 import { AndamioCard } from "~/components/andamio/andamio-card";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
@@ -200,7 +201,7 @@ export function StudioModuleCard({
   }
 
   // All modules link to the edit wizard — the status badge communicates the next step
-  const cardHref = `/studio/course/${courseId}/${moduleCode}`;
+  const cardHref = STUDIO_ROUTES.moduleWizard(courseId, moduleCode);
 
   return (
     <Link

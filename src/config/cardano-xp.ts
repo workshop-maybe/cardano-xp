@@ -1,4 +1,5 @@
 import { env } from "~/env";
+import { PUBLIC_ROUTES } from "./routes";
 
 /**
  * Cardano XP — single course and project for this app.
@@ -9,9 +10,10 @@ import { env } from "~/env";
 export const CARDANO_XP = {
   courseId: env.NEXT_PUBLIC_COURSE_ID,
   projectId: env.NEXT_PUBLIC_PROJECT_ID,
+  /** Shorthand for the two main public routes. Derived from routes.ts. */
   routes: {
-    course: `/learn`,
-    project: `/tasks`,
+    course: PUBLIC_ROUTES.courses,
+    project: PUBLIC_ROUTES.projects,
   },
   /** XP token identity on-chain */
   xpToken: {

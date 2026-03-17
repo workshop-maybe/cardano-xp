@@ -13,6 +13,7 @@ import {
 } from "~/components/icons";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioText } from "~/components/andamio/andamio-text";
+import { PUBLIC_ROUTES } from "~/config/routes";
 import {
   AndamioCard,
   AndamioCardContent,
@@ -130,7 +131,7 @@ export function CourseCard({ course, enrollmentStatus }: CourseCardProps) {
   const teacherCount = teachers?.length ?? 0;
 
   return (
-    <Link href={`/learn/${courseId}`} className="block group" data-testid="course-card">
+    <Link href={PUBLIC_ROUTES.courseDetail(courseId)} className="block group" data-testid="course-card">
       <AndamioCard className="h-full transition-all duration-200 hover:shadow-md hover:border-primary/20 group-hover:bg-accent/5">
         {/* Image or Gradient Header */}
         <div className="relative h-32 sm:h-40 overflow-hidden rounded-t-xl -mt-6 -mx-0">

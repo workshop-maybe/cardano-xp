@@ -7,6 +7,7 @@ import { AndamioText } from "~/components/andamio/andamio-text";
 import { VerifiedIcon, NeutralIcon, ForwardIcon, WalletIcon, AccessTokenIcon, CourseIcon, LearnerIcon } from "~/components/icons";
 import { cn } from "~/lib/utils";
 import type { StepItem } from "~/types/ui";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 interface GettingStartedProps {
   isAuthenticated: boolean;
@@ -33,7 +34,7 @@ export function GettingStarted({ isAuthenticated, hasAccessToken }: GettingStart
       title: "Explore Courses",
       completed: false,
       icon: CourseIcon,
-      link: "/learn",
+      link: PUBLIC_ROUTES.courses,
     },
   ];
 

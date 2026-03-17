@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { STUDIO_ROUTES } from "~/config/routes";
 import {
   AndamioBadge,
   AndamioCard,
@@ -208,7 +209,7 @@ export default function ManageTreasuryPage() {
   if (errorMessage) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        <AndamioBackButton href={`/studio/project/${projectId}`} label="Back to Project" />
+        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
         <AndamioErrorAlert error={errorMessage} />
       </div>
     );
@@ -329,7 +330,7 @@ export default function ManageTreasuryPage() {
     <div className="min-h-full">
     <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
       {/* Header */}
-      <AndamioBackButton href={`/studio/project/${projectId}`} label="Back to Project" />
+      <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
 
       <AndamioPageHeader
         title="Manage Treasury"

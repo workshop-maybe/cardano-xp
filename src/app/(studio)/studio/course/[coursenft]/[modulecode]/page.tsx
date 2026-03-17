@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useStudioHeader } from "~/components/layout/studio-header";
+import { STUDIO_ROUTES } from "~/config/routes";
 import { useModuleWizardData } from "~/hooks/api/course/use-module-wizard-data";
 import { useModuleDraft } from "~/hooks/use-module-draft";
 import { useWizardNavigation } from "~/hooks/ui/use-wizard-navigation";
@@ -85,15 +86,15 @@ function ModuleWizardContent({
       const courseTitle = course?.title ?? "Course";
       if (isNewModule) {
         setBreadcrumbs([
-          { label: "Course Studio", href: "/studio/course" },
-          { label: courseTitle, href: `/studio/course/${courseId}` },
+          { label: "Course Studio", href: STUDIO_ROUTES.courses },
+          { label: courseTitle, href: STUDIO_ROUTES.courseEditor(courseId) },
           { label: "New Module" },
         ]);
         setTitle("New Module");
       } else {
         setBreadcrumbs([
-          { label: "Course Studio", href: "/studio/course" },
-          { label: courseTitle, href: `/studio/course/${courseId}` },
+          { label: "Course Studio", href: STUDIO_ROUTES.courses },
+          { label: courseTitle, href: STUDIO_ROUTES.courseEditor(courseId) },
           { label: courseModule?.title ?? moduleCode },
         ]);
         setTitle(courseModule?.title ?? "Module");
@@ -226,7 +227,7 @@ function ModuleWizardContent({
   const onModuleCreated = useCallback(
     async (newModuleCode: string) => {
       setCreatedModuleCode(newModuleCode);
-      const newUrl = `/studio/course/${courseId}/${newModuleCode}?step=slts`;
+      const newUrl = `${STUDIO_ROUTES.moduleWizard(courseId, newModuleCode)}?step=slts`;
       window.history.replaceState(null, "", newUrl);
       await refetchData(newModuleCode);
       void goToStep("slts");

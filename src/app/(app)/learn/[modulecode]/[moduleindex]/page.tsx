@@ -10,6 +10,7 @@ import {
   AndamioBackButton,
 } from "~/components/andamio";
 import { CourseIcon } from "~/components/icons";
+import { PUBLIC_ROUTES } from "~/config/routes";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { ContentViewer } from "~/components/editor";
@@ -58,7 +59,7 @@ export default function LearnLessonPage() {
   if (error || !lesson) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={`/learn/${moduleCode}`} label="Back to Module" />
+        <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
 
         <AndamioNotFoundCard
           title="Lesson Not Found"
@@ -81,7 +82,7 @@ export default function LearnLessonPage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href={`/learn/${moduleCode}`} label="Back to Module" />
+      <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
 
       {/* Student Learning Target */}
       <AndamioCard>

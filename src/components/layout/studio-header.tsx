@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NextIcon } from "~/components/icons";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
+import { STUDIO_ROUTES } from "~/config/routes";
 
 interface BreadcrumbItem {
   label: string;
@@ -116,14 +117,14 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
         breadcrumbs.push({ label: "Studio" });
       } else if (segments.length === 3) {
         // /studio/course/[coursenft]
-        breadcrumbs.push({ label: "Studio", href: "/studio" });
+        breadcrumbs.push({ label: "Studio", href: STUDIO_ROUTES.hub });
         breadcrumbs.push({ label: "Course" });
       } else if (segments.length >= 4) {
         // /studio/course/[coursenft]/[something] or deeper
-        breadcrumbs.push({ label: "Studio", href: "/studio" });
+        breadcrumbs.push({ label: "Studio", href: STUDIO_ROUTES.hub });
         breadcrumbs.push({
           label: "Course",
-          href: `/studio/course/${segments[2]}`,
+          href: STUDIO_ROUTES.courseEditor(segments[2]!),
         });
         // Determine label based on the route segment
         const subRoute = segments[3];
@@ -140,7 +141,7 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
         // /studio/project - redirects to /studio
         breadcrumbs.push({ label: "Studio" });
       } else {
-        breadcrumbs.push({ label: "Studio", href: "/studio" });
+        breadcrumbs.push({ label: "Studio", href: STUDIO_ROUTES.hub });
         breadcrumbs.push({ label: "Project" });
       }
     } else if (segments.length === 1) {

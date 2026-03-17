@@ -12,6 +12,7 @@ import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioEmptyState } from "~/components/andamio/andamio-empty-state";
 import { AlertIcon, CourseIcon, CredentialIcon, NextIcon, SuccessIcon } from "~/components/icons";
 import { cn } from "~/lib/utils";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * My Learning component - Shows learner's enrolled courses
@@ -38,7 +39,7 @@ function EnrolledCourseCard({ course }: { course: DisplayCourse }) {
 
   return (
     <Link
-      href={`/learn/${courseId}`}
+      href={PUBLIC_ROUTES.courseDetail(courseId)}
       className="group flex items-center gap-3 rounded-md border px-3 py-2.5 hover:bg-accent transition-colors"
     >
       <div
@@ -197,7 +198,7 @@ export function MyLearning() {
             title="No Courses Yet"
             description="Browse courses and submit your first assignment to get started."
             action={
-              <Link href="/learn">
+              <Link href={PUBLIC_ROUTES.courses}>
                 <AndamioButton size="sm"><CourseIcon className="mr-2 h-3 w-3" />Browse Courses</AndamioButton>
               </Link>
             }
@@ -233,7 +234,7 @@ export function MyLearning() {
               )}
             </div>
           </div>
-          <Link href="/learn">
+          <Link href={PUBLIC_ROUTES.courses}>
             <AndamioButton variant="outline" size="sm" className="text-xs h-7">
               Browse More
             </AndamioButton>

@@ -7,6 +7,7 @@ import type { ProjectPrerequisite } from "~/hooks/api/project/use-project";
 import type { StudentCompletionInput } from "~/lib/project-eligibility";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { SuccessIcon } from "~/components/icons";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * Simple checklist of onboarding modules.
@@ -68,7 +69,7 @@ function ModuleChecklistItem({
 
   return (
     <Link
-      href={mod?.moduleCode ? `/learn/${mod.moduleCode}` : "/learn"}
+      href={mod?.moduleCode ? PUBLIC_ROUTES.courseDetail(mod.moduleCode) : PUBLIC_ROUTES.courses}
       className="flex items-center gap-3 p-3 rounded-lg border hover:border-secondary/50 transition-colors"
     >
       <div

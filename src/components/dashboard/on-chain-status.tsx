@@ -21,6 +21,7 @@ import {
 } from "~/components/icons";
 import { useDashboardData } from "~/contexts/dashboard-context";
 import Link from "next/link";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 interface OnChainStatusProps {
   accessTokenAlias: string | null | undefined;
@@ -154,7 +155,7 @@ export function OnChainStatus({ accessTokenAlias }: OnChainStatusProps) {
               {allCourses.slice(0, 3).map((course, index) => (
                 <Link
                   key={course.courseId ?? index}
-                  href={`/learn/${course.courseId ?? ""}`}
+                  href={PUBLIC_ROUTES.courseDetail(course.courseId ?? "")}
                   className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
@@ -183,7 +184,7 @@ export function OnChainStatus({ accessTokenAlias }: OnChainStatusProps) {
               No course enrollments yet
             </AndamioText>
             <Link
-              href="/learn"
+              href={PUBLIC_ROUTES.courses}
               className="text-xs text-primary hover:underline mt-1 inline-block"
             >
               Browse courses →

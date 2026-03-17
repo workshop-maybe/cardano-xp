@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { RegistrationFlow } from "~/components/landing/registration-flow";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 export default function AndamioAccessTokenPage() {
   const { isAuthenticated, user } = useAndamioAuth();
@@ -163,10 +164,10 @@ export default function AndamioAccessTokenPage() {
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <AndamioButton asChild>
-                <Link href="/learn">Start Learning</Link>
+                <Link href={PUBLIC_ROUTES.courses}>Start Learning</Link>
               </AndamioButton>
               <AndamioButton asChild variant="outline">
-                <Link href="/tasks">Browse Tasks</Link>
+                <Link href={PUBLIC_ROUTES.projects}>Browse Tasks</Link>
               </AndamioButton>
             </div>
           </div>

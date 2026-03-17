@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { STUDIO_ROUTES } from "~/config/routes";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import {
   AndamioBadge,
@@ -36,7 +37,7 @@ export default function NewTaskPage() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const backHref = `/studio/project/${projectId}/draft-tasks`;
+  const backHref = STUDIO_ROUTES.draftTasks(projectId);
 
   const handleCreate = async (values: TaskFormValues) => {
     if (!isAuthenticated) {
@@ -109,7 +110,7 @@ export default function NewTaskPage() {
           error={projectError ?? "This project needs to be published on-chain before tasks can be created."}
         />
         {!projectError && (
-          <Link href={`/studio/project/${projectId}/manage-treasury`}>
+          <Link href={STUDIO_ROUTES.treasury(projectId)}>
             <AndamioButton>Go to Manage Treasury</AndamioButton>
           </Link>
         )}

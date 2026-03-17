@@ -40,6 +40,7 @@ import {
 import { formatLovelace } from "~/lib/cardano-utils";
 import { useProject, type Task } from "~/hooks/api/project/use-project";
 import { useManagerTasks, useDeleteTask, useManagerCommitments, type ManagerCommitment } from "~/hooks/api/project/use-project-manager";
+import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
 
 // =============================================================================
 // Task Lifecycle Types
@@ -380,7 +381,7 @@ export default function DraftTasksPage() {
     return (
       <div className="space-y-6">
         <AndamioBackButton
-          href={`/studio/project/${projectId}`}
+          href={STUDIO_ROUTES.projectDashboard(projectId)}
           label="Back to Project"
         />
 
@@ -396,11 +397,11 @@ export default function DraftTasksPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <AndamioBackButton
-          href={`/studio/project/${projectId}`}
+          href={STUDIO_ROUTES.projectDashboard(projectId)}
           label="Back to Project"
         />
 
-        <Link href={`/studio/project/${projectId}/draft-tasks/new`}>
+        <Link href={STUDIO_ROUTES.newTask(projectId)}>
           <AndamioAddButton label="Create Task" />
         </Link>
       </div>
@@ -452,7 +453,7 @@ export default function DraftTasksPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <AndamioSectionHeader title="Draft Tasks" />
-            <Link href={`/studio/project/${projectId}/manage-treasury`}>
+            <Link href={STUDIO_ROUTES.treasury(projectId)}>
               <AndamioButton variant="default" size="sm">
                 <OnChainIcon className="h-4 w-4 mr-2" />
                 Publish Tasks
@@ -495,7 +496,7 @@ export default function DraftTasksPage() {
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right">
                         <AndamioRowActions
-                          editHref={`/studio/project/${projectId}/draft-tasks/${taskIndex}`}
+                          editHref={STUDIO_ROUTES.editTask(projectId, taskIndex)}
                           onDelete={() => handleDeleteTask(task)}
                           itemName="task"
                           deleteDescription={`Are you sure you want to delete "${task.title || "Untitled Task"}"? This action cannot be undone.`}
@@ -517,7 +518,7 @@ export default function DraftTasksPage() {
           <div className="flex items-center justify-between">
             <AndamioSectionHeader title="Live Tasks" />
             {lifecycleCounts.pendingReview > 0 && (
-              <Link href={`/studio/project/${projectId}/commitments`}>
+              <Link href={STUDIO_ROUTES.commitments(projectId)}>
                 <AndamioButton variant="outline" size="sm">
                   <AlertIcon className="h-4 w-4 mr-2" />
                   Review Submissions ({lifecycleCounts.pendingReview})
@@ -642,7 +643,7 @@ export default function DraftTasksPage() {
                     <AndamioTableRow key={`${task.taskHash}-${taskIndex}`}>
                       <AndamioTableCell className="font-medium">
                         <Link
-                          href={`/tasks/${projectId}/${task.taskHash}`}
+                          href={PUBLIC_ROUTES.taskDetail(projectId, task.taskHash)}
                           className="hover:underline"
                         >
                           {task.title || "Untitled Task"}
@@ -726,7 +727,7 @@ export default function DraftTasksPage() {
           title="No tasks yet"
           description="Create your first task to get started"
           action={
-            <Link href={`/studio/project/${projectId}/draft-tasks/new`}>
+            <Link href={STUDIO_ROUTES.newTask(projectId)}>
               <AndamioAddButton label="Create Task" />
             </Link>
           }

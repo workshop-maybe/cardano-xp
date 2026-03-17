@@ -15,6 +15,7 @@ import {
 } from "~/components/icons";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioText } from "~/components/andamio/andamio-text";
+import { PUBLIC_ROUTES } from "~/config/routes";
 import {
   AndamioCard,
   AndamioCardContent,
@@ -162,7 +163,7 @@ export function ProjectCard({
 
   return (
     <Link
-      href={`/tasks/${projectId}`}
+      href={PUBLIC_ROUTES.projectDetail(projectId)}
       className="block group"
       data-testid="project-card"
     >

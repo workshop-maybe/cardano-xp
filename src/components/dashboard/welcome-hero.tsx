@@ -7,6 +7,7 @@ import { AndamioCard, AndamioCardContent } from "~/components/andamio/andamio-ca
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { CourseIcon, ForwardIcon, AccessTokenIcon, VerifiedIcon } from "~/components/icons";
+import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
 
 interface WelcomeHeroProps {
   accessTokenAlias: string;
@@ -60,14 +61,14 @@ export function WelcomeHero({ accessTokenAlias }: WelcomeHeroProps) {
 
               {/* Action buttons */}
               <div className="flex flex-wrap gap-3">
-                <Link href="/learn">
+                <Link href={PUBLIC_ROUTES.courses}>
                   <AndamioButton size="lg" className="gap-2">
                     <CourseIcon className="h-4 w-4" />
                     Browse Courses
                     <ForwardIcon className="h-4 w-4" />
                   </AndamioButton>
                 </Link>
-                <Link href="/studio/course">
+                <Link href={STUDIO_ROUTES.courses}>
                   <AndamioButton variant="outline" size="lg">
                     Course Studio
                   </AndamioButton>

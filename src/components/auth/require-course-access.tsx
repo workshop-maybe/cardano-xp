@@ -8,6 +8,7 @@ import { AndamioPageLoading, AndamioStudioLoading, AndamioAlert, AndamioAlertDes
 import { AlertIcon, BackIcon, SecurityAlertIcon } from "~/components/icons";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { useOwnerCourses, useTeacherCourses } from "~/hooks/api";
+import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
 
 interface RequireCourseAccessProps {
   /** Course NFT Policy ID to check access for */
@@ -128,14 +129,14 @@ export function RequireCourseAccess({
         <div className="flex gap-3">
           <AndamioButton
             variant="outline"
-            onClick={() => router.push("/studio/course")}
+            onClick={() => router.push(STUDIO_ROUTES.courses)}
           >
             <BackIcon className="h-4 w-4 mr-2" />
             Back to Course Studio
           </AndamioButton>
           <AndamioButton
             variant="secondary"
-            onClick={() => router.push(`/learn/${courseId}`)}
+            onClick={() => router.push(PUBLIC_ROUTES.courseDetail(courseId))}
           >
             View Course
           </AndamioButton>

@@ -271,7 +271,7 @@ test("multi-role test", async ({ studentPage, teacherPage, ledger }) => {
   // Student and Teacher have separate browser contexts
   // Ledger tracks UTXO state across both
 
-  await studentPage.goto("/course/123");
+  await studentPage.goto("/learn/module-101");
   await teacherPage.goto("/studio/course/123");
 
   console.log("Student balance:", ledger.getBalance("student"));

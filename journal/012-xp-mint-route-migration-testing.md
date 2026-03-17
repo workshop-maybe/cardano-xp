@@ -29,9 +29,14 @@ Added the XP token logo (blue circle with "XP" text) to the wallet/treasury page
 - **Template literals need separate grep** — `"/course"` and `` `/course/${id}` `` are different search patterns. Multi-agent review catches what grep alone misses.
 - **`routes.ts` is dead code** — all 5 reviewers flagged that the typed route constants are exported but never imported by any component. Components hardcode paths. This is tech debt to address later.
 
+### Route Centralization (tech debt)
+
+All 5 reviewers flagged that `routes.ts` defined typed route constants that no component imported. Fixed: 52 components now import `PUBLIC_ROUTES`, `AUTH_ROUTES`, or `STUDIO_ROUTES` from `routes.ts`. Deleted dead code (`ROUTE_METADATA`, utility functions). `CARDANO_XP.routes` derives from `PUBLIC_ROUTES`.
+
+A second 4-agent review then caught that route builder functions generated URLs with `courseId`/`projectId` segments that don't exist in the filesystem. Fixed the signatures to match reality: `module(moduleCode)`, `lesson(moduleCode, index)`, `task(taskHash)`.
+
 ## What's next
 
-- Wire components to import from `routes.ts` or `CARDANO_XP.routes` instead of hardcoding paths
 - Continue with testing on preprod now that XP tokens are minted
 - API types regenerated for gateway v2.1.0 — ready for new features
 
@@ -39,3 +44,6 @@ Added the XP token logo (blue circle with "XP" text) to the wallet/treasury page
 
 - `e2cea3d` — fix tx fee calculation by setting witness-override to 4
 - `7dba9fa` — migrate routes from template paths to app-specific URLs
+- `36d44df` — add solution doc and journal entry
+- `f41aade` — wire all components to import from routes.ts
+- `d33b555` — fix route builders to match actual filesystem structure

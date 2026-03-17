@@ -75,17 +75,33 @@ grep -r '`/course/' src/ --include="*.tsx"
 
 The initial search only ran the first pattern. The 13 missed references were all template literals with `${interpolation}`.
 
+### Phase 4: Route centralization (tech debt fix)
+
+All 52+ components now import from `routes.ts` instead of hardcoding paths. `CARDANO_XP.routes` derives from `PUBLIC_ROUTES`. Dead code removed (`ROUTE_METADATA`, utility functions).
+
+### Phase 5: Route builder fix (review-caught)
+
+A follow-up 4-agent review found that route builder functions generated URLs with `courseId`/`projectId` segments that don't exist in the single-course, single-project URL structure. Fixed:
+
+- `courseDetail(courseId)` → `module(moduleCode)` — matches `/learn/[modulecode]`
+- `lessonDetail(courseId, moduleCode, index)` → `lesson(moduleCode, index)` — matches `/learn/[modulecode]/[moduleindex]`
+- `assignment(courseId, moduleCode)` → `assignment(moduleCode)` — matches `/learn/[modulecode]/assignment`
+- `projectDetail(projectId)` → removed (no such page)
+- `taskDetail(projectId, taskHash)` → `task(taskHash)` — matches `/tasks/[taskhash]`
+
 ## Prevention
 
-1. **Search both patterns** when doing route migrations — double-quoted strings AND backtick template literals
+1. **Search both string formats** when doing route migrations — double-quoted strings AND backtick template literals
 2. **Multi-agent code review** as a safety net catches what grep misses
-3. **Consider centralizing**: components should import from `routes.ts` or `CARDANO_XP.routes` instead of hardcoding paths — this was flagged but not yet implemented
+3. **Route builders must match filesystem** — verify builder output against `src/app/` directory structure
+4. **All components import from `routes.ts`** — centralization is now enforced. Future route changes require editing one file.
 
 ## Verification
 
 - `npm run compile` passes (TypeScript clean)
 - 357 E2E tests pass, 0 failures
 - All navigation links resolve to correct pages
+- Zero hardcoded route paths remain in executable code
 
 ## Related Documentation
 
@@ -95,4 +111,4 @@ The initial search only ran the first pattern. The 13 missed references were all
 
 ## Files Changed
 
-45 files across src/config, src/components, src/app, e2e/tests, tsconfig.json
+58+ files across src/config, src/components, src/app, e2e/tests, tsconfig.json

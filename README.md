@@ -1,5 +1,15 @@
 # Andamio App Template
 
+## XP Minting
+
+### Preprod
+- `addr_test1qzycl2vtgkq5p9p0eglsfj2ruankazmg9relwg9pa694r6s75lyqaqtvzt5kkvwuz7nnjte9q0dt2wgakqrkvavj5fusvgufhh`
+
+### Mainnet
+- coming soon
+
+## Dependencies
+
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)

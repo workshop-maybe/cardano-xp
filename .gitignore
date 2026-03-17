@@ -61,3 +61,5 @@ packages/*/package-lock.json
 .idea
 .
 specs/
+
+wallets/

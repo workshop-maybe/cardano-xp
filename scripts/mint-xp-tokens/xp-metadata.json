@@ -11,13 +11,13 @@
         "ticker": "XP",
         "url": "https://cardano-xp.io",
         "decimals": 0,
-        "image": "IPFS_HASH_PLACEHOLDER",
+        "image": ["ipfs://bafkreiambboqzvp7odarvsjsf6qo", "ekxcdkoqnyaiys3s223qk56ja35e4e"],
         "mediaType": "image/png",
         "files": [
           {
             "name": "Cardano XP V1",
             "mediaType": "image/png",
-            "src": "IPFS_HASH_PLACEHOLDER"
+            "src": ["ipfs://bafkreiambboqzvp7odarvsjsf6qo", "ekxcdkoqnyaiys3s223qk56ja35e4e"]
           }
         ],
         "supply": "100000",

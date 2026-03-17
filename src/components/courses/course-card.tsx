@@ -131,7 +131,7 @@ export function CourseCard({ course, enrollmentStatus }: CourseCardProps) {
   const teacherCount = teachers?.length ?? 0;
 
   return (
-    <Link href={PUBLIC_ROUTES.courseDetail(courseId)} className="block group" data-testid="course-card">
+    <Link href={PUBLIC_ROUTES.module(courseId)} className="block group" data-testid="course-card">
       <AndamioCard className="h-full transition-all duration-200 hover:shadow-md hover:border-primary/20 group-hover:bg-accent/5">
         {/* Image or Gradient Header */}
         <div className="relative h-32 sm:h-40 overflow-hidden rounded-t-xl -mt-6 -mx-0">

@@ -27,6 +27,7 @@ import {
   ContributorIcon,
 } from "~/components/icons";
 import { CARDANO_XP } from "~/config";
+import { PUBLIC_ROUTES } from "~/config/routes";
 
 /**
  * Credentials Page
@@ -218,7 +219,7 @@ export default function CredentialsPage() {
               {/* Actions */}
               <div className="space-y-1">
                 <Link
-                  href={`/learn/${course.courseId}`}
+                  href={PUBLIC_ROUTES.module(course.courseId)}
                   className="flex items-center justify-between p-2 -mx-2 rounded-md hover:bg-muted/50 transition-colors"
                 >
                   <AndamioText variant="small" className="text-primary font-medium">

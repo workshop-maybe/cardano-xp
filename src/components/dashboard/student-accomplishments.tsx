@@ -204,7 +204,7 @@ function CredentialRow({ courseId, courseTitle, isCompleted, credentialCount }: 
 
   return (
     <Link
-      href={PUBLIC_ROUTES.courseDetail(courseId)}
+      href={PUBLIC_ROUTES.module(courseId)}
       className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
     >
       <div className="flex items-center gap-2 min-w-0">

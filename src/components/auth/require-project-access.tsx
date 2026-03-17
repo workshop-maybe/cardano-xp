@@ -121,7 +121,7 @@ export function RequireProjectAccess({
           </AndamioButton>
           <AndamioButton
             variant="secondary"
-            onClick={() => router.push(PUBLIC_ROUTES.projectDetail(projectId))}
+            onClick={() => router.push(PUBLIC_ROUTES.projects)}
           >
             View Project
           </AndamioButton>

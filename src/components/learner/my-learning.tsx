@@ -39,7 +39,7 @@ function EnrolledCourseCard({ course }: { course: DisplayCourse }) {
 
   return (
     <Link
-      href={PUBLIC_ROUTES.courseDetail(courseId)}
+      href={PUBLIC_ROUTES.module(courseId)}
       className="group flex items-center gap-3 rounded-md border px-3 py-2.5 hover:bg-accent transition-colors"
     >
       <div

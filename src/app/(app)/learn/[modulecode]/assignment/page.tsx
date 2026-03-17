@@ -93,7 +93,7 @@ export default function LearnAssignmentPage() {
   if (error || !assignment) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
+        <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back to Module" />
         <AndamioNotFoundCard
           title="Assignment Not Found"
           message={error ?? "No assignment found for this module"}
@@ -104,7 +104,7 @@ export default function LearnAssignmentPage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
+      <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back to Module" />
 
       <AndamioPageHeader
         title={assignment.title ?? "Assignment"}

@@ -36,6 +36,7 @@ import {
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import Link from "next/link";
 import { Skeleton } from "~/components/ui/skeleton";
+import { STUDIO_ROUTES } from "~/config/routes";
 
 // Type for the course_prereqs format expected by Atlas API
 export type CoursePrereq = [string, string[]]; // [course_policy_id, module_hashes[]]
@@ -295,7 +296,7 @@ export function CoursePrereqsSelector({
             </div>
           </div>
 
-          <Link href="/studio?create=course">
+          <Link href={`${STUDIO_ROUTES.hub}?create=course`}>
             <AndamioButton className="w-full">
               <CourseIcon className="h-4 w-4 mr-2" />
               Create a Course

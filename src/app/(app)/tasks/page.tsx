@@ -333,7 +333,7 @@ export default function TasksPage() {
                     <AndamioTableRow key={group.taskHash}>
                       <AndamioTableCell>
                         {task.taskHash ? (
-                          <Link href={PUBLIC_ROUTES.projectDetail(task.taskHash)}>
+                          <Link href={PUBLIC_ROUTES.task(task.taskHash)}>
                             <div className="flex items-center gap-2">
                               <AndamioText className="font-medium hover:underline">
                                 {task.title || "Untitled Task"}
@@ -411,7 +411,7 @@ export default function TasksPage() {
                   return (
                     <AndamioTableRow key={group.taskHash} className="opacity-70">
                       <AndamioTableCell>
-                        <Link href={PUBLIC_ROUTES.projectDetail(task.taskHash)}>
+                        <Link href={PUBLIC_ROUTES.task(task.taskHash)}>
                           <div className="flex items-center gap-2">
                             <AndamioText className="font-medium hover:underline">
                               {task.title || "Untitled Task"}

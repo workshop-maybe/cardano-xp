@@ -12,21 +12,17 @@ export const PUBLIC_ROUTES = {
   /** Landing page */
   home: "/",
 
-  /** Course routes */
+  /** Course routes — single-course app, no courseId in URL */
   courses: "/learn",
-  courseDetail: (courseId: string) => `/learn/${courseId}`,
-  moduleDetail: (courseId: string, moduleCode: string) =>
-    `/learn/${courseId}/${moduleCode}`,
-  lessonDetail: (courseId: string, moduleCode: string, lessonIndex: number) =>
-    `/learn/${courseId}/${moduleCode}/${lessonIndex}`,
-  assignment: (courseId: string, moduleCode: string) =>
-    `/learn/${courseId}/${moduleCode}/assignment`,
+  module: (moduleCode: string) => `/learn/${moduleCode}`,
+  lesson: (moduleCode: string, lessonIndex: number) =>
+    `/learn/${moduleCode}/${lessonIndex}`,
+  assignment: (moduleCode: string) =>
+    `/learn/${moduleCode}/assignment`,
 
-  /** Project routes */
+  /** Task routes — single-project app, no projectId in URL */
   projects: "/tasks",
-  projectDetail: (projectId: string) => `/tasks/${projectId}`,
-  taskDetail: (projectId: string, taskHash: string) =>
-    `/tasks/${projectId}/${taskHash}`,
+  task: (taskHash: string) => `/tasks/${taskHash}`,
 
   /** Utility routes */
   sitemap: "/sitemap",
@@ -63,6 +59,8 @@ export const STUDIO_ROUTES = {
     `/studio/course/${courseId}/${moduleCode}`,
   teacherDashboard: (courseId: string) =>
     `/studio/course/${courseId}/teacher`,
+  manageLearners: (courseId: string) =>
+    `/studio/course/${courseId}/manage-learners`,
 
   /** Project studio */
   projects: "/studio/project",
@@ -78,8 +76,6 @@ export const STUDIO_ROUTES = {
     `/studio/project/${projectId}/manage-treasury`,
   manageContributors: (projectId: string) =>
     `/studio/project/${projectId}/manage-contributors`,
-  manageLearners: (courseId: string) =>
-    `/studio/course/${courseId}/manage-learners`,
 } as const;
 
 /**

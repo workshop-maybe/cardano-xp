@@ -163,7 +163,7 @@ export function ProjectCard({
 
   return (
     <Link
-      href={PUBLIC_ROUTES.projectDetail(projectId)}
+      href={PUBLIC_ROUTES.projects}
       className="block group"
       data-testid="project-card"
     >

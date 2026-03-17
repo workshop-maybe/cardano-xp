@@ -643,7 +643,7 @@ export default function DraftTasksPage() {
                     <AndamioTableRow key={`${task.taskHash}-${taskIndex}`}>
                       <AndamioTableCell className="font-medium">
                         <Link
-                          href={PUBLIC_ROUTES.taskDetail(projectId, task.taskHash)}
+                          href={PUBLIC_ROUTES.task(task.taskHash)}
                           className="hover:underline"
                         >
                           {task.title || "Untitled Task"}

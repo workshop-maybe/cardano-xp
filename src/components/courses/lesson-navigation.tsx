@@ -52,7 +52,7 @@ export function LessonNavigation({
       {/* Previous */}
       <div className="flex-1">
         {prev && (
-          <Link href={PUBLIC_ROUTES.lessonDetail(courseId, moduleCode, prev.index)} className="block">
+          <Link href={PUBLIC_ROUTES.lesson(moduleCode, prev.index)} className="block">
             <AndamioButton variant="outline" className="w-full justify-start h-auto py-3">
               <PreviousIcon className="h-4 w-4 mr-2 shrink-0" />
               <div className="text-left">
@@ -69,7 +69,7 @@ export function LessonNavigation({
       {/* Next or Go to Assignment */}
       <div className="flex-1">
         {next ? (
-          <Link href={PUBLIC_ROUTES.lessonDetail(courseId, moduleCode, next.index)} className="block">
+          <Link href={PUBLIC_ROUTES.lesson(moduleCode, next.index)} className="block">
             <AndamioButton variant="outline" className="w-full justify-end h-auto py-3">
               <div className="text-right">
                 <div className="text-sm">Next</div>
@@ -81,7 +81,7 @@ export function LessonNavigation({
             </AndamioButton>
           </Link>
         ) : isLastLesson ? (
-          <Link href={PUBLIC_ROUTES.assignment(courseId, moduleCode)} className="block">
+          <Link href={PUBLIC_ROUTES.assignment(moduleCode)} className="block">
             <AndamioButton className="w-full justify-end h-auto py-3">
               <div className="text-right">
                 <div className="text-sm">Go to Assignment</div>

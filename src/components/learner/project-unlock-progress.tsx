@@ -228,7 +228,7 @@ export function ProjectUnlockProgress() {
                 You qualify for {qualifiedCount} {qualifiedCount === 1 ? "project" : "projects"}
               </AndamioText>
             </div>
-            <Link href="/tasks?filter=qualified">
+            <Link href={`${PUBLIC_ROUTES.projects}?filter=qualified`}>
               <AndamioButton size="sm" variant="outline" className="h-7 text-xs">
                 View Qualified Projects
                 <NextIcon className="ml-1 h-3 w-3" />
@@ -244,7 +244,7 @@ export function ProjectUnlockProgress() {
           return (
             <Link
               key={item.projectId}
-              href={PUBLIC_ROUTES.projectDetail(item.projectId)}
+              href={PUBLIC_ROUTES.projects}
               className="block rounded-md border p-4 bg-muted/30 hover:border-primary/30 hover:bg-accent/5 transition-colors group"
             >
               <div className="flex items-center justify-between gap-3">

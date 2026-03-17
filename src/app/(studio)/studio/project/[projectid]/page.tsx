@@ -229,7 +229,7 @@ export default function ProjectDashboardPage() {
             size="sm"
             asChild
           >
-            <Link href={PUBLIC_ROUTES.projectDetail(projectId)}>
+            <Link href={PUBLIC_ROUTES.projects}>
               <PreviewIcon className="h-3.5 w-3.5 mr-1" />
               Preview
             </Link>

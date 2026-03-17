@@ -377,7 +377,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
           className="h-7 text-xs"
           asChild
         >
-          <Link href={`${PUBLIC_ROUTES.courseDetail(courseId)}?preview=teacher`}>
+          <Link href={`${PUBLIC_ROUTES.module(courseId)}?preview=teacher`}>
             <PreviewIcon className="h-3.5 w-3.5 mr-1" />
             Preview
           </Link>

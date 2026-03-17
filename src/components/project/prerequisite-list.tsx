@@ -69,7 +69,7 @@ function ModuleChecklistItem({
 
   return (
     <Link
-      href={mod?.moduleCode ? PUBLIC_ROUTES.courseDetail(mod.moduleCode) : PUBLIC_ROUTES.courses}
+      href={mod?.moduleCode ? PUBLIC_ROUTES.module(mod.moduleCode) : PUBLIC_ROUTES.courses}
       className="flex items-center gap-3 p-3 rounded-lg border hover:border-secondary/50 transition-colors"
     >
       <div

@@ -136,7 +136,7 @@ export function RequireCourseAccess({
           </AndamioButton>
           <AndamioButton
             variant="secondary"
-            onClick={() => router.push(PUBLIC_ROUTES.courseDetail(courseId))}
+            onClick={() => router.push(PUBLIC_ROUTES.module(courseId))}
           >
             View Course
           </AndamioButton>

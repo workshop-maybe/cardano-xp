@@ -57,8 +57,8 @@ export function LearnModuleCard({
 
   // Link to /learn routes (no course ID needed)
   const linkPath = moduleCode
-    ? PUBLIC_ROUTES.courseDetail(moduleCode)
-    : PUBLIC_ROUTES.courseDetail(sltHash!);
+    ? PUBLIC_ROUTES.module(moduleCode)
+    : PUBLIC_ROUTES.module(sltHash!);
 
   return (
     <AndamioCard className="overflow-hidden">

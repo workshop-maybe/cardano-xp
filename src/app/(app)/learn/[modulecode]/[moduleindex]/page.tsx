@@ -59,7 +59,7 @@ export default function LearnLessonPage() {
   if (error || !lesson) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
+        <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back to Module" />
 
         <AndamioNotFoundCard
           title="Lesson Not Found"
@@ -82,7 +82,7 @@ export default function LearnLessonPage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href={PUBLIC_ROUTES.courseDetail(moduleCode)} label="Back to Module" />
+      <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back to Module" />
 
       {/* Student Learning Target */}
       <AndamioCard>

@@ -218,7 +218,7 @@ export default function CredentialsPage() {
               {/* Actions */}
               <div className="space-y-1">
                 <Link
-                  href={`/course/${course.courseId}`}
+                  href={`/learn/${course.courseId}`}
                   className="flex items-center justify-between p-2 -mx-2 rounded-md hover:bg-muted/50 transition-colors"
                 >
                   <AndamioText variant="small" className="text-primary font-medium">

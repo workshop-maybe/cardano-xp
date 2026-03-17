@@ -20,7 +20,7 @@ test.describe("Course Enrollment Flow", () => {
   test.describe("Finding Courses", () => {
     test("can browse available courses", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Course page navigation timeout - test skipped");
         return;
@@ -32,7 +32,7 @@ test.describe("Course Enrollment Flow", () => {
 
     test("can view course details before enrolling", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Course page navigation timeout - test skipped");
         return;
@@ -45,7 +45,7 @@ test.describe("Course Enrollment Flow", () => {
       }
 
       // Find and click a course
-      const courseLink = connectedPage.locator('a[href*="/course"]').first();
+      const courseLink = connectedPage.locator('a[href*="/learn"]').first();
 
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
@@ -74,7 +74,7 @@ test.describe("Course Enrollment Flow", () => {
       });
 
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -88,7 +88,7 @@ test.describe("Course Enrollment Flow", () => {
       }
 
       // Navigate to a course
-      const courseLink = connectedPage.locator('a[href*="/course"]').first();
+      const courseLink = connectedPage.locator('a[href*="/learn"]').first();
 
       if (await courseLink.isVisible().catch(() => false)) {
         await courseLink.click();
@@ -122,7 +122,7 @@ test.describe("Course Enrollment Flow", () => {
       });
 
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -134,7 +134,7 @@ test.describe("Course Enrollment Flow", () => {
         return;
       }
 
-      const courseLink = connectedPage.locator('a[href*="/course"]').first();
+      const courseLink = connectedPage.locator('a[href*="/learn"]').first();
 
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
@@ -163,7 +163,7 @@ test.describe("Course Enrollment Flow", () => {
       await setMockWalletMode(connectedPage, "reject");
 
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -175,7 +175,7 @@ test.describe("Course Enrollment Flow", () => {
         return;
       }
 
-      const courseLink = connectedPage.locator('a[href*="/course"]').first();
+      const courseLink = connectedPage.locator('a[href*="/learn"]').first();
 
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
@@ -219,7 +219,7 @@ test.describe("Course Enrollment Flow", () => {
       });
 
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -240,7 +240,7 @@ test.describe("Course Enrollment Flow", () => {
     test("shows modules for enrolled course", async ({ connectedPage }) => {
       // Navigate to enrolled course - mock course ID may not exist as a valid route
       try {
-        await connectedPage.goto("/course/enrolled-course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn/enrolled-course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout for mock course ID - test skipped");
         return;
@@ -262,7 +262,7 @@ test.describe("Course Enrollment Flow", () => {
   test.describe("Module Navigation", () => {
     test("can expand and collapse modules", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course/course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn/course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout for mock course - test skipped");
         return;
@@ -292,7 +292,7 @@ test.describe("Course Enrollment Flow", () => {
 
     test("can navigate to lesson content", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course/course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn/course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout for mock course - test skipped");
         return;
@@ -322,7 +322,7 @@ test.describe("Course Enrollment Flow", () => {
 
     test("can navigate to assignment", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course/course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn/course-1", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout for mock course - test skipped");
         return;
@@ -362,7 +362,7 @@ test.describe("Assignment Commitment", () => {
     // Note: Assignment routes require valid course NFT and module code
     // This test uses a placeholder route - in real testing, use actual course data
     try {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;
@@ -405,7 +405,7 @@ test.describe("Assignment Commitment", () => {
   test("shows SLT badge on assignment", async ({ connectedPage }) => {
     // Navigate to course catalog first, then look for assignments
     try {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;

@@ -14,7 +14,7 @@ const COURSE_WITH_MODULES = {
 test.describe("Loop 2: Student Enrollment Flow", () => {
 
   test("explore course with modules - unauthenticated", async ({ page }) => {
-    await page.goto(`/course/${COURSE_WITH_MODULES.id}`, { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto(`/learn/${COURSE_WITH_MODULES.id}`, { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(3000);
 
     await page.screenshot({ path: "screenshots/loop2/enroll-01-course-unauth.png", fullPage: true });
@@ -51,7 +51,7 @@ test.describe("Loop 2: Student Enrollment Flow", () => {
 
   test("explore course module detail", async ({ page }) => {
     // Navigate to course
-    await page.goto(`/course/${COURSE_WITH_MODULES.id}`, { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto(`/learn/${COURSE_WITH_MODULES.id}`, { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(2000);
 
     // Look for module link/accordion
@@ -76,7 +76,7 @@ test.describe("Loop 2: Student Enrollment Flow", () => {
   });
 
   test("check what happens when clicking enroll/start", async ({ page }) => {
-    await page.goto(`/course/${COURSE_WITH_MODULES.id}`, { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto(`/learn/${COURSE_WITH_MODULES.id}`, { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(2000);
 
     // Look for any actionable button
@@ -111,7 +111,7 @@ test.describe("Loop 2: Student Enrollment Flow", () => {
 
   test("full course catalog to enrollment attempt flow", async ({ page }) => {
     // Start from course catalog
-    await page.goto("/course", { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto("/learn", { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(2000);
 
     console.log("\n=== FULL FLOW: CATALOG → COURSE → ENROLL ===");

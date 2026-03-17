@@ -18,7 +18,7 @@ test.describe("Course Create Transaction Flow", () => {
   test.describe("Navigation to Course Creation", () => {
     test("can navigate to create course page", async ({ authenticatedPageWithToken }) => {
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -47,7 +47,7 @@ test.describe("Course Create Transaction Flow", () => {
     test("requires access token to create course", async ({ authenticatedPage }) => {
       // User without access token
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -75,7 +75,7 @@ test.describe("Course Create Transaction Flow", () => {
     test("displays course creation form fields", async ({ authenticatedPageWithToken }) => {
       // Try to navigate to course creation - route may not exist
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -110,7 +110,7 @@ test.describe("Course Create Transaction Flow", () => {
 
     test("validates required fields", async ({ authenticatedPageWithToken }) => {
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -158,7 +158,7 @@ test.describe("Course Create Transaction Flow", () => {
       });
 
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -219,7 +219,7 @@ test.describe("Course Create Transaction Flow", () => {
       });
 
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -272,7 +272,7 @@ test.describe("Course Create Transaction Flow", () => {
       });
 
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -319,7 +319,7 @@ test.describe("Course Create Transaction Flow", () => {
       await setMockWalletMode(authenticatedPageWithToken, "reject");
 
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -366,7 +366,7 @@ test.describe("Course Create Transaction Flow", () => {
   test.describe("Module Configuration", () => {
     test("can add modules to course", async ({ authenticatedPageWithToken }) => {
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -409,7 +409,7 @@ test.describe("Course Create Transaction Flow", () => {
 
     test("can configure module assignments", async ({ authenticatedPageWithToken }) => {
       try {
-        await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -450,7 +450,7 @@ test.describe("Course Publish Transaction", () => {
 
     // Navigate to courses page
     try {
-      await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;

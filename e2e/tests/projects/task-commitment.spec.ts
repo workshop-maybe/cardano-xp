@@ -17,7 +17,7 @@ test.describe("Task Commitment Flow", () => {
   test.describe("Finding Available Tasks", () => {
     test("displays available tasks on project page", async ({ authenticatedPageWithToken }) => {
       // Navigate to project list (actual route)
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -26,7 +26,7 @@ test.describe("Task Commitment Flow", () => {
       }
 
       // Try to find and click on a project
-      const projectLink = authenticatedPageWithToken.locator('a[href*="/project/"]').first();
+      const projectLink = authenticatedPageWithToken.locator('a[href*="/tasks/"]').first();
       if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
         await projectLink.click();
         await authenticatedPageWithToken.waitForLoadState("domcontentloaded");
@@ -41,7 +41,7 @@ test.describe("Task Commitment Flow", () => {
     });
 
     test("shows task rewards", async ({ authenticatedPageWithToken }) => {
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -56,7 +56,7 @@ test.describe("Task Commitment Flow", () => {
     });
 
     test("shows task expiration", async ({ authenticatedPageWithToken }) => {
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -73,7 +73,7 @@ test.describe("Task Commitment Flow", () => {
 
   test.describe("First-Time Enrollment", () => {
     test("shows enroll & commit for new contributors", async ({ authenticatedPageWithToken }) => {
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -93,7 +93,7 @@ test.describe("Task Commitment Flow", () => {
         shouldFail: false,
       });
 
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -122,7 +122,7 @@ test.describe("Task Commitment Flow", () => {
         shouldFail: false,
       });
 
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -147,7 +147,7 @@ test.describe("Task Commitment Flow", () => {
 
   test.describe("Task Commitment (Existing Contributor)", () => {
     test("shows commit button for existing contributors", async ({ authenticatedPageWithToken }) => {
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -167,7 +167,7 @@ test.describe("Task Commitment Flow", () => {
         shouldFail: false,
       });
 
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -196,7 +196,7 @@ test.describe("Task Commitment Flow", () => {
         errorMessage: "Task already committed by another user",
       });
 
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -221,7 +221,7 @@ test.describe("Task Commitment Flow", () => {
     test("handles wallet rejection", async ({ authenticatedPageWithToken }) => {
       await setMockWalletMode(authenticatedPageWithToken, "reject");
 
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {
@@ -246,7 +246,7 @@ test.describe("Task Commitment Flow", () => {
 
   test.describe("Commit with Rewards", () => {
     test("shows claim rewards option for eligible tasks", async ({ authenticatedPageWithToken }) => {
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
       if (!mainVisible) {

@@ -154,7 +154,7 @@ export function OnChainStatus({ accessTokenAlias }: OnChainStatusProps) {
               {allCourses.slice(0, 3).map((course, index) => (
                 <Link
                   key={course.courseId ?? index}
-                  href={`/course/${course.courseId ?? ""}`}
+                  href={`/learn/${course.courseId ?? ""}`}
                   className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
                 >
                   <div className="flex items-center gap-2 min-w-0">
@@ -183,7 +183,7 @@ export function OnChainStatus({ accessTokenAlias }: OnChainStatusProps) {
               No course enrollments yet
             </AndamioText>
             <Link
-              href="/course"
+              href="/learn"
               className="text-xs text-primary hover:underline mt-1 inline-block"
             >
               Browse courses →

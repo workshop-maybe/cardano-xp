@@ -18,7 +18,7 @@ test.describe("Loop 2: Full Enrollment Path", () => {
 
     // Step 1: Course Catalog
     console.log("Step 1: Navigate to course catalog");
-    await page.goto("/course", { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto("/learn", { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(2000);
     await page.screenshot({ path: "screenshots/loop2/path-01-catalog.png", fullPage: true });
 
@@ -60,7 +60,7 @@ test.describe("Loop 2: Full Enrollment Path", () => {
 
     // Try direct navigation to module page
     console.log("Step 3b: Direct navigation to module");
-    await page.goto(`/course/${COURSE_WITH_MODULES.id}/${COURSE_WITH_MODULES.moduleCode}`, { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto(`/learn/${COURSE_WITH_MODULES.id}/${COURSE_WITH_MODULES.moduleCode}`, { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(2000);
     await page.screenshot({ path: "screenshots/loop2/path-03-module.png", fullPage: true });
 
@@ -69,7 +69,7 @@ test.describe("Loop 2: Full Enrollment Path", () => {
 
     // Step 4: Navigate to assignment
     console.log("Step 4: Navigate to assignment page");
-    await page.goto(`/course/${COURSE_WITH_MODULES.id}/${COURSE_WITH_MODULES.moduleCode}/assignment`, { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto(`/learn/${COURSE_WITH_MODULES.id}/${COURSE_WITH_MODULES.moduleCode}/assignment`, { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(3000);
     await page.screenshot({ path: "screenshots/loop2/path-04-assignment.png", fullPage: true });
 
@@ -99,7 +99,7 @@ test.describe("Loop 2: Full Enrollment Path", () => {
 
   test("check AssignmentCommitment component state", async ({ page }) => {
     // Go directly to assignment page
-    await page.goto(`/course/${COURSE_WITH_MODULES.id}/${COURSE_WITH_MODULES.moduleCode}/assignment`, { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto(`/learn/${COURSE_WITH_MODULES.id}/${COURSE_WITH_MODULES.moduleCode}/assignment`, { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(3000);
 
     console.log("\n=== ASSIGNMENT COMMITMENT COMPONENT STATE ===\n");

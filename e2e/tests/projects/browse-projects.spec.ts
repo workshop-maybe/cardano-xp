@@ -18,7 +18,7 @@ test.describe("Project Catalog", () => {
   test.describe("Page Layout", () => {
     test("displays project catalog page", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -44,7 +44,7 @@ test.describe("Project Catalog", () => {
       });
 
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -71,7 +71,7 @@ test.describe("Project Catalog", () => {
       });
 
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -109,7 +109,7 @@ test.describe("Project Catalog", () => {
       });
 
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -143,7 +143,7 @@ test.describe("Project Catalog", () => {
       });
 
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -176,7 +176,7 @@ test.describe("Project Catalog", () => {
       });
 
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -189,7 +189,7 @@ test.describe("Project Catalog", () => {
       }
 
       // Click project card or view button
-      const projectLink = connectedPage.locator('a[href*="/project"], [class*="card"] a').first();
+      const projectLink = connectedPage.locator('a[href*="/tasks"], [class*="card"] a').first();
 
       if (await projectLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await projectLink.click();
@@ -207,7 +207,7 @@ test.describe("Project Catalog", () => {
   test.describe("Filtering and Search", () => {
     test("can filter projects by status", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -227,7 +227,7 @@ test.describe("Project Catalog", () => {
 
     test("can search projects", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -268,7 +268,7 @@ test.describe("Project Detail Page", () => {
     });
 
     try {
-      await connectedPage.goto("/project/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/tasks/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;
@@ -312,7 +312,7 @@ test.describe("Project Detail Page", () => {
     });
 
     try {
-      await connectedPage.goto("/project/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/tasks/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;
@@ -347,7 +347,7 @@ test.describe("Project Detail Page", () => {
     });
 
     try {
-      await connectedPage.goto("/project/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/tasks/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;
@@ -383,7 +383,7 @@ test.describe("Project Detail Page", () => {
     });
 
     try {
-      await connectedPage.goto("/project/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/tasks/project-1", { waitUntil: "domcontentloaded", timeout: 15000 });
     } catch {
       console.log("Navigation timeout - test skipped");
       return;

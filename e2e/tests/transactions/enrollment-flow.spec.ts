@@ -35,7 +35,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -67,7 +67,7 @@ test.describe("Course Enrollment Transaction", () => {
     test("shows enrollment requirements", async ({ authenticatedPage }) => {
       // Navigate to course catalog and look for requirements info
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -80,7 +80,7 @@ test.describe("Course Enrollment Transaction", () => {
       }
 
       // Click on a course to view details
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -117,7 +117,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -130,7 +130,7 @@ test.describe("Course Enrollment Transaction", () => {
       }
 
       // Find and click a course
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -164,7 +164,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -176,7 +176,7 @@ test.describe("Course Enrollment Transaction", () => {
         return;
       }
 
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -221,7 +221,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -248,7 +248,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -260,7 +260,7 @@ test.describe("Course Enrollment Transaction", () => {
         return;
       }
 
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -285,7 +285,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -297,7 +297,7 @@ test.describe("Course Enrollment Transaction", () => {
         return;
       }
 
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -321,7 +321,7 @@ test.describe("Course Enrollment Transaction", () => {
       });
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -333,7 +333,7 @@ test.describe("Course Enrollment Transaction", () => {
         return;
       }
 
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -358,7 +358,7 @@ test.describe("Course Enrollment Transaction", () => {
       await setMockWalletMode(authenticatedPage, "reject");
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -370,7 +370,7 @@ test.describe("Course Enrollment Transaction", () => {
         return;
       }
 
-      const courseLink = authenticatedPage.locator('a[href*="/course/"]').first();
+      const courseLink = authenticatedPage.locator('a[href*="/learn/"]').first();
       if (await courseLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await courseLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -396,7 +396,7 @@ test.describe("Course Enrollment Transaction", () => {
       await setMockWalletMode(authenticatedPage, "timeout");
 
       try {
-        await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;

@@ -162,7 +162,7 @@ export function ProjectCard({
 
   return (
     <Link
-      href={`/project/${projectId}`}
+      href={`/tasks/${projectId}`}
       className="block group"
       data-testid="project-card"
     >

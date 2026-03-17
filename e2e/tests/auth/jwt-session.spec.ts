@@ -282,7 +282,7 @@ test.describe("JWT Session Management", () => {
 
     test("course page is accessible", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
         // Wait for page to render - use flexible check
         const mainVisible = await connectedPage.locator("main").isVisible({ timeout: 5000 }).catch(() => false);
         if (!mainVisible) {
@@ -295,7 +295,7 @@ test.describe("JWT Session Management", () => {
 
     test("project page is accessible", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
         // Wait for page to render - use flexible check
         const mainVisible = await connectedPage.locator("main").isVisible({ timeout: 5000 }).catch(() => false);
         if (!mainVisible) {

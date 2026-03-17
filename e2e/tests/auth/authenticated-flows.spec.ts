@@ -123,11 +123,11 @@ test.describe("Authenticated Dashboard", () => {
 
   test.describe("Navigation as Authenticated User", () => {
     test("can access courses page", async ({ authenticatedPage }) => {
-      await authenticatedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await authenticatedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(authenticatedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Should load without redirect to login
-      expect(authenticatedPage.url()).toContain("/course");
+      expect(authenticatedPage.url()).toContain("/learn");
     });
 
     test("can access credentials page", async ({ authenticatedPage }) => {
@@ -138,10 +138,10 @@ test.describe("Authenticated Dashboard", () => {
     });
 
     test("can access projects page", async ({ authenticatedPage }) => {
-      await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded" });
       await expect(authenticatedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
-      expect(authenticatedPage.url()).toContain("/project");
+      expect(authenticatedPage.url()).toContain("/tasks");
     });
   });
 });
@@ -183,7 +183,7 @@ test.describe("Authenticated with Access Token (Owner)", () => {
       });
 
       try {
-        await authenticatedPageWithToken.goto("/course/create", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPageWithToken.goto("/learn/create", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -219,7 +219,7 @@ test.describe("Authenticated with Access Token (Owner)", () => {
         });
       });
 
-      await authenticatedPageWithToken.goto("/course", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(authenticatedPageWithToken.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Look for owner/management tab or section
@@ -232,7 +232,7 @@ test.describe("Authenticated with Access Token (Owner)", () => {
 
   test.describe("Project Management", () => {
     test("can access project creation", async ({ authenticatedPageWithToken }) => {
-      await authenticatedPageWithToken.goto("/project/create", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks/create", { waitUntil: "domcontentloaded" });
 
       const mainVisible = await authenticatedPageWithToken.locator("main").isVisible({ timeout: 10000 }).catch(() => false);
 
@@ -262,7 +262,7 @@ test.describe("Authenticated with Access Token (Owner)", () => {
         });
       });
 
-      await authenticatedPageWithToken.goto("/project", { waitUntil: "domcontentloaded" });
+      await authenticatedPageWithToken.goto("/tasks", { waitUntil: "domcontentloaded" });
       await expect(authenticatedPageWithToken.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Look for owner section

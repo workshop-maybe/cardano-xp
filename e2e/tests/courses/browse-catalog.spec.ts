@@ -17,7 +17,7 @@ import { loading } from "../../helpers/selectors";
 test.describe("Course Catalog", () => {
   test.describe("Page Layout", () => {
     test("displays course catalog page", async ({ connectedPage }) => {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Should have some heading indicating courses
@@ -33,7 +33,7 @@ test.describe("Course Catalog", () => {
         await route.continue();
       });
 
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
 
       // Check for loading indicator
       const loadingIndicator = connectedPage.locator(loading.skeleton);
@@ -54,7 +54,7 @@ test.describe("Course Catalog", () => {
         });
       });
 
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Should show empty state message
@@ -66,7 +66,7 @@ test.describe("Course Catalog", () => {
 
   test.describe("Course Cards", () => {
     test("displays course cards with required information", async ({ connectedPage }) => {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Look for course cards
@@ -87,7 +87,7 @@ test.describe("Course Catalog", () => {
 
     test("course cards are clickable for navigation", async ({ connectedPage }) => {
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Course page navigation timeout - test skipped");
         return;
@@ -100,7 +100,7 @@ test.describe("Course Catalog", () => {
       }
 
       // Find a course card or link
-      const courseLink = connectedPage.locator('a[href*="/course"], [class*="card"] a').first();
+      const courseLink = connectedPage.locator('a[href*="/learn"], [class*="card"] a').first();
       const hasLink = await courseLink.isVisible({ timeout: 3000 }).catch(() => false);
 
       if (hasLink) {
@@ -121,7 +121,7 @@ test.describe("Course Catalog", () => {
 
   test.describe("Filtering and Sorting", () => {
     test("can filter courses by category", async ({ connectedPage }) => {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Look for filter controls
@@ -139,7 +139,7 @@ test.describe("Course Catalog", () => {
     });
 
     test("can sort courses", async ({ connectedPage }) => {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Look for sort controls
@@ -149,7 +149,7 @@ test.describe("Course Catalog", () => {
     });
 
     test("can search courses by name", async ({ connectedPage }) => {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded" });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded" });
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 10000 });
 
       // Look for search input
@@ -171,7 +171,7 @@ test.describe("Course Catalog", () => {
       await connectedPage.setViewportSize({ width: 375, height: 667 });
 
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -194,7 +194,7 @@ test.describe("Course Catalog", () => {
       await connectedPage.setViewportSize({ width: 768, height: 1024 });
 
       try {
-        await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;

@@ -29,14 +29,14 @@ export function ExploreCard() {
       </AndamioCardHeader>
       <AndamioCardContent className="mt-auto space-y-3">
         <AndamioButton asChild variant="outline" className="w-full">
-          <Link href="/course">
+          <Link href="/learn">
             <CourseIcon className="h-4 w-4" />
             <span>Browse Courses</span>
             <ForwardIcon className="ml-auto h-4 w-4" />
           </Link>
         </AndamioButton>
         <AndamioButton asChild variant="outline" className="w-full">
-          <Link href="/project">
+          <Link href="/tasks">
             <ProjectIcon className="h-4 w-4" />
             <span>Browse Projects</span>
             <ForwardIcon className="ml-auto h-4 w-4" />

@@ -60,7 +60,7 @@ export function WelcomeHero({ accessTokenAlias }: WelcomeHeroProps) {
 
               {/* Action buttons */}
               <div className="flex flex-wrap gap-3">
-                <Link href="/course">
+                <Link href="/learn">
                   <AndamioButton size="lg" className="gap-2">
                     <CourseIcon className="h-4 w-4" />
                     Browse Courses

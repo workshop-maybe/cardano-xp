@@ -45,9 +45,11 @@ export enum AggregateUpdateErrorResponseFailedOperationEntity {
 
 export enum AggregateUpdateErrorResponseCode {
   BADREQUEST = "BAD_REQUEST",
+  DUPLICATELESSONSLTINDEX = "DUPLICATE_LESSON_SLT_INDEX",
+  DUPLICATESLTINDEX = "DUPLICATE_SLT_INDEX",
   INVALIDSLTHASH = "INVALID_SLT_HASH",
+  INVALIDSLTINDEX = "INVALID_SLT_INDEX",
   MODULENOTFOUND = "MODULE_NOT_FOUND",
-  SLTLOCKED = "SLT_LOCKED",
   UNAUTHORIZED = "UNAUTHORIZED",
 }
 
@@ -186,6 +188,8 @@ export interface AggregateChangeSummary {
   slts_created?: number;
   slts_deleted?: number;
   slts_reordered?: boolean;
+  /** SltsSkipped True when SLTs were present in the request but module is not DRAFT */
+  slts_skipped?: boolean;
   slts_updated?: number;
   /** StatusChanged True if DRAFT → APPROVED */
   status_changed?: boolean;
@@ -239,7 +243,7 @@ export interface AggregateUpdateModuleV2Request {
   /** ImageUrl Module image URL (only send if changed) */
   image_url?: string;
   introduction?: AggregateIntroductionInput;
-  /** Lessons Flat array of lessons keyed by slt_index. Server diffs against current state. */
+  /** Lessons Flat array of lessons keyed by slt_index. Server diffs against current state. Editable in any status. */
   lessons?: AggregateLessonInput[];
   /** SltHash Required when status = 'APPROVED'. Hash of the SLT list. */
   slt_hash?: string;
@@ -1504,7 +1508,12 @@ export interface PendingTxResponse {
   /** Optional metadata stored with the transaction */
   metadata?: Record<string, string>;
   /**
-   * Number of retry attempts for confirmation polling
+   * Number of 404 poll cycles (Andamioscan not yet indexed)
+   * @example 0
+   */
+  not_indexed_count?: number;
+  /**
+   * Number of retry attempts for confirmation polling (error retries only, not 404s)
    * @example 0
    */
   retry_count?: number;

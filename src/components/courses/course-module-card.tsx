@@ -62,8 +62,8 @@ export function CourseModuleCard({
 
   // Link destination: use moduleCode if available, otherwise sltHash for chain_only modules
   const linkPath = moduleCode
-    ? `/course/${courseId}/${moduleCode}`
-    : `/course/${courseId}/${sltHash}`;
+    ? `/learn/${courseId}/${moduleCode}`
+    : `/learn/${courseId}/${sltHash}`;
 
   return (
     <AndamioCard className="overflow-hidden">

@@ -213,7 +213,7 @@ test.describe("Real Wallet - Loop 2: Earn a Credential", () => {
       await setupRealWalletPage(page, "student");
 
       // Navigate to course page
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });
@@ -256,7 +256,7 @@ test.describe("Real Wallet - Loop 2: Earn a Credential", () => {
       await setupRealWalletPage(page, "student");
 
       // Navigate directly to assignment page (module 101)
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}/101/assignment`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}/101/assignment`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });
@@ -316,12 +316,12 @@ test.describe("Real Wallet - Loop 2: Earn a Credential", () => {
       });
       await page.waitForTimeout(2000);
 
-      const catalogHasCourses = await waitForElement(page, 'a[href*="/course/"]', 5000);
+      const catalogHasCourses = await waitForElement(page, 'a[href*="/learn/"]', 5000);
       console.log(`   Courses listed: ${catalogHasCourses}`);
 
       // Step 2: Course detail
       console.log("\n2. Course Detail");
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });
@@ -332,7 +332,7 @@ test.describe("Real Wallet - Loop 2: Earn a Credential", () => {
 
       // Step 3: Module
       console.log("\n3. Module Page");
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}/101`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}/101`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });
@@ -343,7 +343,7 @@ test.describe("Real Wallet - Loop 2: Earn a Credential", () => {
 
       // Step 4: Assignment
       console.log("\n4. Assignment Page");
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}/101/assignment`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}/101/assignment`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });

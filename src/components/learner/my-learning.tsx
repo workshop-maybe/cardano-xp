@@ -38,7 +38,7 @@ function EnrolledCourseCard({ course }: { course: DisplayCourse }) {
 
   return (
     <Link
-      href={`/course/${courseId}`}
+      href={`/learn/${courseId}`}
       className="group flex items-center gap-3 rounded-md border px-3 py-2.5 hover:bg-accent transition-colors"
     >
       <div
@@ -197,7 +197,7 @@ export function MyLearning() {
             title="No Courses Yet"
             description="Browse courses and submit your first assignment to get started."
             action={
-              <Link href="/course">
+              <Link href="/learn">
                 <AndamioButton size="sm"><CourseIcon className="mr-2 h-3 w-3" />Browse Courses</AndamioButton>
               </Link>
             }
@@ -233,7 +233,7 @@ export function MyLearning() {
               )}
             </div>
           </div>
-          <Link href="/course">
+          <Link href="/learn">
             <AndamioButton variant="outline" size="sm" className="text-xs h-7">
               Browse More
             </AndamioButton>

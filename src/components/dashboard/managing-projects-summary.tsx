@@ -128,7 +128,7 @@ export function ManagingProjectsSummary({ accessTokenAlias }: ManagingProjectsSu
 
         {/* Browse projects link */}
         <div className="pt-2">
-          <Link href="/project" className="block">
+          <Link href="/tasks" className="block">
             <AndamioButton variant="outline" size="sm" className="w-full">
               <ManagerIcon className="mr-2 h-3 w-3" />
               View All Projects

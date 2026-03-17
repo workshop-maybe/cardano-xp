@@ -13,20 +13,20 @@ export const PUBLIC_ROUTES = {
   home: "/",
 
   /** Course routes */
-  courses: "/course",
-  courseDetail: (courseId: string) => `/course/${courseId}`,
+  courses: "/learn",
+  courseDetail: (courseId: string) => `/learn/${courseId}`,
   moduleDetail: (courseId: string, moduleCode: string) =>
-    `/course/${courseId}/${moduleCode}`,
+    `/learn/${courseId}/${moduleCode}`,
   lessonDetail: (courseId: string, moduleCode: string, lessonIndex: number) =>
-    `/course/${courseId}/${moduleCode}/${lessonIndex}`,
+    `/learn/${courseId}/${moduleCode}/${lessonIndex}`,
   assignment: (courseId: string, moduleCode: string) =>
-    `/course/${courseId}/${moduleCode}/assignment`,
+    `/learn/${courseId}/${moduleCode}/assignment`,
 
   /** Project routes */
-  projects: "/project",
-  projectDetail: (projectId: string) => `/project/${projectId}`,
+  projects: "/tasks",
+  projectDetail: (projectId: string) => `/tasks/${projectId}`,
   taskDetail: (projectId: string, taskHash: string) =>
-    `/project/${projectId}/${taskHash}`,
+    `/tasks/${projectId}/${taskHash}`,
 
   /** Utility routes */
   sitemap: "/sitemap",
@@ -46,7 +46,7 @@ export const AUTH_ROUTES = {
   credentials: "/credentials",
 
   /** Contributor workflow */
-  contributor: (projectId: string) => `/project/${projectId}/contributor`,
+  contributor: (projectId: string) => `/tasks/${projectId}/contributor`,
 } as const;
 
 /**
@@ -102,12 +102,12 @@ export const ROUTE_METADATA = {
     description: "Your personal hub with wallet info and activity",
     requiresAuth: true,
   },
-  "/course": {
+  "/learn": {
     label: "Learn",
     description: "The Cardano XP course",
     requiresAuth: false,
   },
-  "/project": {
+  "/tasks": {
     label: "Contribute",
     description: "The Cardano XP project",
     requiresAuth: false,

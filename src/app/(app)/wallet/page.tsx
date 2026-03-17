@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { CopyId } from "~/components/andamio/copy-id";
 import { useProjectWallet } from "~/hooks/api/use-project-wallet";
 import { formatAda } from "~/lib/cardano-utils";
@@ -19,13 +20,24 @@ export default function WalletPage() {
     <div className="space-y-12 max-w-2xl mx-auto">
       {/* Header */}
       <div className="space-y-4 pt-4">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
-          Wallet
-        </p>
-        <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
-          Project{" "}
-          <span className="text-secondary">transparency.</span>
-        </h1>
+        <div className="flex items-center gap-4">
+          <Image
+            src="/logos/xp-token.png"
+            alt="XP Token"
+            width={64}
+            height={64}
+            className="rounded-full"
+          />
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
+              Wallet
+            </p>
+            <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
+              Project{" "}
+              <span className="text-secondary">transparency.</span>
+            </h1>
+          </div>
+        </div>
         <p className="text-lg text-muted-foreground leading-relaxed">
           Every ADA spent on this project and every donation from the
           community is recorded on-chain. This is the wallet.

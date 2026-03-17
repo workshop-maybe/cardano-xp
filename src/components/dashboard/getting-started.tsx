@@ -33,7 +33,7 @@ export function GettingStarted({ isAuthenticated, hasAccessToken }: GettingStart
       title: "Explore Courses",
       completed: false,
       icon: CourseIcon,
-      link: "/course",
+      link: "/learn",
     },
   ];
 

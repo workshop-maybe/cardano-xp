@@ -251,7 +251,7 @@ test.describe("Real Wallet Authentication (User Auth Flow)", () => {
       await setupAuthenticatedPage(page, auth);
 
       // Navigate to course detail
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });
@@ -291,7 +291,7 @@ test.describe("Real Wallet Authentication (User Auth Flow)", () => {
       await setupAuthenticatedPage(page, auth);
 
       // Navigate to assignment
-      await page.goto(`http://localhost:3000/course/${TEST_COURSE.id}/101/assignment`, {
+      await page.goto(`http://localhost:3000/learn/${TEST_COURSE.id}/101/assignment`, {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });

@@ -216,7 +216,7 @@ test.describe("Loop 2: Earn a Credential - Transaction Flow", () => {
     console.log("\n=== STUDENT: Navigate to Assignment ===");
 
     // Navigate to course
-    await studentPage.goto(`/course/${TEST_CONFIG.courseId}`, {
+    await studentPage.goto(`/learn/${TEST_CONFIG.courseId}`, {
       waitUntil: "domcontentloaded",
     });
     await studentPage.waitForTimeout(2000);
@@ -227,7 +227,7 @@ test.describe("Loop 2: Earn a Credential - Transaction Flow", () => {
 
     // Navigate to assignment
     await studentPage.goto(
-      `/course/${TEST_CONFIG.courseId}/${TEST_CONFIG.moduleCode}/assignment`,
+      `/learn/${TEST_CONFIG.courseId}/${TEST_CONFIG.moduleCode}/assignment`,
       { waitUntil: "domcontentloaded" }
     );
     await studentPage.waitForTimeout(2000);

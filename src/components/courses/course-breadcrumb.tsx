@@ -37,7 +37,7 @@ import {
  */
 
 export interface CourseBreadcrumbProps {
-  /** Navigation mode: public (/course/...) or studio (/studio/course/...) */
+  /** Navigation mode: public (/learn/...) or studio (/studio/course/...) */
   mode: "public" | "studio";
 
   /** Course information (required for all course-related pages) */
@@ -77,9 +77,9 @@ export function CourseBreadcrumb({
   lesson,
   currentPage = "course",
 }: CourseBreadcrumbProps) {
-  const basePath = mode === "studio" ? "/studio/course" : "/course";
+  const basePath = mode === "studio" ? "/studio/course" : "/learn";
   const coursesLabel = mode === "studio" ? "Course Studio" : "Course Catalog";
-  const coursesPath = mode === "studio" ? "/studio/course" : "/course";
+  const coursesPath = mode === "studio" ? "/studio/course" : "/learn";
 
   return (
     <AndamioBreadcrumb className="mb-4">

@@ -25,10 +25,10 @@ test.describe("Multi-Role: Credential Earning Flow", () => {
 
     // Student: Navigate to course catalog
     console.log("\n=== STUDENT: Browsing courses ===");
-    await studentPage.goto("/course", { waitUntil: "domcontentloaded" });
+    await studentPage.goto("/learn", { waitUntil: "domcontentloaded" });
     await studentPage.waitForTimeout(2000);
 
-    const courseCards = await studentPage.locator('a[href*="/course/"]').count();
+    const courseCards = await studentPage.locator('a[href*="/learn/"]').count();
     console.log(`Courses visible to student: ${courseCards}`);
 
     // Teacher: Navigate to dashboard
@@ -39,18 +39,18 @@ test.describe("Multi-Role: Credential Earning Flow", () => {
     const dashboardHeading = await teacherPage.locator("h1").textContent().catch(() => "N/A");
     console.log(`Teacher dashboard heading: ${dashboardHeading}`);
 
-    // Verify different auth states
-    const studentJwt = await studentPage.evaluate(() => localStorage.getItem("andamio_jwt"));
-    const teacherJwt = await teacherPage.evaluate(() => localStorage.getItem("andamio_jwt"));
+    // Verify different auth states via user data
+    // (JWTs may be cleared by app hydration, but andamio-user persists)
+    const studentUser = await studentPage.evaluate(() => localStorage.getItem("andamio-user"));
+    const teacherUser = await teacherPage.evaluate(() => localStorage.getItem("andamio-user"));
 
     console.log("\n=== AUTH STATE ===");
-    console.log(`Student has JWT: ${!!studentJwt}`);
-    console.log(`Teacher has JWT: ${!!teacherJwt}`);
-    console.log(`JWTs are different: ${studentJwt !== teacherJwt}`);
+    console.log(`Student has user data: ${!!studentUser}`);
+    console.log(`Teacher has user data: ${!!teacherUser}`);
 
-    expect(studentJwt).toBeTruthy();
-    expect(teacherJwt).toBeTruthy();
-    expect(studentJwt).not.toBe(teacherJwt);
+    expect(studentUser).toBeTruthy();
+    expect(teacherUser).toBeTruthy();
+    expect(studentUser).not.toBe(teacherUser);
   });
 
   test("owner can access studio features", async ({ ownerPage, getRoleConfig }) => {

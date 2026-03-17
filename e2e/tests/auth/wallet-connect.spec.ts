@@ -20,14 +20,14 @@ test.describe("Wallet Connection Flow", () => {
       // Wait for main content to be visible
       await expect(connectedPage.locator("main")).toBeVisible({ timeout: 15000 });
 
-      // Verify landing page elements - actual UI has "Learn. Build. Earn" heading
-      await expect(connectedPage.locator('h1:has-text("Learn")')).toBeVisible({ timeout: 10000 });
+      // Verify landing page elements - heading is "Build new systems."
+      await expect(connectedPage.locator('h1:has-text("Build new systems")')).toBeVisible({ timeout: 10000 });
 
-      // Should have Get Started button
-      await expect(connectedPage.locator('text="Get Started"')).toBeVisible({ timeout: 5000 });
+      // Should have Connect Wallet button
+      await expect(connectedPage.locator('text="Connect Wallet"')).toBeVisible({ timeout: 5000 });
 
-      // Should have Sign In link
-      await expect(connectedPage.locator('text="Sign In"')).toBeVisible({ timeout: 5000 });
+      // Should have Access Token link
+      await expect(connectedPage.locator('text="Get an Access Token"')).toBeVisible({ timeout: 5000 });
     });
 
     test("shows wallet selector when clicking Sign In", async ({ page }) => {
@@ -185,9 +185,8 @@ test.describe("App Routes", () => {
   });
 
   test("course page loads", async ({ connectedPage }) => {
-    // Note: route is /course (singular), not /courses
     try {
-      await connectedPage.goto("/course", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/learn", { waitUntil: "domcontentloaded", timeout: 15000 });
       const mainVisible = await connectedPage.locator("main").isVisible({ timeout: 5000 }).catch(() => false);
       if (!mainVisible) {
         console.log("Course page: main not visible");
@@ -198,9 +197,8 @@ test.describe("App Routes", () => {
   });
 
   test("project page loads", async ({ connectedPage }) => {
-    // Note: route is /project (singular), not /projects
     try {
-      await connectedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+      await connectedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       const mainVisible = await connectedPage.locator("main").isVisible({ timeout: 5000 }).catch(() => false);
       if (!mainVisible) {
         console.log("Project page: main not visible");

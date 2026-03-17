@@ -22,7 +22,7 @@ test.describe("Deep Exploration: Course Catalog Issues", () => {
     });
 
     // Navigate and wait longer
-    await page.goto("/course", { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto("/learn", { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(5000); // Extra wait for any async rendering
 
     await page.screenshot({ path: "screenshots/loop2/deep-01-course-page-loaded.png", fullPage: true });
@@ -80,7 +80,7 @@ test.describe("Deep Exploration: Course Catalog Issues", () => {
       }
     });
 
-    await page.goto("/course", { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto("/learn", { waitUntil: "networkidle", timeout: 30000 });
     await page.waitForTimeout(3000);
 
     console.log("\n=== API CALLS MADE ===");
@@ -92,7 +92,7 @@ test.describe("Deep Exploration: Course Catalog Issues", () => {
     // Course: "Getting Started with Andamio" - course_id: ed1bf7e5917e1b8a59a26eaaaa6011353bff5fac5d8de9e083e3b737
     const courseId = "ed1bf7e5917e1b8a59a26eaaaa6011353bff5fac5d8de9e083e3b737";
 
-    await page.goto(`/course/${courseId}`, { waitUntil: "domcontentloaded" });
+    await page.goto(`/learn/${courseId}`, { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(5000);
 
     await page.screenshot({ path: "screenshots/loop2/deep-02-course-detail-direct.png", fullPage: true });

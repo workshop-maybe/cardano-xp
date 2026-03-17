@@ -46,7 +46,7 @@ test.describe("Project Task Commitment", () => {
       });
 
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -88,7 +88,7 @@ test.describe("Project Task Commitment", () => {
       });
 
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -111,7 +111,7 @@ test.describe("Project Task Commitment", () => {
     test("displays available tasks on project page", async ({ authenticatedPage }) => {
       // Navigate to project list first (actual route)
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -124,7 +124,7 @@ test.describe("Project Task Commitment", () => {
       }
 
       // Try to find and click on a project to see tasks
-      const projectLink = authenticatedPage.locator('a[href*="/project/"]').first();
+      const projectLink = authenticatedPage.locator('a[href*="/tasks/"]').first();
       if (await projectLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await projectLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -146,7 +146,7 @@ test.describe("Project Task Commitment", () => {
     test("shows task details and requirements", async ({ authenticatedPage }) => {
       // Navigate to project list first
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -159,7 +159,7 @@ test.describe("Project Task Commitment", () => {
       }
 
       // Try to find and click on a project
-      const projectLink = authenticatedPage.locator('a[href*="/project/"]').first();
+      const projectLink = authenticatedPage.locator('a[href*="/tasks/"]').first();
       if (await projectLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await projectLink.click();
         await authenticatedPage.waitForLoadState("domcontentloaded").catch(() => {});
@@ -183,7 +183,7 @@ test.describe("Project Task Commitment", () => {
 
       // Navigate to project list and find a project
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -216,7 +216,7 @@ test.describe("Project Task Commitment", () => {
       });
 
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;
@@ -244,7 +244,7 @@ test.describe("Project Task Commitment", () => {
       await setMockWalletMode(authenticatedPage, "reject");
 
       try {
-        await authenticatedPage.goto("/project", { waitUntil: "domcontentloaded", timeout: 15000 });
+        await authenticatedPage.goto("/tasks", { waitUntil: "domcontentloaded", timeout: 15000 });
       } catch {
         console.log("Navigation timeout - test skipped");
         return;

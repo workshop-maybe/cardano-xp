@@ -10,17 +10,17 @@ test.describe("Loop 2 Exploration: Student Enrollment Flow", () => {
 
   test("explore course catalog and enrollment UI", async ({ page }) => {
     // Step 1: Navigate to course catalog
-    await page.goto("/course", { waitUntil: "domcontentloaded" });
+    await page.goto("/learn", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(3000);
     await page.screenshot({ path: "screenshots/loop2/01-course-catalog.png", fullPage: true });
 
     // Log what we see
-    const courseCards = await page.locator('[data-testid="course-card"], [class*="course"], a[href*="/course/"]').count();
+    const courseCards = await page.locator('[data-testid="course-card"], [class*="course"], a[href*="/learn/"]').count();
     console.log(`\n=== COURSE CATALOG ===`);
     console.log(`Course cards found: ${courseCards}`);
 
     // Step 2: Click on first course to view details
-    const firstCourse = page.locator('a[href*="/course/"]').first();
+    const firstCourse = page.locator('a[href*="/learn/"]').first();
     const courseExists = await firstCourse.isVisible({ timeout: 5000 }).catch(() => false);
 
     if (courseExists) {
@@ -65,14 +65,14 @@ test.describe("Loop 2 Exploration: Student Enrollment Flow", () => {
       }));
     });
 
-    await page.goto("/course", { waitUntil: "domcontentloaded" });
+    await page.goto("/learn", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(3000);
     await page.screenshot({ path: "screenshots/loop2/03-course-catalog-auth.png", fullPage: true });
 
     console.log(`\n=== AUTHENTICATED COURSE VIEW ===`);
 
     // Click first course
-    const firstCourse = page.locator('a[href*="/course/"]').first();
+    const firstCourse = page.locator('a[href*="/learn/"]').first();
     if (await firstCourse.isVisible({ timeout: 3000 }).catch(() => false)) {
       await firstCourse.click();
       await page.waitForTimeout(3000);

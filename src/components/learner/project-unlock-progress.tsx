@@ -189,7 +189,7 @@ export function ProjectUnlockProgress() {
             title="Project Opportunities"
             description="As you complete course modules, you will unlock real project opportunities here."
             action={
-              <Link href="/project">
+              <Link href="/tasks">
                 <AndamioButton size="sm"><ProjectIcon className="mr-2 h-3 w-3" />Browse Projects</AndamioButton>
               </Link>
             }
@@ -227,7 +227,7 @@ export function ProjectUnlockProgress() {
                 You qualify for {qualifiedCount} {qualifiedCount === 1 ? "project" : "projects"}
               </AndamioText>
             </div>
-            <Link href="/project?filter=qualified">
+            <Link href="/tasks?filter=qualified">
               <AndamioButton size="sm" variant="outline" className="h-7 text-xs">
                 View Qualified Projects
                 <NextIcon className="ml-1 h-3 w-3" />
@@ -243,7 +243,7 @@ export function ProjectUnlockProgress() {
           return (
             <Link
               key={item.projectId}
-              href={`/project/${item.projectId}`}
+              href={`/tasks/${item.projectId}`}
               className="block rounded-md border p-4 bg-muted/30 hover:border-primary/30 hover:bg-accent/5 transition-colors group"
             >
               <div className="flex items-center justify-between gap-3">
@@ -293,7 +293,7 @@ export function ProjectUnlockProgress() {
 
         {/* Overflow link when more than MAX_IN_PROGRESS_SHOWN in-progress */}
         {hiddenInProgressCount > 0 && (
-          <Link href="/project" className="flex items-center justify-center gap-1 py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <Link href="/tasks" className="flex items-center justify-center gap-1 py-2 text-sm text-muted-foreground hover:text-primary transition-colors">
             View {hiddenInProgressCount} more {hiddenInProgressCount === 1 ? "project" : "projects"}
             <NextIcon className="h-3.5 w-3.5" />
           </Link>

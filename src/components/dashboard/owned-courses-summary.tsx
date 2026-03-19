@@ -21,7 +21,7 @@ import {
   AddIcon,
 } from "~/components/icons";
 import { useDashboardData } from "~/contexts/dashboard-context";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 
 interface OwnedCoursesSummaryProps {
   accessTokenAlias: string | null | undefined;
@@ -92,7 +92,7 @@ export function OwnedCoursesSummary({ accessTokenAlias }: OwnedCoursesSummaryPro
             title="No Courses Created"
             description="Create your first course and publish it on-chain."
             action={
-              <Link href={STUDIO_ROUTES.hub}>
+              <Link href={ADMIN_ROUTES.hub}>
                 <AndamioButton size="sm">
                   <AddIcon className="mr-2 h-3 w-3" />
                   Create Course
@@ -137,7 +137,7 @@ export function OwnedCoursesSummary({ accessTokenAlias }: OwnedCoursesSummaryPro
           {ownedCourses.slice(0, 3).map((course) => (
             <Link
               key={course.courseId}
-              href={STUDIO_ROUTES.courseEditor}
+              href={ADMIN_ROUTES.courseEditor}
               className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
             >
               <div className="flex items-center gap-2 min-w-0">
@@ -158,10 +158,10 @@ export function OwnedCoursesSummary({ accessTokenAlias }: OwnedCoursesSummaryPro
 
         {/* Manage courses link */}
         <div className="pt-2">
-          <Link href={STUDIO_ROUTES.hub} className="block">
+          <Link href={ADMIN_ROUTES.hub} className="block">
             <AndamioButton variant="outline" size="sm" className="w-full">
               <InstructorIcon className="mr-2 h-3 w-3" />
-              Manage in Studio
+              Manage Course
             </AndamioButton>
           </Link>
         </div>

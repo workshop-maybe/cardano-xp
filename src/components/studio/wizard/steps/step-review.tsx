@@ -30,7 +30,7 @@ import { computeSltHashDefinite } from "@andamio/core/hashing";
 import { useUpdateCourseModuleStatus } from "~/hooks/api/course/use-course-module";
 import type { WizardStepConfig } from "../types";
 import { CopyId } from "~/components/andamio";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 
 interface StepReviewProps {
   config: WizardStepConfig;
@@ -231,7 +231,7 @@ export function StepReview({ config, direction }: StepReviewProps) {
                   </div>
                 )}
                 <Link
-                  href={`${STUDIO_ROUTES.courseEditor}?tab=credentials`}
+                  href={`${ADMIN_ROUTES.courseEditor}?tab=credentials`}
                   className="hover:opacity-80 transition-opacity"
                 >
                   <AndamioBadge variant="outline" className="cursor-pointer hover:bg-accent">

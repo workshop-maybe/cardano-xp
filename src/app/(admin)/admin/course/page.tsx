@@ -52,7 +52,7 @@ import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { CopyId } from "~/components/andamio/copy-id";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
+import { PUBLIC_ROUTES, ADMIN_ROUTES } from "~/config/routes";
 import { useCourse } from "~/hooks/api/course/use-course";
 import { useUpdateCourse, useDeleteCourse } from "~/hooks/api/course/use-course-owner";
 import { useTeacherCourseModules, useDeleteCourseModule, useRegisterCourseModule } from "~/hooks/api/course/use-course-module";
@@ -362,7 +362,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
     if (course) {
       setTitle(courseTitle);
       setBreadcrumbs([
-        { label: "Studio", href: STUDIO_ROUTES.hub },
+        { label: "Studio", href: ADMIN_ROUTES.hub },
         { label: courseTitle },
       ]);
     }
@@ -418,7 +418,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
     try {
       await deleteCourseMutation.mutateAsync(courseId);
       toast.success("Course deleted");
-      router.push(STUDIO_ROUTES.hub);
+      router.push(ADMIN_ROUTES.hub);
     } catch (err) {
       toast.error("Failed to delete", {
         description: err instanceof Error ? err.message : "Unknown error",
@@ -488,7 +488,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
 
   // Computed values
   const isLoading = isLoadingCourse || isLoadingModules;
-  const assessmentViewHref = STUDIO_ROUTES.teacherDashboard;
+  const assessmentViewHref = ADMIN_ROUTES.teacherDashboard;
   // Note: video_url comparison is always vs "" since it's not in merged type
   const hasChanges = course && (
     formTitle !== (course.title ?? "") ||
@@ -575,7 +575,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
                 {/* Guided Path */}
                 <button
                   type="button"
-                  onClick={() => router.push(`${STUDIO_ROUTES.courseEditor}/new?step=credential&mode=wizard`)}
+                  onClick={() => router.push(`${ADMIN_ROUTES.courseEditor}/new?step=credential&mode=wizard`)}
                   className="group relative text-left p-6 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
                 >
                   <div className="absolute top-4 right-4">
@@ -599,7 +599,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
                 {/* Pro Path */}
                 <button
                   type="button"
-                  onClick={() => router.push(`${STUDIO_ROUTES.courseEditor}/new?step=credential&mode=pro`)}
+                  onClick={() => router.push(`${ADMIN_ROUTES.courseEditor}/new?step=credential&mode=pro`)}
                   className="group text-left p-6 rounded-2xl border-2 border-border bg-gradient-to-br from-muted/50 via-muted/20 to-background hover:border-border/80 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted mb-4 group-hover:scale-110 group-hover:bg-muted/80 transition-all">
@@ -724,7 +724,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
                   <div className="flex justify-center pt-4">
                     <AndamioButton
                       variant="outline"
-                      onClick={() => router.push(`${STUDIO_ROUTES.courseEditor}/new?step=credential`)}
+                      onClick={() => router.push(`${ADMIN_ROUTES.courseEditor}/new?step=credential`)}
                     >
                       <AddIcon className="h-4 w-4 mr-2" />
                       Add Credential
@@ -1191,7 +1191,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
                       {pendingCommitmentsForCourse.slice(0, 3).map((commitment, i) => (
                         <Link
                           key={`${commitment.studentAlias}-${commitment.sltHash}-${i}`}
-                          href={`${STUDIO_ROUTES.teacherDashboard}?student=${encodeURIComponent(commitment.studentAlias)}&sltHash=${encodeURIComponent(commitment.sltHash ?? "")}`}
+                          href={`${ADMIN_ROUTES.teacherDashboard}?student=${encodeURIComponent(commitment.studentAlias)}&sltHash=${encodeURIComponent(commitment.sltHash ?? "")}`}
                           className="block rounded-xl border p-4 bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors"
                         >
                           <div className="flex items-center justify-between">
@@ -1285,7 +1285,7 @@ function CourseEditorContent({ courseId }: { courseId: string }) {
                     <AndamioText variant="small">
                       View all students who have submitted assignments for this course.
                     </AndamioText>
-                    <Link href={STUDIO_ROUTES.manageLearners}>
+                    <Link href={ADMIN_ROUTES.manageLearners}>
                       <AndamioButton variant="outline" size="sm">
                         <LearnerIcon className="h-3.5 w-3.5 mr-1.5" />
                         View Learners ({uniqueLearnerCount})

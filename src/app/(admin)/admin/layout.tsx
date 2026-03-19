@@ -18,13 +18,13 @@ import {
   TreasuryIcon,
 } from "~/components/icons";
 import { cn } from "~/lib/utils";
-import { STUDIO_ROUTES, ADMIN_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 
 // =============================================================================
-// Studio Sidebar Layout — Single course, single project
+// Admin Sidebar Layout — Single course, single project
 // =============================================================================
 
-export default function StudioSidebarLayout({
+export default function AdminSidebarLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -32,10 +32,10 @@ export default function StudioSidebarLayout({
   const pathname = usePathname();
   const { isAuthenticated } = useAndamioAuth();
 
-  // Wizard mode: editing a module — /studio/course/[moduleCode]
+  // Wizard mode: editing a module — /admin/course/[moduleCode]
   // Exclude known static routes (teacher, manage-learners)
   const isWizardMode = useMemo(() => {
-    const match = /\/studio\/course\/([^/]+)/.exec(pathname);
+    const match = /\/admin\/course\/([^/]+)/.exec(pathname);
     if (!match) return false;
     const segment = match[1];
     if (segment === "teacher" || segment === "manage-learners") return false;
@@ -47,7 +47,7 @@ export default function StudioSidebarLayout({
       <StudioEditorPane padding="normal" className="min-h-[calc(100vh-40px-44px)]">
         <ConnectWalletGate
           title="Connect your wallet"
-          description="Sign in to access Studio"
+          description="Sign in to manage this project"
         />
       </StudioEditorPane>
     );
@@ -61,21 +61,21 @@ export default function StudioSidebarLayout({
   const navItems = [
     {
       label: "Course",
-      href: STUDIO_ROUTES.courseEditor,
+      href: ADMIN_ROUTES.courseEditor,
       icon: CourseIcon,
-      active: pathname.startsWith("/studio/course"),
+      active: pathname.startsWith("/admin/course"),
     },
     {
       label: "Project",
-      href: STUDIO_ROUTES.projectDashboard,
+      href: ADMIN_ROUTES.projectDashboard,
       icon: ProjectIcon,
-      active: pathname.startsWith("/studio/project"),
+      active: pathname.startsWith("/admin/project") && !pathname.startsWith("/admin/project/treasury"),
     },
     {
       label: "Treasury",
-      href: ADMIN_ROUTES.project,
+      href: ADMIN_ROUTES.treasury,
       icon: TreasuryIcon,
-      active: pathname.startsWith("/admin/project"),
+      active: pathname.startsWith("/admin/project/treasury"),
     },
   ];
 

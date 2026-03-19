@@ -279,11 +279,7 @@ export default function AdminProjectPage() {
       </div>
 
       {/* Treasury Balance */}
-      <TreasuryBalanceCard
-        treasuryFundings={projectDetail?.treasuryFundings ?? []}
-        treasuryAddress={projectDetail?.treasuryAddress}
-        treasuryBalance={projectDetail?.treasuryBalance}
-      />
+      <TreasuryBalanceCard />
 
       {/* Add Funds to Treasury */}
       <TreasuryAddFunds

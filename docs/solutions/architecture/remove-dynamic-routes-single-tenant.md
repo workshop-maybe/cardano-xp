@@ -1,13 +1,14 @@
 ---
 problem_type: architecture
-module: Studio routes, layout, page components
+module: Admin routes (formerly Studio), layout, page components
 severity: medium
 date_solved: 2026-03-19
+updated: 2026-03-19
 tags:
   - route-migration
   - template-fork
   - single-tenant
-  - studio
+  - admin
   - next-js
 ---
 
@@ -145,10 +146,24 @@ A single grep misses one form. The prior migration missed 13 template-literal re
 2. Rename paths in `routes.ts` and filesystem together
 3. Compile — errors point directly at import sites
 
+## Follow-Up: Studio → Admin Rename
+
+After removing dynamic params, a second pass renamed all `/studio` routes to `/admin`:
+
+- `STUDIO_ROUTES` merged into `ADMIN_ROUTES` — single route object
+- Filesystem moved from `src/app/(studio)/studio/` to `src/app/(admin)/admin/`
+- "Studio" removed from public top nav entirely
+- Treasury moved from `/admin/project` to `/admin/project/treasury`
+- All user-facing "Studio" labels updated to "Admin"
+
+**Gotcha**: Internal component names (`StudioHeader`, `StudioLayout`, `StudioEditorPane`) were intentionally left as-is — they're internal identifiers, not user-facing. Renaming them is a separate, lower-priority refactor.
+
+**Gotcha**: The deprecated `STUDIO_ROUTES` alias must be removed from `routes.ts` AND `config/index.ts` — easy to miss the barrel re-export.
+
 ## Stats
 
-- 42 files changed, ~1,600 insertions, ~7,900 deletions (net -6,300 lines)
-- 12 files deleted (dynamic route pages, context, hooks, redirects)
+- Phase 1 (dynamic params): 42 files, ~1,600 insertions, ~7,900 deletions
+- Phase 2 (studio→admin): 40 files, route rename + filesystem move
 
 ## Related
 

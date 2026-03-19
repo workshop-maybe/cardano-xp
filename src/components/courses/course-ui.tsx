@@ -12,7 +12,7 @@ import Link from "next/link";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { SuccessIcon, LessonIcon, ModuleIcon, SettingsIcon } from "~/components/icons";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 
 /**
  * CourseStatusBadge - Shows Published/Draft status
@@ -151,7 +151,7 @@ export function CourseManageButton({
   }
 
   return (
-    <Link href={STUDIO_ROUTES.courseEditor}>
+    <Link href={ADMIN_ROUTES.courseEditor}>
       <AndamioButton variant={variant} size={size} className={className}>
         <SettingsIcon className={`h-4 w-4 ${showLabel ? "mr-2" : ""}`} />
         {showLabel && label}

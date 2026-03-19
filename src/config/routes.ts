@@ -46,35 +46,29 @@ export const AUTH_ROUTES = {
 } as const;
 
 /**
- * Admin routes - require authentication + manager role
- */
-export const ADMIN_ROUTES = {
-  /** Project admin — manage tasks, treasury, XP distribution */
-  project: "/admin/project",
-} as const;
-
-/**
- * Studio routes - require authentication + ownership/role
+ * Admin routes — require authentication + owner/manager role.
  * Single-course, single-project app — no dynamic IDs in URLs.
  */
-export const STUDIO_ROUTES = {
-  /** Studio hub — redirects to courseEditor */
-  hub: "/studio",
+export const ADMIN_ROUTES = {
+  /** Admin hub — redirects to courseEditor */
+  hub: "/admin",
 
-  /** Course studio */
-  courseEditor: "/studio/course",
-  moduleWizard: (moduleCode: string) => `/studio/course/${moduleCode}`,
-  teacherDashboard: "/studio/course/teacher",
-  manageLearners: "/studio/course/manage-learners",
+  /** Course admin */
+  courseEditor: "/admin/course",
+  moduleWizard: (moduleCode: string) => `/admin/course/${moduleCode}`,
+  teacherDashboard: "/admin/course/teacher",
+  manageLearners: "/admin/course/manage-learners",
 
-  /** Project studio */
-  projectDashboard: "/studio/project",
-  commitments: "/studio/project/commitments",
-  draftTasks: "/studio/project/draft-tasks",
-  newTask: "/studio/project/draft-tasks/new",
-  editTask: (taskIndex: number) => `/studio/project/draft-tasks/${taskIndex}`,
-  manageContributors: "/studio/project/manage-contributors",
+  /** Project admin */
+  projectDashboard: "/admin/project",
+  treasury: "/admin/project/treasury",
+  commitments: "/admin/project/commitments",
+  draftTasks: "/admin/project/draft-tasks",
+  newTask: "/admin/project/draft-tasks/new",
+  editTask: (taskIndex: number) => `/admin/project/draft-tasks/${taskIndex}`,
+  manageContributors: "/admin/project/manage-contributors",
 } as const;
+
 
 /**
  * API routes

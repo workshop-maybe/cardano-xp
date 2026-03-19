@@ -2,9 +2,8 @@
 
 import { useMemo } from "react";
 import { CARDANO_XP } from "~/config/cardano-xp";
-import { useProject } from "~/hooks/api";
-import { STUDIO_ROUTES } from "~/config/routes";
-import { useManagerCommitments } from "~/hooks/api/project/use-project-manager";
+import { useCourse } from "~/hooks/api/course/use-course";
+import { useTeacherAssignmentCommitments } from "~/hooks/api/course/use-course-teacher";
 import {
   AndamioBadge,
   AndamioCard,
@@ -27,153 +26,157 @@ import {
   AndamioDashboardStat,
   AndamioScrollArea,
 } from "~/components/andamio";
-import { ContributorIcon, AssignmentIcon, SuccessIcon } from "~/components/icons";
-import { RequireProjectAccess } from "~/components/auth/require-project-access";
+import { LearnerIcon, AssignmentIcon, SuccessIcon } from "~/components/icons";
+import { ADMIN_ROUTES } from "~/config/routes";
+import { RequireCourseAccess } from "~/components/auth/require-course-access";
 
 /**
- * Manage Contributors Page
+ * Manage Learners Page
  *
- * View on-chain contributors for a project with task commitment stats.
- * Contributors from the merged project endpoint, enriched with commitment data.
+ * View students who have submitted assignments for a course.
+ * Derives the learner list by deduplicating studentAlias from
+ * teacher assignment commitments.
  *
- * Wrapped in RequireProjectAccess to ensure only project owners
- * and managers can view contributor data.
+ * Wrapped in RequireCourseAccess to ensure only course owners
+ * and teachers can view learner data.
  */
-export default function ManageContributorsPage() {
-  const projectId = CARDANO_XP.projectId;
+export default function ManageLearnersPage() {
+  const courseId = CARDANO_XP.courseId;
 
   return (
-    <RequireProjectAccess
-      projectId={projectId}
-      title="Manage Contributors"
-      description="Connect your wallet to view contributors"
+    <RequireCourseAccess
+      courseId={courseId}
+      title="Learners"
+      description="Connect your wallet to view learners"
     >
-      <ManageContributorsContent projectId={projectId} />
-    </RequireProjectAccess>
+      <ManageLearnersContent courseId={courseId} />
+    </RequireCourseAccess>
   );
 }
 
-function ManageContributorsContent({ projectId }: { projectId: string }) {
-  const { data: project, isLoading, error: projectError } = useProject(projectId);
-  const { data: commitments, isLoading: commitmentsLoading } = useManagerCommitments(projectId);
+function ManageLearnersContent({ courseId }: { courseId: string }) {
+  const { data: course, isLoading: courseLoading, error: courseError } = useCourse(courseId);
+  const { data: commitments, isLoading: commitmentsLoading } = useTeacherAssignmentCommitments(courseId);
 
-  // Build per-contributor stats from commitments.
-  // Join key: commitment.submittedBy === contributor.alias (both are the on-chain alias)
-  const contributorStats = useMemo(() => {
-    const stats = new Map<string, { committed: number; accepted: number; pending: number }>();
+  // Build per-learner stats from commitments (exclude LEFT students)
+  const learnerStats = useMemo(() => {
+    const stats = new Map<string, { submitted: number; accepted: number; pending: number }>();
     for (const c of commitments ?? []) {
-      const entry = stats.get(c.submittedBy) ?? { committed: 0, accepted: 0, pending: 0 };
-      entry.committed++;
+      if (c.commitmentStatus === "LEFT") continue;
+      const entry = stats.get(c.studentAlias) ?? { submitted: 0, accepted: 0, pending: 0 };
+      entry.submitted++;
       if (c.commitmentStatus === "ACCEPTED") entry.accepted++;
       if (c.commitmentStatus === "SUBMITTED" || c.commitmentStatus === "PENDING_APPROVAL") entry.pending++;
-      stats.set(c.submittedBy, entry);
+      stats.set(c.studentAlias, entry);
     }
     return stats;
   }, [commitments]);
 
-  // Aggregate stats for dashboard
-  const totalAccepted = useMemo(
-    () => Array.from(contributorStats.values()).reduce((sum, s) => sum + s.accepted, 0),
-    [contributorStats]
+  const learners = useMemo(
+    () => Array.from(learnerStats.keys()).sort(),
+    [learnerStats]
   );
 
-  if (isLoading || commitmentsLoading) {
+  const totalAccepted = useMemo(
+    () => Array.from(learnerStats.values()).reduce((sum, s) => sum + s.accepted, 0),
+    [learnerStats]
+  );
+
+  if (courseLoading || commitmentsLoading) {
     return <AndamioPageLoading variant="detail" />;
   }
 
-  if (projectError || !project) {
+  if (courseError || !course) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
-        <AndamioPageHeader title="Contributors" />
-        <AndamioErrorAlert error={projectError?.message ?? "Project not found"} />
+        <AndamioBackButton href={ADMIN_ROUTES.courseEditor} label="Back to Course" />
+        <AndamioPageHeader title="Learners" />
+        <AndamioErrorAlert error={courseError?.message ?? "Course not found"} />
       </div>
     );
   }
-
-  const contributors = project.contributors ?? [];
 
   return (
     <AndamioScrollArea className="h-full">
     <div className="min-h-full">
     <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-      <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
+      <AndamioBackButton href={ADMIN_ROUTES.courseEditor} label="Back to Course" />
 
       <AndamioPageHeader
-        title="Contributors"
-        description={`On-chain contributors for ${project.title ?? "this project"}`}
+        title="Learners"
+        description={`Students with assignment activity in ${course.title ?? "this course"}`}
       />
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2">
         <AndamioDashboardStat
-          icon={ContributorIcon}
-          label="Total Contributors"
-          value={contributors.length}
-          valueColor={contributors.length > 0 ? "success" : undefined}
-          iconColor={contributors.length > 0 ? "success" : undefined}
+          icon={LearnerIcon}
+          label="Active Learners"
+          value={learners.length}
+          valueColor={learners.length > 0 ? "success" : undefined}
+          iconColor={learners.length > 0 ? "success" : undefined}
         />
         <AndamioDashboardStat
           icon={AssignmentIcon}
-          label="Tasks Completed"
+          label="Assignments Completed"
           value={totalAccepted}
           valueColor={totalAccepted > 0 ? "success" : undefined}
           iconColor={totalAccepted > 0 ? "success" : undefined}
         />
       </div>
 
-      {/* Contributors Card */}
+      {/* Learners Card */}
       <AndamioCard>
         <AndamioCardHeader>
           <AndamioCardTitle className="flex items-center gap-2">
-            <ContributorIcon className="h-5 w-5" />
-            Contributors
+            <LearnerIcon className="h-5 w-5" />
+            Learners
           </AndamioCardTitle>
           <AndamioCardDescription>
-            Contributors registered on-chain with their task activity
+            Students who have submitted at least one assignment
           </AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent>
-          {contributors.length === 0 && (
+          {learners.length === 0 && (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/50 mb-3">
-                <ContributorIcon className="h-6 w-6 text-muted-foreground" />
+                <LearnerIcon className="h-6 w-6 text-muted-foreground" />
               </div>
-              <AndamioText className="font-medium">No contributors yet</AndamioText>
+              <AndamioText className="font-medium">No learners yet</AndamioText>
               <AndamioText variant="muted" className="mt-1 max-w-[320px]">
-                Share your project link with potential contributors. They can join by connecting their wallet and committing to tasks.
+                Learners will appear here once they submit assignments for this course.
               </AndamioText>
             </div>
           )}
 
-          {contributors.length > 0 && (
+          {learners.length > 0 && (
             <AndamioTableContainer>
               <AndamioTable>
                 <AndamioTableHeader>
                   <AndamioTableRow>
                     <AndamioTableHead className="w-[50px]">#</AndamioTableHead>
-                    <AndamioTableHead>Contributor</AndamioTableHead>
-                    <AndamioTableHead className="w-[100px] text-center">Committed</AndamioTableHead>
+                    <AndamioTableHead>Student</AndamioTableHead>
+                    <AndamioTableHead className="w-[100px] text-center">Submitted</AndamioTableHead>
                     <AndamioTableHead className="w-[100px] text-center">Completed</AndamioTableHead>
                     <AndamioTableHead className="w-[100px] text-center">Pending</AndamioTableHead>
                   </AndamioTableRow>
                 </AndamioTableHeader>
                 <AndamioTableBody>
-                  {contributors.map((contributor, index) => {
-                    const stats = contributorStats.get(contributor.alias);
+                  {learners.map((alias, index) => {
+                    const stats = learnerStats.get(alias)!;
                     return (
-                      <AndamioTableRow key={contributor.alias}>
+                      <AndamioTableRow key={alias}>
                         <AndamioTableCell className="text-muted-foreground">
                           {index + 1}
                         </AndamioTableCell>
                         <AndamioTableCell className="font-mono">
-                          {contributor.alias}
+                          {alias}
                         </AndamioTableCell>
                         <AndamioTableCell className="text-center">
-                          {stats?.committed ?? 0}
+                          {stats.submitted}
                         </AndamioTableCell>
                         <AndamioTableCell className="text-center">
-                          {stats?.accepted ? (
+                          {stats.accepted > 0 ? (
                             <AndamioBadge variant="default" className="gap-1">
                               <SuccessIcon className="h-3 w-3" />
                               {stats.accepted}
@@ -183,7 +186,7 @@ function ManageContributorsContent({ projectId }: { projectId: string }) {
                           )}
                         </AndamioTableCell>
                         <AndamioTableCell className="text-center">
-                          {stats?.pending ? (
+                          {stats.pending > 0 ? (
                             <AndamioBadge variant="secondary">{stats.pending}</AndamioBadge>
                           ) : (
                             <span className="text-muted-foreground">0</span>

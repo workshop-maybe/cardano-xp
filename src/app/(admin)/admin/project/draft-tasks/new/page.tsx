@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { STUDIO_ROUTES, ADMIN_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import {
   AndamioBadge,
@@ -36,7 +36,7 @@ export default function NewTaskPage() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const backHref = STUDIO_ROUTES.draftTasks;
+  const backHref = ADMIN_ROUTES.draftTasks;
 
   const handleCreate = async (values: TaskFormValues) => {
     if (!isAuthenticated) {
@@ -109,7 +109,7 @@ export default function NewTaskPage() {
           error={projectError ?? "This project needs to be published on-chain before tasks can be created."}
         />
         {!projectError && (
-          <Link href={ADMIN_ROUTES.project}>
+          <Link href={ADMIN_ROUTES.treasury}>
             <AndamioButton>Go to Manage Treasury</AndamioButton>
           </Link>
         )}

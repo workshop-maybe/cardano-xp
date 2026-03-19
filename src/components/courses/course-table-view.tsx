@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AndamioTable, AndamioTableBody, AndamioTableCell, AndamioTableHead, AndamioTableHeader, AndamioTableRow } from "~/components/andamio/andamio-table";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { SettingsIcon } from "~/components/icons";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 import { type Course } from "~/hooks/api";
 import {
   CourseStatusIcon,
@@ -76,7 +76,7 @@ export function CourseTableView({ courses, moduleCounts }: CourseTableViewProps)
                 {/* Actions */}
                 <AndamioTableCell className="text-right">
                   {courseId && (
-                    <Link href={STUDIO_ROUTES.courseEditor}>
+                    <Link href={ADMIN_ROUTES.courseEditor}>
                       <AndamioButton variant="ghost" size="sm">
                         <SettingsIcon className="h-4 w-4 md:mr-1" />
                         <span className="hidden md:inline">Manage</span>

@@ -42,7 +42,7 @@ import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AlertIcon, LoadingIcon, SuccessIcon } from "~/components/icons";
 import { toast } from "sonner";
 import { TRANSACTION_UI } from "~/config/transaction-ui";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
 
 // =============================================================================
@@ -304,16 +304,16 @@ export function CreateProject({ onSuccess, onConfirmed }: CreateProjectProps) {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               {projectId ? (
                 <>
-                  <Link href={STUDIO_ROUTES.newTask} className="flex-1">
+                  <Link href={ADMIN_ROUTES.newTask} className="flex-1">
                     <AndamioButton className="w-full">Create Your First Task</AndamioButton>
                   </Link>
-                  <Link href={STUDIO_ROUTES.projectDashboard} className="flex-1">
+                  <Link href={ADMIN_ROUTES.projectDashboard} className="flex-1">
                     <AndamioButton variant="outline" className="w-full">Go to Project Dashboard</AndamioButton>
                   </Link>
                 </>
               ) : (
-                <Link href={STUDIO_ROUTES.hub}>
-                  <AndamioButton variant="outline">Go to Studio</AndamioButton>
+                <Link href={ADMIN_ROUTES.hub}>
+                  <AndamioButton variant="outline">Go to Admin</AndamioButton>
                 </Link>
               )}
             </div>

@@ -25,7 +25,7 @@ export { APP_NAVIGATION, isNavItemActive } from "./navigation";
 export {
   PUBLIC_ROUTES,
   AUTH_ROUTES,
-  STUDIO_ROUTES,
+  ADMIN_ROUTES,
   API_ROUTES,
 } from "./routes";
 

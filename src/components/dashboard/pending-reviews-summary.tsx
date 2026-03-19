@@ -21,7 +21,7 @@ import {
   ExternalLinkIcon,
 } from "~/components/icons";
 import { useDashboardData } from "~/contexts/dashboard-context";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 
 interface PendingReviewsSummaryProps {
   accessTokenAlias: string | null | undefined;
@@ -171,7 +171,7 @@ export function PendingReviewsSummary({ accessTokenAlias }: PendingReviewsSummar
           {sortedReviews.slice(0, 3).map((review) => (
             <Link
               key={review.courseId}
-              href={STUDIO_ROUTES.teacherDashboard}
+              href={ADMIN_ROUTES.teacherDashboard}
               className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
             >
               <div className="flex items-center gap-2 min-w-0">

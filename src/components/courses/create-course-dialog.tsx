@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 import { useWallet } from "@meshsdk/react";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useTransaction } from "~/hooks/tx/use-transaction";
@@ -153,7 +153,7 @@ export function CreateCourseDialog({ defaultOpen = false }: CreateCourseDialogPr
               description: `"${courseTitle}" is now live`,
               action: {
                 label: "Open Course",
-                onClick: () => router.push(STUDIO_ROUTES.courseEditor),
+                onClick: () => router.push(ADMIN_ROUTES.courseEditor),
               },
             });
           } else {

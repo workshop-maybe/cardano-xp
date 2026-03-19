@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 import { useSuccessNotification } from "~/hooks/ui/use-success-notification";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import {
@@ -54,7 +54,7 @@ export default function EditTaskPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const { isSuccess: saveSuccess, showSuccess } = useSuccessNotification();
 
-  const backHref = STUDIO_ROUTES.draftTasks;
+  const backHref = ADMIN_ROUTES.draftTasks;
 
   const handleSave = async (values: TaskFormValues) => {
     if (!isAuthenticated || !contributorStateId || !taskData) return;

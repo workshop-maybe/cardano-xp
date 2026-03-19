@@ -7,12 +7,9 @@ import { AndamioPageHeader } from "~/components/andamio";
 import { AlertIcon, RefreshIcon } from "~/components/icons";
 
 /**
- * Error boundary for the (studio) route group
- *
- * Catches unhandled errors in studio routes and displays a user-friendly error UI.
- * Users can attempt to recover by clicking the retry button.
+ * Error boundary for the (admin) route group
  */
-export default function StudioError({
+export default function AdminError({
   error,
   reset,
 }: {
@@ -20,14 +17,14 @@ export default function StudioError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Studio error boundary caught:", error);
+    console.error("Admin error boundary caught:", error);
   }, [error]);
 
   return (
     <div className="space-y-6 p-6">
       <AndamioPageHeader
         title="Something went wrong"
-        description="An unexpected error occurred in the studio"
+        description="An unexpected error occurred"
       />
 
       <AndamioAlert variant="destructive">

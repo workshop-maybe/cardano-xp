@@ -37,10 +37,17 @@ import {
   ErrorIcon,
   SortIcon,
 } from "~/components/icons";
-import { formatLovelace } from "~/lib/cardano-utils";
+import { formatXP } from "~/lib/cardano-utils";
+
+function getTaskXpReward(task: Task): number {
+  const xpToken = task.tokens?.find(
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId && t.assetName === CARDANO_XP.xpToken.assetName
+  );
+  return xpToken?.quantity ?? 0;
+}
 import { useProject, type Task } from "~/hooks/api/project/use-project";
 import { useManagerTasks, useDeleteTask, useManagerCommitments, type ManagerCommitment } from "~/hooks/api/project/use-project-manager";
-import { PUBLIC_ROUTES, STUDIO_ROUTES, ADMIN_ROUTES } from "~/config/routes";
+import { PUBLIC_ROUTES, ADMIN_ROUTES } from "~/config/routes";
 
 // =============================================================================
 // Task Lifecycle Types
@@ -208,7 +215,7 @@ export default function DraftTasksPage() {
       if (draftSortField === "title") {
         cmp = (a.title || "").localeCompare(b.title || "");
       } else {
-        cmp = (parseInt(a.lovelaceAmount) || 0) - (parseInt(b.lovelaceAmount) || 0);
+        cmp = getTaskXpReward(a) - getTaskXpReward(b);
       }
       return draftSortDirection === "desc" ? -cmp : cmp;
     });
@@ -280,7 +287,7 @@ export default function DraftTasksPage() {
           break;
         }
         case "reward":
-          cmp = (parseInt(a.lovelaceAmount) || 0) - (parseInt(b.lovelaceAmount) || 0);
+          cmp = getTaskXpReward(a) - getTaskXpReward(b);
           break;
         case "lifecycle": {
           const la = taskLifecycleMap.get(a.taskHash)?.lifecycle ?? "available";
@@ -380,7 +387,7 @@ export default function DraftTasksPage() {
     return (
       <div className="space-y-6">
         <AndamioBackButton
-          href={STUDIO_ROUTES.projectDashboard}
+          href={ADMIN_ROUTES.projectDashboard}
           label="Back to Project"
         />
 
@@ -396,11 +403,11 @@ export default function DraftTasksPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <AndamioBackButton
-          href={STUDIO_ROUTES.projectDashboard}
+          href={ADMIN_ROUTES.projectDashboard}
           label="Back to Project"
         />
 
-        <Link href={STUDIO_ROUTES.newTask}>
+        <Link href={ADMIN_ROUTES.newTask}>
           <AndamioAddButton label="Create Task" />
         </Link>
       </div>
@@ -452,7 +459,7 @@ export default function DraftTasksPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <AndamioSectionHeader title="Draft Tasks" />
-            <Link href={ADMIN_ROUTES.project}>
+            <Link href={ADMIN_ROUTES.treasury}>
               <AndamioButton variant="default" size="sm">
                 <OnChainIcon className="h-4 w-4 mr-2" />
                 Publish Tasks
@@ -472,7 +479,7 @@ export default function DraftTasksPage() {
                   </AndamioTableHead>
                   <AndamioTableHead className="w-32 text-center">
                     <button onClick={() => toggleDraftSort("reward")} className="inline-flex items-center gap-1 cursor-pointer hover:text-foreground mx-auto">
-                      Reward
+                      XP
                       <SortIcon className={`h-3 w-3 ${draftSortField === "reward" ? "text-primary" : "text-muted-foreground/50"}`} />
                     </button>
                   </AndamioTableHead>
@@ -488,14 +495,14 @@ export default function DraftTasksPage() {
 
                       <AndamioTableCell className="font-medium">{task.title || "Untitled Task"}</AndamioTableCell>
                       <AndamioTableCell className="text-center">
-                        <AndamioBadge variant="outline">{formatLovelace(task.lovelaceAmount)}</AndamioBadge>
+                        <AndamioBadge variant="outline">{formatXP(getTaskXpReward(task))}</AndamioBadge>
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
                         <AndamioBadge variant={getStatusVariant(task.taskStatus ?? "")}>{task.taskStatus}</AndamioBadge>
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right">
                         <AndamioRowActions
-                          editHref={STUDIO_ROUTES.editTask(taskIndex)}
+                          editHref={ADMIN_ROUTES.editTask(taskIndex)}
                           onDelete={() => handleDeleteTask(task)}
                           itemName="task"
                           deleteDescription={`Are you sure you want to delete "${task.title || "Untitled Task"}"? This action cannot be undone.`}
@@ -517,7 +524,7 @@ export default function DraftTasksPage() {
           <div className="flex items-center justify-between">
             <AndamioSectionHeader title="Live Tasks" />
             {lifecycleCounts.pendingReview > 0 && (
-              <Link href={STUDIO_ROUTES.commitments}>
+              <Link href={ADMIN_ROUTES.commitments}>
                 <AndamioButton variant="outline" size="sm">
                   <AlertIcon className="h-4 w-4 mr-2" />
                   Review Submissions ({lifecycleCounts.pendingReview})
@@ -621,7 +628,7 @@ export default function DraftTasksPage() {
                   </AndamioTableHead>
                   <AndamioTableHead className="w-32 text-center">
                     <button onClick={() => toggleSort("reward")} className="inline-flex items-center gap-1 cursor-pointer hover:text-foreground mx-auto">
-                      Reward
+                      XP
                       <SortIcon className={`h-3 w-3 ${sortField === "reward" ? "text-primary" : "text-muted-foreground/50"}`} />
                     </button>
                   </AndamioTableHead>
@@ -661,7 +668,7 @@ export default function DraftTasksPage() {
                         )}
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
-                        <AndamioBadge variant="outline">{formatLovelace(task.lovelaceAmount)}</AndamioBadge>
+                        <AndamioBadge variant="outline">{formatXP(getTaskXpReward(task))}</AndamioBadge>
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
                         <AndamioBadge variant={getLifecycleBadgeVariant(lifecycle)}>
@@ -693,7 +700,7 @@ export default function DraftTasksPage() {
               <AndamioTableHeader>
                 <AndamioTableRow>
                   <AndamioTableHead>Title</AndamioTableHead>
-                  <AndamioTableHead className="w-32 text-center">Reward</AndamioTableHead>
+                  <AndamioTableHead className="w-32 text-center">XP</AndamioTableHead>
                   <AndamioTableHead className="w-32 text-center">Status</AndamioTableHead>
                 </AndamioTableRow>
               </AndamioTableHeader>
@@ -705,7 +712,7 @@ export default function DraftTasksPage() {
 
                       <AndamioTableCell className="font-medium">{task.title || "Untitled Task"}</AndamioTableCell>
                       <AndamioTableCell className="text-center">
-                        <AndamioBadge variant="outline">{formatLovelace(task.lovelaceAmount)}</AndamioBadge>
+                        <AndamioBadge variant="outline">{formatXP(getTaskXpReward(task))}</AndamioBadge>
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
                         <AndamioBadge variant={getStatusVariant(task.taskStatus ?? "")}>{task.taskStatus}</AndamioBadge>
@@ -726,7 +733,7 @@ export default function DraftTasksPage() {
           title="No tasks yet"
           description="Create your first task to get started"
           action={
-            <Link href={STUDIO_ROUTES.newTask}>
+            <Link href={ADMIN_ROUTES.newTask}>
               <AndamioAddButton label="Create Task" />
             </Link>
           }

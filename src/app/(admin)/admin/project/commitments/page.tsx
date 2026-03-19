@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 import { useManagerCommitments, useProject, type ManagerCommitment } from "~/hooks/api";
 import { useInvalidateManagerProjects } from "~/hooks/api/project/use-project-manager";
 import { useTransaction } from "~/hooks/tx/use-transaction";
@@ -295,7 +295,7 @@ export default function ProjectCommitmentsPage() {
   if (!isAuthenticated || !user?.accessTokenAlias) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
+        <AndamioBackButton href={ADMIN_ROUTES.projectDashboard} label="Back to Project" />
         <AndamioErrorAlert
           title="Authentication Required"
           error="Please connect your wallet to access project commitments."
@@ -307,7 +307,7 @@ export default function ProjectCommitmentsPage() {
   if (projectError || !project) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
+        <AndamioBackButton href={ADMIN_ROUTES.projectDashboard} label="Back to Project" />
         <AndamioErrorAlert error={projectError?.message ?? "Project not found"} />
       </div>
     );
@@ -443,7 +443,7 @@ export default function ProjectCommitmentsPage() {
             {/* Back button at bottom */}
             <div className="border-t px-4 py-3">
               <AndamioBackButton
-                href={STUDIO_ROUTES.projectDashboard}
+                href={ADMIN_ROUTES.projectDashboard}
                 label="Back to Project"
               />
             </div>

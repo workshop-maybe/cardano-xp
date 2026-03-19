@@ -1,3 +1,8 @@
+"use client";
+
+import { useTreasuryBalance } from "~/hooks/use-treasury-balance";
+import { CARDANO_XP } from "~/config/cardano-xp";
+
 const STATS = [
   { label: "Total Supply", value: "100,000", unit: "XP", prefix: "", accent: "text-secondary" },
   { label: "Distribution", value: "Tasks", unit: "only", prefix: "", accent: "text-primary" },
@@ -6,6 +11,7 @@ const STATS = [
 ] as const;
 
 export default function XPPage() {
+  const { data: balance } = useTreasuryBalance();
   return (
     <div className="space-y-16">
       {/* Hero header */}
@@ -87,6 +93,47 @@ export default function XPPage() {
           </div>
         ))}
       </div>
+
+      {/* Live treasury balance */}
+      {balance && (
+        <section className="space-y-4">
+          <div className="space-y-2">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              On-chain
+            </p>
+            <h2 className="font-display font-bold text-2xl text-foreground">
+              Treasury
+            </h2>
+          </div>
+          <div className="grid gap-px sm:grid-cols-2 bg-border">
+            <div className="bg-card p-6 space-y-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                XP in Treasury
+              </p>
+              <p className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-display font-bold text-secondary">
+                  {balance.xp.toLocaleString()}
+                </span>
+                <span className="text-sm font-mono text-muted-foreground">XP</span>
+              </p>
+            </div>
+            <div className="bg-card p-6 space-y-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                ADA in Treasury
+              </p>
+              <p className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-display font-bold text-primary">
+                  {balance.ada.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+                <span className="text-sm font-mono text-muted-foreground">ADA</span>
+              </p>
+            </div>
+          </div>
+          <p className="font-mono text-xs text-muted-foreground break-all">
+            {CARDANO_XP.projectWallet.address}
+          </p>
+        </section>
+      )}
 
       {/* The problem */}
       <section className="space-y-6">

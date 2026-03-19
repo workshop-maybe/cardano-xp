@@ -8,7 +8,7 @@ import { PUBLIC_ROUTES, AUTH_ROUTES } from "./routes";
 
 /**
  * Top-level app navigation items.
- * Studio link is handled conditionally in the nav bar component.
+ * Admin routes (/admin) are not shown in the public nav.
  */
 export const APP_NAVIGATION = [
   { name: "About", href: "/about" },

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NextIcon } from "~/components/icons";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { ADMIN_ROUTES } from "~/config/routes";
 
 interface BreadcrumbItem {
   label: string;
@@ -110,15 +110,13 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
   const breadcrumbs: BreadcrumbItem[] = [];
 
   // Build breadcrumbs based on path structure
-  if (segments[0] === "studio") {
+  if (segments[0] === "admin") {
     if (segments[1] === "course") {
       if (segments.length === 2) {
-        // /studio/course — single course editor
         breadcrumbs.push({ label: "Course" });
       } else if (segments.length === 3) {
-        // /studio/course/teacher, /studio/course/manage-learners, or /studio/course/[modulecode]
         const subRoute = segments[2];
-        breadcrumbs.push({ label: "Course", href: STUDIO_ROUTES.courseEditor });
+        breadcrumbs.push({ label: "Course", href: ADMIN_ROUTES.courseEditor });
         if (subRoute === "teacher") {
           breadcrumbs.push({ label: "Teacher" });
         } else if (subRoute === "manage-learners") {
@@ -131,10 +129,9 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
       }
     } else if (segments[1] === "project") {
       if (segments.length === 2) {
-        // /studio/project — single project dashboard
         breadcrumbs.push({ label: "Project" });
       } else {
-        breadcrumbs.push({ label: "Project", href: STUDIO_ROUTES.projectDashboard });
+        breadcrumbs.push({ label: "Project", href: ADMIN_ROUTES.projectDashboard });
         const subRoute = segments[2];
         if (subRoute === "draft-tasks") {
           breadcrumbs.push({ label: "Tasks" });
@@ -142,11 +139,12 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
           breadcrumbs.push({ label: "Commitments" });
         } else if (subRoute === "manage-contributors") {
           breadcrumbs.push({ label: "Contributors" });
+        } else if (subRoute === "treasury") {
+          breadcrumbs.push({ label: "Treasury" });
         }
       }
     } else if (segments.length === 1) {
-      // /studio root
-      breadcrumbs.push({ label: "Studio" });
+      breadcrumbs.push({ label: "Admin" });
     }
   }
 

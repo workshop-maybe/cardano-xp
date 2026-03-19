@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { CARDANO_XP } from "~/config/cardano-xp";
+import { XpBadge } from "~/components/xp-badge";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
@@ -496,7 +497,7 @@ export default function DraftTasksPage() {
 
                       <AndamioTableCell className="font-medium">{task.title || "Untitled Task"}</AndamioTableCell>
                       <AndamioTableCell className="text-center">
-                        <AndamioBadge variant="outline">{formatXP(getTaskXpReward(task))}</AndamioBadge>
+                        <XpBadge amount={getTaskXpReward(task)} />
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
                         <AndamioBadge variant={getStatusVariant(task.taskStatus ?? "")}>{task.taskStatus}</AndamioBadge>
@@ -669,7 +670,7 @@ export default function DraftTasksPage() {
                         )}
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
-                        <AndamioBadge variant="outline">{formatXP(getTaskXpReward(task))}</AndamioBadge>
+                        <XpBadge amount={getTaskXpReward(task)} />
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
                         <AndamioBadge variant={getLifecycleBadgeVariant(lifecycle)}>
@@ -713,7 +714,7 @@ export default function DraftTasksPage() {
 
                       <AndamioTableCell className="font-medium">{task.title || "Untitled Task"}</AndamioTableCell>
                       <AndamioTableCell className="text-center">
-                        <AndamioBadge variant="outline">{formatXP(getTaskXpReward(task))}</AndamioBadge>
+                        <XpBadge amount={getTaskXpReward(task)} />
                       </AndamioTableCell>
                       <AndamioTableCell className="text-center">
                         <AndamioBadge variant={getStatusVariant(task.taskStatus ?? "")}>{task.taskStatus}</AndamioBadge>

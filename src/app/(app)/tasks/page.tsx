@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useProject } from "~/hooks/api";
+import { XpBadge } from "~/components/xp-badge";
 import { useProjectTasks, groupTasksByHash } from "~/hooks/api/project/use-project";
 import {
   AndamioBadge,
@@ -222,6 +223,35 @@ export default function TasksPage() {
         </div>
       )}
 
+      {/* Treasury XP */}
+      {(() => {
+        const treasuryXp = project.treasuryAssets?.find(
+          (t) => t.policyId === CARDANO_XP.xpToken.policyId
+        )?.quantity ?? 0;
+        return treasuryXp > 0 ? (
+          <div className="rounded-2xl border-2 border-secondary/30 bg-gradient-to-br from-secondary/10 via-secondary/5 to-background p-8">
+            <div className="flex items-center justify-center gap-6">
+              <img
+                src="/logos/xp-token.png"
+                alt="XP"
+                className="h-20 w-20 sm:h-24 sm:w-24 rounded-full shadow-lg shadow-secondary/20"
+              />
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary/70 mb-1">
+                  XP in Treasury
+                </p>
+                <p className="text-5xl sm:text-6xl font-display font-bold text-secondary tracking-tight leading-none">
+                  {treasuryXp.toLocaleString()}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Earned by completing tasks
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : null;
+      })()}
+
       {/* Stats Bar */}
       <div className="grid gap-4 grid-cols-3">
         <div className="rounded-lg border p-4">
@@ -365,9 +395,7 @@ export default function TasksPage() {
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <AndamioBadge variant="secondary">
-                            {getTaskXp(task)} XP
-                          </AndamioBadge>
+                          <XpBadge amount={getTaskXp(task)} />
                           {group.count > 1 && (
                             <AndamioText variant="small" className="text-muted-foreground">each</AndamioText>
                           )}
@@ -425,9 +453,7 @@ export default function TasksPage() {
                         </Link>
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right">
-                        <AndamioBadge variant="secondary" className="opacity-70">
-                          {getTaskXp(task)} XP
-                        </AndamioBadge>
+                        <XpBadge amount={getTaskXp(task)} className="opacity-70" />
                       </AndamioTableCell>
                     </AndamioTableRow>
                   );

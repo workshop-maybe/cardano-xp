@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
+import { XpBadge } from "~/components/xp-badge";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import {
   AndamioBadge,
@@ -395,7 +396,7 @@ export default function AdminProjectPage() {
                               {task.taskHash ? `${task.taskHash.slice(0, 16)}...` : "-"}
                             </AndamioTableCell>
                             <AndamioTableCell className="text-center">
-                              <AndamioBadge variant="outline">{getTaskXpReward(task)} XP</AndamioBadge>
+                              <XpBadge amount={getTaskXpReward(task)} />
                             </AndamioTableCell>
                           </AndamioTableRow>
                         );
@@ -518,7 +519,7 @@ export default function AdminProjectPage() {
                               {taskHash ? `${taskHash.slice(0, 16)}...` : "-"}
                             </AndamioTableCell>
                             <AndamioTableCell className="text-center">
-                              <AndamioBadge variant="outline">{getTaskXpReward(task)} XP</AndamioBadge>
+                              <XpBadge amount={getTaskXpReward(task)} />
                             </AndamioTableCell>
                             <AndamioTableCell className="hidden sm:table-cell text-center text-xs text-muted-foreground">
                               {expirationDate.toLocaleDateString()}

@@ -139,13 +139,15 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
       {/* Headline */}
       <div className="flex flex-col gap-4">
         <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-7xl leading-[1.1] tracking-tight text-foreground">
-          Build{" "}
-          <span className="text-secondary">new systems.</span>
+          Give{" "}
+          <span className="text-secondary">feedback.</span>
+          <br />
+          Earn{" "}
+          <span className="text-secondary">proof.</span>
         </h1>
 
-        <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          A tiny experiment in giving feedback. Share what works and what
-          doesn&apos;t. Earn XP for your trouble.
+        <p className="text-base sm:text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
+          Support Cardano development. Get on-chain proof you contributed.
         </p>
       </div>
 
@@ -158,14 +160,9 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
           Connect Wallet
         </AndamioButton>
         <AndamioButton
-          onClick={() => router.push("/andamio-access-token")}
-          className="w-full lg:w-auto"
-        >
-          Get an Access Token
-        </AndamioButton>
-        <AndamioButton
           onClick={() => router.push("/about")}
           className="w-full lg:w-auto"
+          variant="outline"
         >
           What is this?
         </AndamioButton>

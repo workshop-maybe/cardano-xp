@@ -65,8 +65,7 @@ export default function RootLayout({
       <body className="font-sans overflow-hidden overscroll-none">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          forcedTheme="dark"
           disableTransitionOnChange
         >
           <MeshProvider>

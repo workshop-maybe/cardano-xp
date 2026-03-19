@@ -167,8 +167,8 @@ export default function TasksPage() {
       {/* Header */}
       <div>
         <AndamioPageHeader
-          title="Tasks"
-          description="Earn XP by completing feedback tasks"
+          title="Contribute"
+          description="Pick a task, give feedback, earn XP. Your contribution history becomes your identity."
           action={
             isReturningContributor ? (
               <Link href="/contributor">
@@ -238,13 +238,13 @@ export default function TasksPage() {
               />
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary/70 mb-1">
-                  XP in Treasury
+                  XP available
                 </p>
                 <p className="text-5xl sm:text-6xl font-display font-bold text-secondary tracking-tight leading-none">
                   {treasuryXp.toLocaleString()}
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Earned by completing tasks
+                  Fixed supply. Tasks are the only mint.
                 </p>
               </div>
             </div>
@@ -310,9 +310,9 @@ export default function TasksPage() {
           <AndamioCardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <AndamioCardTitle className="text-lg">Get Started as a Feedback Provider</AndamioCardTitle>
+                <AndamioCardTitle className="text-lg">Before you start</AndamioCardTitle>
                 <AndamioCardDescription>
-                  This app is moderated by humans. It moves at the speed of people.
+                  Complete these prerequisites to contribute. Moderated by humans — it moves at the speed of people.
                 </AndamioCardDescription>
               </div>
               {eligibility && (

@@ -26,12 +26,14 @@ export default function XPPage() {
           Tokenomics
         </p>
         <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
-          Let&apos;s try something{" "}
-          <span className="text-secondary">different</span> with tokens.
+          A token you can only earn by{" "}
+          <span className="text-secondary">doing real work.</span>
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          Whether you&apos;re a user, an expert, a tinkerer, or a curious
-          ADA holder exploring what you can do on Cardano, this is for you.
+          Not DeFi yield. Not learn-to-earn. XP is proof you showed up and
+          did something useful — recorded on-chain, composable, permanent.
+          While everyone else is trading tokens, we built one that means
+          something because it&apos;s backed by contribution, not speculation.
         </p>
       </div>
 
@@ -150,20 +152,21 @@ export default function XPPage() {
         </h2>
         <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-8 space-y-4">
           <p className="text-xl text-foreground font-display font-semibold leading-snug">
-            Developers have git commits. The rest of us have Twitter.
+            There&apos;s nothing on this public ledger that distinguishes
+            a five-year builder from someone who showed up yesterday.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            If you write code, you can point to your contribution graph. PRs,
-            commits, repos — verifiable proof you showed up and did something.
-            But for everyone else — community reviewers, educators, product testers,
-            facilitators — there&apos;s nothing. You post threads. You hope people
-            remember.
+            Developers have git commits. Designers have portfolios. But
+            community reviewers, educators, product testers, facilitators —
+            you post threads. You hope people remember. Five and a half years
+            of Catalyst. Thousands of contributors. Almost nothing on-chain
+            to show for any of it.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            Five and a half years of Catalyst. Hundreds of funded proposals.
-            Thousands of contributors. Almost nothing on-chain to show for it.
-            If you want verifiable proof of contribution and you don&apos;t have
-            a GitHub profile, this experiment is a place to start.
+            As long as we&apos;re on Twitter, we&apos;ve changed nothing.
+            XP is the commit graph for non-code contributions. Devs
+            recognize the model immediately. Everyone else gets access to
+            what made open source culture work — without needing to learn git.
           </p>
         </div>
       </section>
@@ -206,18 +209,16 @@ export default function XPPage() {
         </h2>
         <div className="bg-card border border-border shadow-lg p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
-            This is not learn-to-earn. This is not a financial token. XP has no
-            market value and is not designed to be traded.
+            Not learn-to-earn. Not a financial token. Not governance (yet).
+            XP has no market value and is not designed to be traded.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            This is a feedback collection mechanism. It takes time to give good
-            feedback, and that time should be rewarded. The reward is proof you
-            showed up and did something useful — recorded on-chain, composable,
-            permanent.
+            Cardano doesn&apos;t need another token to trade. It needs a token
+            that makes people want to <em>do things</em>. XP gives the
+            ecosystem something to point to: this is what Cardano is
+            actually for.
           </p>
-          <p className="text-muted-foreground leading-relaxed">
-            Without verifiable proof of what people can do and have done,
-            ecosystems default to informal reputation and relationship networks.
+          <p className="text-foreground font-medium">
             XP replaces &ldquo;take my word for it&rdquo; with &ldquo;check
             the ledger.&rdquo;
           </p>
@@ -242,11 +243,11 @@ export default function XPPage() {
         </div>
       </section>
 
-      {/* CTA for devs */}
+      {/* For builders */}
       <section className="space-y-6">
         <div className="space-y-2">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            For developers
+            For builders
           </p>
           <h2 className="font-display font-bold text-2xl text-foreground">
             Want feedback on what you&apos;re building?
@@ -254,35 +255,53 @@ export default function XPPage() {
         </div>
         <div className="bg-card border border-border shadow-lg p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
-            Set up a project on the Andamio protocol, create feedback tasks,
-            and distribute XP to the people who help you improve your work.
-            You get real, structured feedback from the community. They get
-            on-chain proof they contributed.
+            Create a project, post feedback tasks, distribute XP. You get
+            structured feedback from real people. They get on-chain proof they
+            contributed. No one needs to approve you — the protocol enforces it.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            This experiment is scaffolding — designed to be outgrown by
-            whatever the community builds next. The protocol is open. The
-            tools are ready. If you&apos;re building on Cardano and want
-            community input, this is a way to make that exchange real.
+            XP earned on any project is composable. Other projects can set
+            prerequisites based on your XP balance. Strangers build on each
+            other&apos;s credentials without coordination. That&apos;s the
+            difference between a public ledger and a better database.
           </p>
+        </div>
+        <div className="rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 p-8 space-y-4 text-center">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60">
+            Coming soon
+          </p>
+          <p className="font-display font-bold text-xl text-foreground">
+            Host your own project on Cardano XP
+          </p>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+            Post tasks, reward contributors with XP, and collect structured
+            feedback on what you&apos;re building. If you&apos;re interested
+            in being one of the first projects, reach out.
+          </p>
+          <a
+            href="https://x.com/andaborocardano"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+          >
+            Let&apos;s talk
+          </a>
         </div>
       </section>
 
-      {/* Permissionless */}
+      {/* Invitation */}
       <section className="space-y-6 pb-12">
-        <h2 className="font-display font-bold text-2xl text-foreground">
-          Permissionless
-        </h2>
-        <div className="bg-card border border-border shadow-lg p-8 space-y-4">
-          <p className="text-muted-foreground leading-relaxed">
-            Anyone can set up a project on the Andamio protocol and distribute
-            XP to contributors. It takes a few steps, but no one needs to
-            approve you.
+        <div className="border-l-4 border-primary bg-card border border-border shadow-lg p-8 space-y-4">
+          <p className="text-foreground leading-relaxed">
+            This is scaffolding — designed to be outgrown by whatever the
+            community builds next. If it works, the people who earned XP in
+            V1 decide what V2 looks like. If it doesn&apos;t, we learned
+            something. Either way, it&apos;s on-chain.
           </p>
-          <p className="text-muted-foreground leading-relaxed">
-            XP earned on any project is composable — other projects can set
-            prerequisites based on your XP balance. Strangers build on each
-            other&apos;s credentials without coordination.
+          <p className="text-foreground font-medium leading-relaxed">
+            We&apos;re not asking anyone to believe this will work.
+            We&apos;re doing it. You&apos;re invited to join in when
+            you&apos;re ready.
           </p>
         </div>
       </section>

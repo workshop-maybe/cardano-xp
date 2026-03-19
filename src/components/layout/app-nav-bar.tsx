@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useWallet } from "@meshsdk/react";
-import { useTheme } from "next-themes";
 import { APP_NAVIGATION, isNavItemActive } from "~/config";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
 import {
   LogOutIcon,
-  LightModeIcon,
-  DarkModeIcon,
 } from "~/components/icons";
 import { cn } from "~/lib/utils";
 import { env } from "~/env";
@@ -26,23 +23,16 @@ export function AppNavBar() {
   const pathname = usePathname();
   const router = useRouter();
   const { name: walletName } = useWallet();
-  const { theme, setTheme } = useTheme();
   const {
     isAuthenticated,
     user,
     logout,
   } = useAndamioAuth();
 
-  const [mounted, setMounted] = useState(false);
-
   const handleLogout = useCallback(() => {
     logout();
     router.push("/");
   }, [logout, router]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <nav className="sticky top-0 z-40 xp-glass border-b border-border/30">
@@ -98,21 +88,6 @@ export function AppNavBar() {
             <span className="hidden md:inline-flex items-center text-[11px] text-muted-foreground">
               {walletName}
             </span>
-          )}
-
-          {/* Theme toggle */}
-          {mounted && (
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="h-8 w-8 flex items-center justify-center rounded-sm text-muted-foreground hover:bg-foreground/5 hover:text-foreground transition-colors"
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {theme === "dark" ? (
-                <LightModeIcon className="h-3.5 w-3.5" />
-              ) : (
-                <DarkModeIcon className="h-3.5 w-3.5" />
-              )}
-            </button>
           )}
 
           {/* Auth action */}

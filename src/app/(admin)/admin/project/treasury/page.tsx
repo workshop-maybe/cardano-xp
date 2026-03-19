@@ -57,8 +57,9 @@ interface ProjectData {
 }
 
 function getTaskXpReward(task: Task): number {
+  // Match on policyId only — the API returns decoded assetName ("XP") not hex ("5850")
   const xpToken = task.tokens?.find(
-    (t) => t.policyId === CARDANO_XP.xpToken.policyId && t.assetName === CARDANO_XP.xpToken.assetName
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId
   );
   return xpToken?.quantity ?? 0;
 }
@@ -187,10 +188,14 @@ export default function AdminProjectPage() {
       expirationMs = expirationMs * 1000;
     }
 
-    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
-      `${t.policyId}.${t.assetName}`,
-      t.quantity,
-    ]);
+    // Build native_assets with hex-encoded asset names.
+    // The API returns decoded names ("XP") but on-chain expects hex ("5850").
+    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => {
+      const hexName = t.policyId === CARDANO_XP.xpToken.policyId
+        ? CARDANO_XP.xpToken.assetName
+        : t.assetName;
+      return [`${t.policyId}.${hexName}`, t.quantity];
+    });
 
     return {
       project_content: projectContent,
@@ -213,10 +218,14 @@ export default function AdminProjectPage() {
       expirationMs = expirationMs * 1000;
     }
 
-    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
-      `${t.policyId}.${t.assetName}`,
-      t.quantity,
-    ]);
+    // Build native_assets with hex-encoded asset names.
+    // The API returns decoded names ("XP") but on-chain expects hex ("5850").
+    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => {
+      const hexName = t.policyId === CARDANO_XP.xpToken.policyId
+        ? CARDANO_XP.xpToken.assetName
+        : t.assetName;
+      return [`${t.policyId}.${hexName}`, t.quantity];
+    });
 
     return {
       project_content: projectContent,
@@ -235,6 +244,7 @@ export default function AdminProjectPage() {
   const availableFunds = treasuryBalance - onChainCommitted;
   const publishDepositAmount = Math.max(0, addLovelace - availableFunds);
 
+  // XP needed for tasks being published
   const addXp = tasksToAdd.reduce((sum, t) => {
     const xpAsset = t.native_assets.find(([assetClass]) =>
       typeof assetClass === "string" && assetClass.includes(CARDANO_XP.xpToken.assetName)
@@ -242,14 +252,25 @@ export default function AdminProjectPage() {
     return sum + (xpAsset ? (typeof xpAsset[1] === "number" ? xpAsset[1] : 0) : 0);
   }, 0);
 
+  // XP already in treasury (don't ask wallet to supply what's already there)
+  const treasuryXp = projectDetail?.treasuryAssets?.find(
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId
+  )?.quantity ?? 0;
+  const onChainXpCommitted = onChainTasks.reduce((sum, t) => {
+    const xp = t.tokens?.find((tk) => tk.policyId === CARDANO_XP.xpToken.policyId);
+    return sum + (xp?.quantity ?? 0);
+  }, 0);
+  const availableXp = treasuryXp - onChainXpCommitted;
+  const xpDepositNeeded = Math.max(0, addXp - availableXp);
+
   const publishDepositValue: ListValue = [];
   if (publishDepositAmount > 0) {
     publishDepositValue.push(["lovelace", publishDepositAmount]);
   }
-  if (addXp > 0) {
+  if (xpDepositNeeded > 0) {
     publishDepositValue.push([
       `${CARDANO_XP.xpToken.policyId}.${CARDANO_XP.xpToken.assetName}`,
-      addXp,
+      xpDepositNeeded,
     ]);
   }
 
@@ -279,7 +300,11 @@ export default function AdminProjectPage() {
       </div>
 
       {/* Treasury Balance */}
-      <TreasuryBalanceCard />
+      <TreasuryBalanceCard
+        treasuryBalance={projectDetail?.treasuryBalance}
+        treasuryAssets={projectDetail?.treasuryAssets}
+        treasuryAddress={projectDetail?.treasuryAddress}
+      />
 
       {/* Add Funds to Treasury */}
       <TreasuryAddFunds

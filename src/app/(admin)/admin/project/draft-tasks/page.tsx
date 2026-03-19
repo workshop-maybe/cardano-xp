@@ -40,8 +40,9 @@ import {
 import { formatXP } from "~/lib/cardano-utils";
 
 function getTaskXpReward(task: Task): number {
+  // Match on policyId only — the API returns decoded assetName ("XP") not hex ("5850")
   const xpToken = task.tokens?.find(
-    (t) => t.policyId === CARDANO_XP.xpToken.policyId && t.assetName === CARDANO_XP.xpToken.assetName
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId
   );
   return xpToken?.quantity ?? 0;
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useTreasuryBalance } from "~/hooks/use-treasury-balance";
 import { CARDANO_XP } from "~/config/cardano-xp";
+import { useProject } from "~/hooks/api/project/use-project";
 
 const STATS = [
   { label: "Total Supply", value: "100,000", unit: "XP", prefix: "", accent: "text-secondary" },
@@ -11,7 +11,13 @@ const STATS = [
 ] as const;
 
 export default function XPPage() {
-  const { data: balance } = useTreasuryBalance();
+  const { data: project } = useProject(CARDANO_XP.projectId);
+  const xpBalance = project?.treasuryAssets?.find(
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId
+  )?.quantity ?? 0;
+  const adaBalance = project?.treasuryBalance != null
+    ? project.treasuryBalance / 1_000_000
+    : 0;
   return (
     <div className="space-y-16">
       {/* Hero header */}
@@ -95,7 +101,7 @@ export default function XPPage() {
       </div>
 
       {/* Live treasury balance */}
-      {balance && (
+      {project && (
         <section className="space-y-4">
           <div className="space-y-2">
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -112,7 +118,7 @@ export default function XPPage() {
               </p>
               <p className="flex items-baseline gap-1.5">
                 <span className="text-3xl font-display font-bold text-secondary">
-                  {balance.xp.toLocaleString()}
+                  {xpBalance.toLocaleString()}
                 </span>
                 <span className="text-sm font-mono text-muted-foreground">XP</span>
               </p>
@@ -123,15 +129,17 @@ export default function XPPage() {
               </p>
               <p className="flex items-baseline gap-1.5">
                 <span className="text-3xl font-display font-bold text-primary">
-                  {balance.ada.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {adaBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
                 <span className="text-sm font-mono text-muted-foreground">ADA</span>
               </p>
             </div>
           </div>
-          <p className="font-mono text-xs text-muted-foreground break-all">
-            {CARDANO_XP.projectWallet.address}
-          </p>
+          {project.treasuryAddress && (
+            <p className="font-mono text-xs text-muted-foreground break-all">
+              {project.treasuryAddress}
+            </p>
+          )}
         </section>
       )}
 

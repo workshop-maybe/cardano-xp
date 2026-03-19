@@ -310,6 +310,9 @@ export interface ProjectDetail extends Project {
    */
   treasuryBalance?: number;
 
+  /** Native assets currently in the treasury UTxO */
+  treasuryAssets?: TaskToken[];
+
   /**
    * Legacy states array for backward compatibility
    * @deprecated Use contributorStateId directly
@@ -605,6 +608,7 @@ export function transformProjectDetail(api: MergedProjectDetail): ProjectDetail 
     assessments,
     treasuryFundings,
     treasuryBalance: api.treasury_balance,
+    treasuryAssets: api.treasury_assets ? transformAssets(api.treasury_assets) : undefined,
     credentialClaims,
     states,
   };

@@ -8,14 +8,32 @@ import {
   AndamioCardTitle,
 } from "~/components/andamio/andamio-card";
 import { AndamioText } from "~/components/andamio/andamio-text";
-import { AndamioSkeleton } from "~/components/andamio";
 import { TreasuryIcon } from "~/components/icons";
-import { useTreasuryBalance } from "~/hooks/use-treasury-balance";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { cn } from "~/lib/utils";
+import type { TaskToken } from "~/hooks/api/project/use-project";
 
-export function TreasuryBalanceCard({ className }: { className?: string }) {
-  const { data: balance, isLoading } = useTreasuryBalance();
+export interface TreasuryBalanceCardProps {
+  /** Spendable lovelace in the treasury (from API) */
+  treasuryBalance?: number;
+  /** Native assets in the treasury UTxO */
+  treasuryAssets?: TaskToken[];
+  /** On-chain treasury address */
+  treasuryAddress?: string;
+  className?: string;
+}
+
+export function TreasuryBalanceCard({
+  treasuryBalance,
+  treasuryAssets,
+  treasuryAddress,
+  className,
+}: TreasuryBalanceCardProps) {
+  const xpBalance = treasuryAssets?.find(
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId
+  )?.quantity ?? 0;
+
+  const adaBalance = treasuryBalance != null ? treasuryBalance / 1_000_000 : 0;
 
   return (
     <AndamioCard className={cn("", className)}>
@@ -31,34 +49,26 @@ export function TreasuryBalanceCard({ className }: { className?: string }) {
             <AndamioText variant="small" className="text-muted-foreground">
               XP Balance
             </AndamioText>
-            {isLoading ? (
-              <AndamioSkeleton className="h-8 w-24 mt-1" />
-            ) : (
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-3xl font-bold text-secondary">
-                  {(balance?.xp ?? 0).toLocaleString()}
-                </span>
-                <span className="text-sm font-medium text-muted-foreground">XP</span>
-              </div>
-            )}
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold text-secondary">
+                {xpBalance.toLocaleString()}
+              </span>
+              <span className="text-sm font-medium text-muted-foreground">XP</span>
+            </div>
           </div>
           <div>
             <AndamioText variant="small" className="text-muted-foreground">
               ADA Balance
             </AndamioText>
-            {isLoading ? (
-              <AndamioSkeleton className="h-8 w-24 mt-1" />
-            ) : (
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-3xl font-bold text-primary">
-                  {(balance?.ada ?? 0).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </span>
-                <span className="text-sm font-medium text-muted-foreground">ADA</span>
-              </div>
-            )}
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold text-primary">
+                {adaBalance.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+              <span className="text-sm font-medium text-muted-foreground">ADA</span>
+            </div>
           </div>
         </div>
 
@@ -66,14 +76,16 @@ export function TreasuryBalanceCard({ className }: { className?: string }) {
           Fixed supply — tasks are the only mint
         </AndamioText>
 
-        <div className="pt-2 border-t">
-          <AndamioText variant="small" className="text-muted-foreground">
-            Treasury address
-          </AndamioText>
-          <AndamioText variant="small" className="font-mono break-all">
-            {CARDANO_XP.projectWallet.address}
-          </AndamioText>
-        </div>
+        {treasuryAddress && (
+          <div className="pt-2 border-t">
+            <AndamioText variant="small" className="text-muted-foreground">
+              Treasury address
+            </AndamioText>
+            <AndamioText variant="small" className="font-mono break-all">
+              {treasuryAddress}
+            </AndamioText>
+          </div>
+        )}
       </AndamioCardContent>
     </AndamioCard>
   );

@@ -76,7 +76,7 @@ export function CourseTableView({ courses, moduleCounts }: CourseTableViewProps)
                 {/* Actions */}
                 <AndamioTableCell className="text-right">
                   {courseId && (
-                    <Link href={STUDIO_ROUTES.courseEditor(courseId)}>
+                    <Link href={STUDIO_ROUTES.courseEditor}>
                       <AndamioButton variant="ghost" size="sm">
                         <SettingsIcon className="h-4 w-4 md:mr-1" />
                         <span className="hidden md:inline">Manage</span>

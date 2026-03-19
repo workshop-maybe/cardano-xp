@@ -153,7 +153,7 @@ export function CreateCourseDialog({ defaultOpen = false }: CreateCourseDialogPr
               description: `"${courseTitle}" is now live`,
               action: {
                 label: "Open Course",
-                onClick: () => router.push(STUDIO_ROUTES.courseEditor(courseId)),
+                onClick: () => router.push(STUDIO_ROUTES.courseEditor),
               },
             });
           } else {

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useMemo, useState, useCallback, useRef, useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioButton } from "~/components/andamio/andamio-button";
@@ -123,9 +124,8 @@ const formatNetworkStatus = (status: string | undefined | null): string => {
 };
 
 export default function TeacherDashboardPage() {
-  const params = useParams();
   const searchParams = useSearchParams();
-  const courseId = params.coursenft as string;
+  const courseId = CARDANO_XP.courseId;
   const { user } = useAndamioAuth();
 
   // Data hooks

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
@@ -40,7 +40,7 @@ import {
 import { formatLovelace } from "~/lib/cardano-utils";
 import { useProject, type Task } from "~/hooks/api/project/use-project";
 import { useManagerTasks, useDeleteTask, useManagerCommitments, type ManagerCommitment } from "~/hooks/api/project/use-project-manager";
-import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
+import { PUBLIC_ROUTES, STUDIO_ROUTES, ADMIN_ROUTES } from "~/config/routes";
 
 // =============================================================================
 // Task Lifecycle Types
@@ -150,8 +150,7 @@ function shouldReplace(existing: TaskLifecycle, incoming: TaskLifecycle): boolea
  * - useDeleteTask() - Delete task mutation
  */
 export default function DraftTasksPage() {
-  const params = useParams();
-  const projectId = params.projectid as string;
+  const projectId = CARDANO_XP.projectId;
   const { isAuthenticated } = useAndamioAuth();
 
   // React Query hooks
@@ -381,7 +380,7 @@ export default function DraftTasksPage() {
     return (
       <div className="space-y-6">
         <AndamioBackButton
-          href={STUDIO_ROUTES.projectDashboard(projectId)}
+          href={STUDIO_ROUTES.projectDashboard}
           label="Back to Project"
         />
 
@@ -397,11 +396,11 @@ export default function DraftTasksPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <AndamioBackButton
-          href={STUDIO_ROUTES.projectDashboard(projectId)}
+          href={STUDIO_ROUTES.projectDashboard}
           label="Back to Project"
         />
 
-        <Link href={STUDIO_ROUTES.newTask(projectId)}>
+        <Link href={STUDIO_ROUTES.newTask}>
           <AndamioAddButton label="Create Task" />
         </Link>
       </div>
@@ -453,7 +452,7 @@ export default function DraftTasksPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <AndamioSectionHeader title="Draft Tasks" />
-            <Link href={STUDIO_ROUTES.treasury(projectId)}>
+            <Link href={ADMIN_ROUTES.project}>
               <AndamioButton variant="default" size="sm">
                 <OnChainIcon className="h-4 w-4 mr-2" />
                 Publish Tasks
@@ -496,7 +495,7 @@ export default function DraftTasksPage() {
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right">
                         <AndamioRowActions
-                          editHref={STUDIO_ROUTES.editTask(projectId, taskIndex)}
+                          editHref={STUDIO_ROUTES.editTask(taskIndex)}
                           onDelete={() => handleDeleteTask(task)}
                           itemName="task"
                           deleteDescription={`Are you sure you want to delete "${task.title || "Untitled Task"}"? This action cannot be undone.`}
@@ -518,7 +517,7 @@ export default function DraftTasksPage() {
           <div className="flex items-center justify-between">
             <AndamioSectionHeader title="Live Tasks" />
             {lifecycleCounts.pendingReview > 0 && (
-              <Link href={STUDIO_ROUTES.commitments(projectId)}>
+              <Link href={STUDIO_ROUTES.commitments}>
                 <AndamioButton variant="outline" size="sm">
                   <AlertIcon className="h-4 w-4 mr-2" />
                   Review Submissions ({lifecycleCounts.pendingReview})
@@ -727,7 +726,7 @@ export default function DraftTasksPage() {
           title="No tasks yet"
           description="Create your first task to get started"
           action={
-            <Link href={STUDIO_ROUTES.newTask(projectId)}>
+            <Link href={STUDIO_ROUTES.newTask}>
               <AndamioAddButton label="Create Task" />
             </Link>
           }

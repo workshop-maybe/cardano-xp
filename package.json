@@ -24,7 +24,8 @@
     "test:e2e:mobile": "playwright test --config=e2e/playwright.config.ts --project=mobile",
     "test:e2e:a11y": "playwright test --config=e2e/playwright.config.ts --project=accessibility",
     "test:e2e:report": "playwright show-report e2e/reports/html",
-    "test:e2e:pr": "playwright test --config=e2e/playwright.config.ts --project=chromium e2e/tests/pr/"
+    "test:e2e:pr": "playwright test --config=e2e/playwright.config.ts --project=chromium e2e/tests/pr/",
+    "mint:xp": "tsx scripts/mint-xp-tokens/mint-xp-mesh.ts"
   },
   "dependencies": {
     "@andamio/core": "^0.3.0",

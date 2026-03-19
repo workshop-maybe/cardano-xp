@@ -25,6 +25,6 @@ export const CARDANO_XP = {
   fixedAdaPerTask: 2_500_000,
   /** Project wallet — public address for transparency and donations */
   projectWallet: {
-    address: "addr_test1qprwjy7umw6fgdr7rtlmllnn2jn4m9yft7pz8n9zrlavwqwk6nn4dezcpy2dzpj2tkz0hts2wvyna0aexm7tadhst2usmrr52f",
+    address: "addr_test1qzwnfx02qcss3uhktdk274nczndtp6ckdr45ukqhf0j2fjpqhthudm3knhnchrt8q2mcr5sex4gjwwhy99cs4d25q06q7xevf8",
   },
 } as const;

@@ -54,7 +54,7 @@ export function TreasuryBalanceCard({
               variant="small"
               className="font-mono break-all"
             >
-              {treasuryAddress.slice(0, 20)}...{treasuryAddress.slice(-12)}
+              {treasuryAddress}
             </AndamioText>
           </div>
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { STUDIO_ROUTES } from "~/config/routes";
 import { useManagerCommitments, useProject, type ManagerCommitment } from "~/hooks/api";
@@ -129,8 +129,7 @@ const getManagerStatusHint = (status: string | undefined | null): string | null 
  * Supports single assessment per submission (accept/refuse/deny).
  */
 export default function ProjectCommitmentsPage() {
-  const params = useParams();
-  const projectId = params.projectid as string;
+  const projectId = CARDANO_XP.projectId;
   const { isAuthenticated, user } = useAndamioAuth();
 
   // Data hooks
@@ -296,7 +295,7 @@ export default function ProjectCommitmentsPage() {
   if (!isAuthenticated || !user?.accessTokenAlias) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
+        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
         <AndamioErrorAlert
           title="Authentication Required"
           error="Please connect your wallet to access project commitments."
@@ -308,7 +307,7 @@ export default function ProjectCommitmentsPage() {
   if (projectError || !project) {
     return (
       <div className="space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
+        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
         <AndamioErrorAlert error={projectError?.message ?? "Project not found"} />
       </div>
     );
@@ -444,7 +443,7 @@ export default function ProjectCommitmentsPage() {
             {/* Back button at bottom */}
             <div className="border-t px-4 py-3">
               <AndamioBackButton
-                href={STUDIO_ROUTES.projectDashboard(projectId)}
+                href={STUDIO_ROUTES.projectDashboard}
                 label="Back to Project"
               />
             </div>

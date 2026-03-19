@@ -201,7 +201,7 @@ export function StudioModuleCard({
   }
 
   // All modules link to the edit wizard — the status badge communicates the next step
-  const cardHref = STUDIO_ROUTES.moduleWizard(courseId, moduleCode);
+  const cardHref = STUDIO_ROUTES.moduleWizard(moduleCode);
 
   return (
     <Link

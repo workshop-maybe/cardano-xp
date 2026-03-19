@@ -113,23 +113,16 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
   if (segments[0] === "studio") {
     if (segments[1] === "course") {
       if (segments.length === 2) {
-        // /studio/course - redirects to /studio
-        breadcrumbs.push({ label: "Studio" });
-      } else if (segments.length === 3) {
-        // /studio/course/[coursenft]
-        breadcrumbs.push({ label: "Studio", href: STUDIO_ROUTES.hub });
+        // /studio/course — single course editor
         breadcrumbs.push({ label: "Course" });
-      } else if (segments.length >= 4) {
-        // /studio/course/[coursenft]/[something] or deeper
-        breadcrumbs.push({ label: "Studio", href: STUDIO_ROUTES.hub });
-        breadcrumbs.push({
-          label: "Course",
-          href: STUDIO_ROUTES.courseEditor(segments[2]!),
-        });
-        // Determine label based on the route segment
-        const subRoute = segments[3];
+      } else if (segments.length === 3) {
+        // /studio/course/teacher, /studio/course/manage-learners, or /studio/course/[modulecode]
+        const subRoute = segments[2];
+        breadcrumbs.push({ label: "Course", href: STUDIO_ROUTES.courseEditor });
         if (subRoute === "teacher") {
           breadcrumbs.push({ label: "Teacher" });
+        } else if (subRoute === "manage-learners") {
+          breadcrumbs.push({ label: "Learners" });
         } else if (subRoute === "new") {
           breadcrumbs.push({ label: "New Credential" });
         } else {
@@ -138,11 +131,18 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
       }
     } else if (segments[1] === "project") {
       if (segments.length === 2) {
-        // /studio/project - redirects to /studio
-        breadcrumbs.push({ label: "Studio" });
-      } else {
-        breadcrumbs.push({ label: "Studio", href: STUDIO_ROUTES.hub });
+        // /studio/project — single project dashboard
         breadcrumbs.push({ label: "Project" });
+      } else {
+        breadcrumbs.push({ label: "Project", href: STUDIO_ROUTES.projectDashboard });
+        const subRoute = segments[2];
+        if (subRoute === "draft-tasks") {
+          breadcrumbs.push({ label: "Tasks" });
+        } else if (subRoute === "commitments") {
+          breadcrumbs.push({ label: "Commitments" });
+        } else if (subRoute === "manage-contributors") {
+          breadcrumbs.push({ label: "Contributors" });
+        }
       }
     } else if (segments.length === 1) {
       // /studio root

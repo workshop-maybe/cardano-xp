@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { STUDIO_ROUTES } from "~/config/routes";
@@ -25,11 +26,10 @@ import {
   useUpdateTask,
 } from "~/hooks/api/project/use-project-manager";
 import { TaskForm, type TaskFormValues } from "~/components/studio";
-import { CARDANO_XP } from "~/config/cardano-xp";
 
 export default function EditTaskPage() {
   const params = useParams();
-  const projectId = params.projectid as string;
+  const projectId = CARDANO_XP.projectId;
   const taskIndex = parseInt(params.taskindex as string);
   const { isAuthenticated } = useAndamioAuth();
 
@@ -54,7 +54,7 @@ export default function EditTaskPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const { isSuccess: saveSuccess, showSuccess } = useSuccessNotification();
 
-  const backHref = STUDIO_ROUTES.draftTasks(projectId);
+  const backHref = STUDIO_ROUTES.draftTasks;
 
   const handleSave = async (values: TaskFormValues) => {
     if (!isAuthenticated || !contributorStateId || !taskData) return;

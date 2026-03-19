@@ -129,7 +129,7 @@ export function RequireCourseAccess({
         <div className="flex gap-3">
           <AndamioButton
             variant="outline"
-            onClick={() => router.push(STUDIO_ROUTES.courses)}
+            onClick={() => router.push(STUDIO_ROUTES.courseEditor)}
           >
             <BackIcon className="h-4 w-4 mr-2" />
             Back to Course Studio

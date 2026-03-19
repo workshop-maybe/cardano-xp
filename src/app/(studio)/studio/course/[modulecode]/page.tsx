@@ -2,6 +2,7 @@
 
 import React, { useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useStudioHeader } from "~/components/layout/studio-header";
@@ -86,15 +87,15 @@ function ModuleWizardContent({
       const courseTitle = course?.title ?? "Course";
       if (isNewModule) {
         setBreadcrumbs([
-          { label: "Course Studio", href: STUDIO_ROUTES.courses },
-          { label: courseTitle, href: STUDIO_ROUTES.courseEditor(courseId) },
+          { label: "Course Studio", href: STUDIO_ROUTES.courseEditor },
+          { label: courseTitle, href: STUDIO_ROUTES.courseEditor },
           { label: "New Module" },
         ]);
         setTitle("New Module");
       } else {
         setBreadcrumbs([
-          { label: "Course Studio", href: STUDIO_ROUTES.courses },
-          { label: courseTitle, href: STUDIO_ROUTES.courseEditor(courseId) },
+          { label: "Course Studio", href: STUDIO_ROUTES.courseEditor },
+          { label: courseTitle, href: STUDIO_ROUTES.courseEditor },
           { label: courseModule?.title ?? moduleCode },
         ]);
         setTitle(courseModule?.title ?? "Module");
@@ -227,7 +228,7 @@ function ModuleWizardContent({
   const onModuleCreated = useCallback(
     async (newModuleCode: string) => {
       setCreatedModuleCode(newModuleCode);
-      const newUrl = `${STUDIO_ROUTES.moduleWizard(courseId, newModuleCode)}?step=slts`;
+      const newUrl = `${STUDIO_ROUTES.moduleWizard(newModuleCode)}?step=slts`;
       window.history.replaceState(null, "", newUrl);
       await refetchData(newModuleCode);
       void goToStep("slts");
@@ -489,7 +490,7 @@ function ModuleWizardContent({
  */
 export default function StudioModuleEditPage() {
   const params = useParams();
-  const courseId = params.coursenft as string;
+  const courseId = CARDANO_XP.courseId;
   const moduleCode = params.modulecode as string;
   const isNewModule = moduleCode === "new";
 

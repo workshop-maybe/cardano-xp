@@ -78,9 +78,9 @@ export function CourseBreadcrumb({
   lesson,
   currentPage = "course",
 }: CourseBreadcrumbProps) {
-  const basePath = mode === "studio" ? STUDIO_ROUTES.courses : PUBLIC_ROUTES.courses;
+  const basePath = mode === "studio" ? STUDIO_ROUTES.courseEditor : PUBLIC_ROUTES.courses;
   const coursesLabel = mode === "studio" ? "Course Studio" : "Course Catalog";
-  const coursesPath = mode === "studio" ? STUDIO_ROUTES.courses : PUBLIC_ROUTES.courses;
+  const coursesPath = mode === "studio" ? STUDIO_ROUTES.courseEditor : PUBLIC_ROUTES.courses;
 
   return (
     <AndamioBreadcrumb className="mb-4">

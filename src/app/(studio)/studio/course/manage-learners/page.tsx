@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { useCourse } from "~/hooks/api/course/use-course";
 import { useTeacherAssignmentCommitments } from "~/hooks/api/course/use-course-teacher";
 import {
@@ -41,8 +41,7 @@ import { RequireCourseAccess } from "~/components/auth/require-course-access";
  * and teachers can view learner data.
  */
 export default function ManageLearnersPage() {
-  const params = useParams();
-  const courseId = params.coursenft as string;
+  const courseId = CARDANO_XP.courseId;
 
   return (
     <RequireCourseAccess
@@ -90,7 +89,7 @@ function ManageLearnersContent({ courseId }: { courseId: string }) {
   if (courseError || !course) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.courseEditor(courseId)} label="Back to Course" />
+        <AndamioBackButton href={STUDIO_ROUTES.courseEditor} label="Back to Course" />
         <AndamioPageHeader title="Learners" />
         <AndamioErrorAlert error={courseError?.message ?? "Course not found"} />
       </div>
@@ -101,7 +100,7 @@ function ManageLearnersContent({ courseId }: { courseId: string }) {
     <AndamioScrollArea className="h-full">
     <div className="min-h-full">
     <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-      <AndamioBackButton href={STUDIO_ROUTES.courseEditor(courseId)} label="Back to Course" />
+      <AndamioBackButton href={STUDIO_ROUTES.courseEditor} label="Back to Course" />
 
       <AndamioPageHeader
         title="Learners"

@@ -46,36 +46,34 @@ export const AUTH_ROUTES = {
 } as const;
 
 /**
+ * Admin routes - require authentication + manager role
+ */
+export const ADMIN_ROUTES = {
+  /** Project admin — manage tasks, treasury, XP distribution */
+  project: "/admin/project",
+} as const;
+
+/**
  * Studio routes - require authentication + ownership/role
+ * Single-course, single-project app — no dynamic IDs in URLs.
  */
 export const STUDIO_ROUTES = {
-  /** Studio hub */
+  /** Studio hub — redirects to courseEditor */
   hub: "/studio",
 
   /** Course studio */
-  courses: "/studio/course",
-  courseEditor: (courseId: string) => `/studio/course/${courseId}`,
-  moduleWizard: (courseId: string, moduleCode: string) =>
-    `/studio/course/${courseId}/${moduleCode}`,
-  teacherDashboard: (courseId: string) =>
-    `/studio/course/${courseId}/teacher`,
-  manageLearners: (courseId: string) =>
-    `/studio/course/${courseId}/manage-learners`,
+  courseEditor: "/studio/course",
+  moduleWizard: (moduleCode: string) => `/studio/course/${moduleCode}`,
+  teacherDashboard: "/studio/course/teacher",
+  manageLearners: "/studio/course/manage-learners",
 
   /** Project studio */
-  projects: "/studio/project",
-  projectDashboard: (projectId: string) => `/studio/project/${projectId}`,
-  projectManager: (projectId: string) => `/studio/project/${projectId}/manager`,
-  commitments: (projectId: string) =>
-    `/studio/project/${projectId}/commitments`,
-  draftTasks: (projectId: string) => `/studio/project/${projectId}/draft-tasks`,
-  newTask: (projectId: string) => `/studio/project/${projectId}/draft-tasks/new`,
-  editTask: (projectId: string, taskIndex: number) =>
-    `/studio/project/${projectId}/draft-tasks/${taskIndex}`,
-  treasury: (projectId: string) =>
-    `/studio/project/${projectId}/manage-treasury`,
-  manageContributors: (projectId: string) =>
-    `/studio/project/${projectId}/manage-contributors`,
+  projectDashboard: "/studio/project",
+  commitments: "/studio/project/commitments",
+  draftTasks: "/studio/project/draft-tasks",
+  newTask: "/studio/project/draft-tasks/new",
+  editTask: (taskIndex: number) => `/studio/project/draft-tasks/${taskIndex}`,
+  manageContributors: "/studio/project/manage-contributors",
 } as const;
 
 /**

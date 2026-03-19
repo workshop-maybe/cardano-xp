@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { STUDIO_ROUTES } from "~/config/routes";
 import {
   AndamioBadge,
   AndamioCard,
@@ -20,13 +18,11 @@ import {
   AndamioTableHeader,
   AndamioTableRow,
   AndamioTableContainer,
-  AndamioBackButton,
   AndamioErrorAlert,
   AndamioEmptyState,
   AndamioText,
   AndamioCheckbox,
   AndamioScrollArea,
-  AndamioSectionHeader,
 } from "~/components/andamio";
 import {
   AndamioTabs,
@@ -38,15 +34,6 @@ import { TaskIcon, OnChainIcon, AddIcon, DeleteIcon } from "~/components/icons";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import { TreasuryBalanceCard } from "~/components/studio/treasury-balance-card";
 import { TasksManage, TreasuryAddFunds } from "~/components/tx";
-/**
- * Get XP reward amount from task tokens
- */
-function getTaskXpReward(task: Task): number {
-  const xpToken = task.tokens?.find(
-    (t) => t.policyId === CARDANO_XP.xpToken.policyId && t.assetName === CARDANO_XP.xpToken.assetName
-  );
-  return xpToken?.quantity ?? 0;
-}
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { toast } from "sonner";
 import type { Task } from "~/hooks/api/project/use-project";
@@ -56,31 +43,26 @@ import { useQueryClient } from "@tanstack/react-query";
 
 /**
  * ListValue - Array of [asset_class, quantity] tuples
- * Format: [["lovelace", amount]] or [["policyId.tokenName", amount]]
  */
 type ListValue = Array<[string, number]>;
 
 /**
  * ProjectData - Task formatted for on-chain publishing
- *
- * IMPORTANT: This matches the Atlas API ManageTasksTxRequest schema
- * @see https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json
- *
- * @property project_content - Task content text (max 140 chars, NOT a hash!)
- * @property expiration_posix - Unix timestamp in MILLISECONDS
- * @property lovelace_amount - Reward amount in lovelace
- * @property native_assets - ListValue array of [asset_class, quantity] tuples
  */
 interface ProjectData {
-  project_content: string; // Task content text (max 140 chars)
-  expiration_posix: number; // Unix timestamp in MILLISECONDS
+  project_content: string;
+  expiration_posix: number;
   lovelace_amount: number;
-  native_assets: ListValue; // [["policyId.tokenName", qty], ...]
+  native_assets: ListValue;
 }
 
-/**
- * Decode hex string to UTF-8 text
- */
+function getTaskXpReward(task: Task): number {
+  const xpToken = task.tokens?.find(
+    (t) => t.policyId === CARDANO_XP.xpToken.policyId && t.assetName === CARDANO_XP.xpToken.assetName
+  );
+  return xpToken?.quantity ?? 0;
+}
+
 function hexToText(hex: string): string {
   try {
     const bytes = new Uint8Array(
@@ -93,33 +75,23 @@ function hexToText(hex: string): string {
 }
 
 /**
- * Manage Treasury Page
+ * Admin Project Page
  *
- * Allows managers to publish draft tasks on-chain via the TasksManage transaction.
- * Tasks must be in DRAFT status to be published.
+ * Single-project manage treasury — uses CARDANO_XP.projectId directly.
  */
-export default function ManageTreasuryPage() {
-  const params = useParams();
-  const projectId = params.projectid as string;
+export default function AdminProjectPage() {
+  const projectId = CARDANO_XP.projectId;
   const { isAuthenticated } = useAndamioAuth();
   const queryClient = useQueryClient();
 
-  // React Query hooks
   const { data: projectDetail, isLoading: isProjectLoading, error: projectError } = useProject(projectId);
   const contributorStateId = projectDetail?.contributorStateId ?? null;
   const { data: tasks = [], isLoading: isTasksLoading } = useManagerTasks(projectId);
 
-  // Track which section has an active TX to prevent unmounting the TasksManage component
-  // "add" = draft tasks section, "remove" = on-chain tasks section, null = no TX in flight
   const [txInProgress, setTxInProgress] = useState<"add" | "remove" | null>(null);
-
-  // Selected tasks for publishing
   const [selectedTaskIndices, setSelectedTaskIndices] = useState<Set<number>>(new Set());
-
-  // On-chain tasks for removal (derived from hook data)
   const [selectedOnChainTaskIds, setSelectedOnChainTaskIds] = useState<Set<string>>(new Set());
 
-  // On-chain tasks from hook data, de-duplicated by taskHash
   const onChainTasks: Task[] = useMemo(() => {
     const raw = (projectDetail?.tasks ?? []).filter(t => t.taskStatus === "ON_CHAIN");
     const seen = new Set<string>();
@@ -131,12 +103,8 @@ export default function ManageTreasuryPage() {
     });
   }, [projectDetail?.tasks]);
 
-  // Derived: on-chain task count
   const onChainTaskCount = onChainTasks.length;
 
-  // Cache invalidation for onSuccess callbacks.
-  // useManagerTasks caches under projectManagerKeys.tasks(projectId),
-  // so we must invalidate with projectId — not contributorStateId.
   const refreshData = useCallback(async () => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: projectKeys.detail(projectId) }),
@@ -147,11 +115,8 @@ export default function ManageTreasuryPage() {
   const handleToggleTask = (taskIndex: number) => {
     setSelectedTaskIndices((prev) => {
       const next = new Set(prev);
-      if (next.has(taskIndex)) {
-        next.delete(taskIndex);
-      } else {
-        next.add(taskIndex);
-      }
+      if (next.has(taskIndex)) next.delete(taskIndex);
+      else next.add(taskIndex);
       return next;
     });
   };
@@ -159,10 +124,8 @@ export default function ManageTreasuryPage() {
   const handleSelectAll = () => {
     const draftTasks = tasks.filter((t) => t.taskStatus === "DRAFT");
     if (selectedTaskIndices.size === draftTasks.length) {
-      // Deselect all
       setSelectedTaskIndices(new Set());
     } else {
-      // Select all draft tasks - filter out undefined indices
       setSelectedTaskIndices(new Set(draftTasks.map((t) => t.index).filter((idx): idx is number => idx !== undefined)));
     }
   };
@@ -170,117 +133,60 @@ export default function ManageTreasuryPage() {
   const handleToggleOnChainTask = (taskHash: string) => {
     setSelectedOnChainTaskIds((prev) => {
       const next = new Set(prev);
-      if (next.has(taskHash)) {
-        next.delete(taskHash);
-      } else {
-        next.add(taskHash);
-      }
+      if (next.has(taskHash)) next.delete(taskHash);
+      else next.add(taskHash);
       return next;
     });
   };
 
   const handleSelectAllOnChain = () => {
     if (selectedOnChainTaskIds.size === onChainTasks.length) {
-      // Deselect all
       setSelectedOnChainTaskIds(new Set());
     } else {
-      // Select all on-chain tasks
       setSelectedOnChainTaskIds(new Set(onChainTasks.map((t) => t.taskHash).filter(Boolean)));
     }
   };
 
-  // Not authenticated
   if (!isAuthenticated) {
     return (
       <ConnectWalletGate
-        title="Manage Treasury"
-        description="Connect your wallet to manage the treasury"
+        title="Project Admin"
+        description="Connect your wallet to manage the project"
       />
     );
   }
 
-  // Loading state
   if (isProjectLoading || isTasksLoading) {
     return <AndamioPageLoading variant="detail" />;
   }
 
-  // Error state
   const errorMessage = projectError instanceof Error ? projectError.message : projectError ? "Failed to load project" : null;
   if (errorMessage) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
         <AndamioErrorAlert error={errorMessage} />
       </div>
     );
   }
 
-  // Build set of on-chain task hashes to exclude from draft list
-  // (manager tasks API can lag behind project detail after publishing)
   const onChainTaskHashes = new Set(
     onChainTasks.map((t) => t.taskHash).filter(Boolean)
   );
 
-  // Filter draft tasks, excluding any that are already on-chain
   const draftTasks = tasks.filter(
     (t) => t.taskStatus === "DRAFT" && (!t.taskHash || !onChainTaskHashes.has(t.taskHash))
   );
-  const liveTasks = tasks.filter((t) => t.taskStatus === "ON_CHAIN");
 
-  // Get selected tasks (filter for valid indices)
   const selectedTasks = draftTasks.filter((t) => t.index !== undefined && selectedTaskIndices.has(t.index));
 
-  // Convert selected tasks to ProjectData format for the transaction
-  // IMPORTANT: project_content is the task description (max 140 chars), NOT a hash!
-  // expiration_posix must be in MILLISECONDS
   const tasksToAdd: ProjectData[] = selectedTasks.map((task) => {
-    // Use task title/description as project_content (truncate to 140 chars)
     const projectContent = (task.title || task.description || "Task").substring(0, 140);
 
-    // Ensure expiration_posix is in milliseconds
-    // If it's a small number (< year 2000 in ms), it might be in seconds
-    let expirationMs = parseInt(task.expirationTime ?? "0") || 0;
-    if (expirationMs < 946684800000) {
-      // If less than year 2000 in ms, assume it's in seconds
-      expirationMs = expirationMs * 1000;
-    }
-
-    // Build native_assets from task tokens (e.g., XP tokens)
-    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
-      `${t.policyId}.${t.assetName}`,
-      t.quantity,
-    ]);
-
-    const projectData: ProjectData = {
-      project_content: projectContent,
-      expiration_posix: expirationMs,
-      lovelace_amount: parseInt(task.lovelaceAmount) || 5000000,
-      native_assets: nativeAssets,
-    };
-
-    return projectData;
-  });
-
-
-  // Task labels for the publish summary (show title, fallback to index)
-  const taskCodes = selectedTasks.map((t) => t.title || `Task ${(t.index ?? 0) + 1}`);
-  const taskIndices = selectedTasks.map((t) => t.index).filter((idx): idx is number => idx !== undefined);
-
-  // Convert selected on-chain tasks to ProjectData format for removal
-  // IMPORTANT: tasks_to_remove requires full ProjectData objects, NOT just hashes!
-  const selectedOnChainTasks = onChainTasks.filter((t) => t.taskHash && selectedOnChainTaskIds.has(t.taskHash));
-  const tasksToRemove: ProjectData[] = selectedOnChainTasks.map((task) => {
-    // On-chain content from hook data - may be hex or text
-    const onChainContent = task.onChainContent ?? "";
-    const projectContent = /^[0-9a-fA-F]+$/.exec(onChainContent) ? hexToText(onChainContent) : (task.title || "Task");
-
-    // Expiration from hook data
     let expirationMs = parseInt(task.expirationTime ?? "0") || 0;
     if (expirationMs < 946684800000) {
       expirationMs = expirationMs * 1000;
     }
 
-    // Reconstruct native_assets from on-chain task tokens
     const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
       `${t.policyId}.${t.assetName}`,
       t.quantity,
@@ -294,10 +200,33 @@ export default function ManageTreasuryPage() {
     };
   });
 
-  // Deposit calculation for publishing draft tasks
+  const taskCodes = selectedTasks.map((t) => t.title || `Task ${(t.index ?? 0) + 1}`);
+  const taskIndices = selectedTasks.map((t) => t.index).filter((idx): idx is number => idx !== undefined);
+
+  const selectedOnChainTasks = onChainTasks.filter((t) => t.taskHash && selectedOnChainTaskIds.has(t.taskHash));
+  const tasksToRemove: ProjectData[] = selectedOnChainTasks.map((task) => {
+    const onChainContent = task.onChainContent ?? "";
+    const projectContent = /^[0-9a-fA-F]+$/.exec(onChainContent) ? hexToText(onChainContent) : (task.title || "Task");
+
+    let expirationMs = parseInt(task.expirationTime ?? "0") || 0;
+    if (expirationMs < 946684800000) {
+      expirationMs = expirationMs * 1000;
+    }
+
+    const nativeAssets: ListValue = (task.tokens ?? []).map((t) => [
+      `${t.policyId}.${t.assetName}`,
+      t.quantity,
+    ]);
+
+    return {
+      project_content: projectContent,
+      expiration_posix: expirationMs,
+      lovelace_amount: parseInt(task.lovelaceAmount) || 5000000,
+      native_assets: nativeAssets,
+    };
+  });
+
   const addLovelace = tasksToAdd.reduce((sum, t) => sum + t.lovelace_amount, 0);
-  const removeLovelace = tasksToRemove.reduce((sum, t) => sum + t.lovelace_amount, 0);
-  // Use API's treasury_balance (actual on-chain balance minus min-UTxO reserve)
   const treasuryBalance = projectDetail?.treasuryBalance ?? 0;
   const onChainCommitted = onChainTasks.reduce(
     (sum, t) => sum + (parseInt(t.lovelaceAmount) || 0),
@@ -306,7 +235,6 @@ export default function ManageTreasuryPage() {
   const availableFunds = treasuryBalance - onChainCommitted;
   const publishDepositAmount = Math.max(0, addLovelace - availableFunds);
 
-  // Calculate XP deposit needed (sum XP across all tasks being published)
   const addXp = tasksToAdd.reduce((sum, t) => {
     const xpAsset = t.native_assets.find(([assetClass]) =>
       typeof assetClass === "string" && assetClass.includes(CARDANO_XP.xpToken.assetName)
@@ -329,12 +257,9 @@ export default function ManageTreasuryPage() {
     <AndamioScrollArea className="h-full">
     <div className="min-h-full">
     <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-      {/* Header */}
-      <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
-
       <AndamioPageHeader
-        title="Manage Treasury"
-        description="Publish draft tasks on-chain and manage treasury settings"
+        title="Project Admin"
+        description="Manage tasks, treasury, and XP distribution"
       />
 
       {/* Stats */}
@@ -381,9 +306,7 @@ export default function ManageTreasuryPage() {
           </AndamioTabsTrigger>
         </AndamioTabsList>
 
-        {/* ============================================================= */}
-        {/* PUBLISH TAB — Add draft tasks to the treasury                  */}
-        {/* ============================================================= */}
+        {/* PUBLISH TAB */}
         <AndamioTabsContent value="publish" className="space-y-4">
           {draftTasks.length > 0 ? (
             <AndamioCard>
@@ -460,7 +383,6 @@ export default function ManageTreasuryPage() {
                   </AndamioTable>
                 </AndamioTableContainer>
 
-                {/* Publish Transaction */}
                 {(tasksToAdd.length > 0 || txInProgress === "add") && contributorStateId && (
                   <>
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-6 space-y-3">
@@ -509,9 +431,7 @@ export default function ManageTreasuryPage() {
           )}
         </AndamioTabsContent>
 
-        {/* ============================================================= */}
-        {/* REMOVE TAB — Remove on-chain tasks from the treasury           */}
-        {/* ============================================================= */}
+        {/* REMOVE TAB */}
         <AndamioTabsContent value="remove" className="space-y-4">
           {onChainTasks.length > 0 ? (
             <AndamioCard className="border-destructive/20">
@@ -589,7 +509,6 @@ export default function ManageTreasuryPage() {
                   </AndamioTable>
                 </AndamioTableContainer>
 
-                {/* Remove Transaction */}
                 {(tasksToRemove.length > 0 || txInProgress === "remove") && contributorStateId && (
                   <>
                     <div className="rounded-md border border-destructive/20 bg-destructive/5 p-3 text-xs space-y-1">

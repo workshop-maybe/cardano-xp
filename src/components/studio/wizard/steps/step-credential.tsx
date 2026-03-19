@@ -232,7 +232,7 @@ export function StepCredential({ config, direction }: StepCredentialProps) {
       // Close dialog and navigate to new module
       setShowDuplicateDialog(false);
       setDuplicateModuleCode("");
-      router.push(STUDIO_ROUTES.moduleWizard(courseId, newCode));
+      router.push(STUDIO_ROUTES.moduleWizard(newCode));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to duplicate module");
     } finally {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useParams } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import { useProject } from "~/hooks/api";
 import { STUDIO_ROUTES } from "~/config/routes";
 import { useManagerCommitments } from "~/hooks/api/project/use-project-manager";
@@ -40,8 +40,7 @@ import { RequireProjectAccess } from "~/components/auth/require-project-access";
  * and managers can view contributor data.
  */
 export default function ManageContributorsPage() {
-  const params = useParams();
-  const projectId = params.projectid as string;
+  const projectId = CARDANO_XP.projectId;
 
   return (
     <RequireProjectAccess
@@ -85,7 +84,7 @@ function ManageContributorsContent({ projectId }: { projectId: string }) {
   if (projectError || !project) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
+        <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
         <AndamioPageHeader title="Contributors" />
         <AndamioErrorAlert error={projectError?.message ?? "Project not found"} />
       </div>
@@ -98,7 +97,7 @@ function ManageContributorsContent({ projectId }: { projectId: string }) {
     <AndamioScrollArea className="h-full">
     <div className="min-h-full">
     <div className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-      <AndamioBackButton href={STUDIO_ROUTES.projectDashboard(projectId)} label="Back to Project" />
+      <AndamioBackButton href={STUDIO_ROUTES.projectDashboard} label="Back to Project" />
 
       <AndamioPageHeader
         title="Contributors"

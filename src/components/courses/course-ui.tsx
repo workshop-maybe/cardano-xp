@@ -151,7 +151,7 @@ export function CourseManageButton({
   }
 
   return (
-    <Link href={STUDIO_ROUTES.courseEditor(courseId)}>
+    <Link href={STUDIO_ROUTES.courseEditor}>
       <AndamioButton variant={variant} size={size} className={className}>
         <SettingsIcon className={`h-4 w-4 ${showLabel ? "mr-2" : ""}`} />
         {showLabel && label}

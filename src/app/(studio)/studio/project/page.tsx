@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useSuccessNotification } from "~/hooks/ui/use-success-notification";
@@ -46,7 +47,7 @@ import { useProject, projectKeys } from "~/hooks/api/project/use-project";
 import { useManagerTasks, useManagerCommitments, projectManagerKeys } from "~/hooks/api/project/use-project-manager";
 import { useUpdateProject } from "~/hooks/api/project/use-project-owner";
 import { useQueryClient } from "@tanstack/react-query";
-import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
+import { PUBLIC_ROUTES, STUDIO_ROUTES, ADMIN_ROUTES } from "~/config/routes";
 
 /**
  * Project Dashboard - Edit project details and access management areas
@@ -57,11 +58,10 @@ import { PUBLIC_ROUTES, STUDIO_ROUTES } from "~/config/routes";
  * - useUpdateProject() - Update project metadata mutation
  */
 export default function ProjectDashboardPage() {
-  const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const projectId = params.projectid as string;
+  const projectId = CARDANO_XP.projectId;
   const { isAuthenticated, user } = useAndamioAuth();
   const queryClient = useQueryClient();
 
@@ -350,7 +350,7 @@ export default function ProjectDashboardPage() {
                     )}
                   </span>
                 </div>
-                <Link href={STUDIO_ROUTES.treasury(projectId)}>
+                <Link href={ADMIN_ROUTES.project}>
                   <AndamioButton variant="outline" size="sm" className="w-full mt-1">
                     <TreasuryIcon className="h-4 w-4 mr-2" />
                     Manage Treasury
@@ -392,7 +392,7 @@ export default function ProjectDashboardPage() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 {draftTasks === 0 && liveTasks === 0 ? (
-                  <Link href={STUDIO_ROUTES.newTask(projectId)}>
+                  <Link href={STUDIO_ROUTES.newTask}>
                     <AndamioButton className="w-full sm:w-auto">
                       <TaskIcon className="h-4 w-4 mr-2" />
                       Create Your First Task
@@ -400,10 +400,10 @@ export default function ProjectDashboardPage() {
                   </Link>
                 ) : (
                   <>
-                    <Link href={STUDIO_ROUTES.newTask(projectId)}>
+                    <Link href={STUDIO_ROUTES.newTask}>
                       <AndamioAddButton label="Create Task" />
                     </Link>
-                    <Link href={STUDIO_ROUTES.draftTasks(projectId)}>
+                    <Link href={STUDIO_ROUTES.draftTasks}>
                       <AndamioButton variant="outline" className="w-full sm:w-auto">
                         <TaskIcon className="h-4 w-4 mr-2" />
                         Manage Tasks
@@ -412,7 +412,7 @@ export default function ProjectDashboardPage() {
                   </>
                 )}
                 {draftTasks > 0 && (
-                  <Link href={STUDIO_ROUTES.treasury(projectId)}>
+                  <Link href={ADMIN_ROUTES.project}>
                     <AndamioButton variant="outline" className="w-full sm:w-auto">
                       <OnChainIcon className="h-4 w-4 mr-2" />
                       Manage Treasury
@@ -461,7 +461,7 @@ export default function ProjectDashboardPage() {
                   <ContributorIcon className="h-3.5 w-3.5" />
                   Contributors
                 </AndamioLabel>
-                <Link href={STUDIO_ROUTES.manageContributors(projectId)}>
+                <Link href={STUDIO_ROUTES.manageContributors}>
                   <AndamioButton variant="outline" size="sm">
                     <ContributorIcon className="h-3.5 w-3.5 mr-1.5" />
                     View Contributors ({onChainContributorCount})
@@ -488,7 +488,7 @@ export default function ProjectDashboardPage() {
                 {pendingCommitments.map((commitment, i) => (
                   <Link
                     key={`${commitment.taskHash}-${commitment.submittedBy}-${i}`}
-                    href={STUDIO_ROUTES.commitments(projectId)}
+                    href={STUDIO_ROUTES.commitments}
                     className="block rounded-xl border p-4 bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors"
                   >
                     <div className="flex items-center justify-between">
@@ -590,7 +590,7 @@ export default function ProjectDashboardPage() {
           {/* Full Review Page Link */}
           {allCommitments.length > 0 && (
             <div className="flex justify-center pt-2">
-              <Link href={STUDIO_ROUTES.commitments(projectId)}>
+              <Link href={STUDIO_ROUTES.commitments}>
                 <AndamioButton variant="outline">
                   <AssignmentIcon className="h-4 w-4 mr-2" />
                   Open Full Review Page

@@ -68,7 +68,7 @@ export function WelcomeHero({ accessTokenAlias }: WelcomeHeroProps) {
                     <ForwardIcon className="h-4 w-4" />
                   </AndamioButton>
                 </Link>
-                <Link href={STUDIO_ROUTES.courses}>
+                <Link href={STUDIO_ROUTES.courseEditor}>
                   <AndamioButton variant="outline" size="lg">
                     Course Studio
                   </AndamioButton>

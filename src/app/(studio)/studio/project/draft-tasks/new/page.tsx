@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { CARDANO_XP } from "~/config/cardano-xp";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { STUDIO_ROUTES } from "~/config/routes";
+import { STUDIO_ROUTES, ADMIN_ROUTES } from "~/config/routes";
 import { ConnectWalletGate } from "~/components/auth/connect-wallet-gate";
 import {
   AndamioBadge,
@@ -19,12 +20,10 @@ import { toast } from "sonner";
 import { useProject } from "~/hooks/api/project/use-project";
 import { useCreateTask } from "~/hooks/api/project/use-project-manager";
 import { TaskForm, type TaskFormValues } from "~/components/studio";
-import { CARDANO_XP } from "~/config/cardano-xp";
 
 export default function NewTaskPage() {
-  const params = useParams();
   const router = useRouter();
-  const projectId = params.projectid as string;
+  const projectId = CARDANO_XP.projectId;
   const { isAuthenticated } = useAndamioAuth();
 
   const {
@@ -37,7 +36,7 @@ export default function NewTaskPage() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const backHref = STUDIO_ROUTES.draftTasks(projectId);
+  const backHref = STUDIO_ROUTES.draftTasks;
 
   const handleCreate = async (values: TaskFormValues) => {
     if (!isAuthenticated) {
@@ -110,7 +109,7 @@ export default function NewTaskPage() {
           error={projectError ?? "This project needs to be published on-chain before tasks can be created."}
         />
         {!projectError && (
-          <Link href={STUDIO_ROUTES.treasury(projectId)}>
+          <Link href={ADMIN_ROUTES.project}>
             <AndamioButton>Go to Manage Treasury</AndamioButton>
           </Link>
         )}

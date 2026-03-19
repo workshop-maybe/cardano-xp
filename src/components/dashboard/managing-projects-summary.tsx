@@ -108,7 +108,7 @@ export function ManagingProjectsSummary({ accessTokenAlias }: ManagingProjectsSu
           {managingProjects.slice(0, 3).map((project) => (
             <Link
               key={project.projectId}
-              href={STUDIO_ROUTES.projectDashboard(project.projectId)}
+              href={STUDIO_ROUTES.projectDashboard}
               className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
             >
               <div className="flex items-center gap-2 min-w-0">

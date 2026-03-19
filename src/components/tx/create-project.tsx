@@ -304,10 +304,10 @@ export function CreateProject({ onSuccess, onConfirmed }: CreateProjectProps) {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               {projectId ? (
                 <>
-                  <Link href={STUDIO_ROUTES.newTask(projectId)} className="flex-1">
+                  <Link href={STUDIO_ROUTES.newTask} className="flex-1">
                     <AndamioButton className="w-full">Create Your First Task</AndamioButton>
                   </Link>
-                  <Link href={STUDIO_ROUTES.projectDashboard(projectId)} className="flex-1">
+                  <Link href={STUDIO_ROUTES.projectDashboard} className="flex-1">
                     <AndamioButton variant="outline" className="w-full">Go to Project Dashboard</AndamioButton>
                   </Link>
                 </>

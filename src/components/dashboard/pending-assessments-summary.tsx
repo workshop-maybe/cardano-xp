@@ -170,7 +170,7 @@ export function PendingAssessmentsSummary({ accessTokenAlias }: PendingAssessmen
           {sortedAssessments.slice(0, 3).map((assessment) => (
             <Link
               key={assessment.projectId}
-              href={`${STUDIO_ROUTES.projectDashboard(assessment.projectId)}?tab=commitments`}
+              href={`${STUDIO_ROUTES.projectDashboard}?tab=commitments`}
               className="flex items-center justify-between p-2 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
             >
               <div className="flex items-center gap-2 min-w-0">

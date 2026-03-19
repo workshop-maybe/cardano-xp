@@ -114,7 +114,7 @@ export function RequireProjectAccess({
         <div className="flex gap-3">
           <AndamioButton
             variant="outline"
-            onClick={() => router.push(STUDIO_ROUTES.projects)}
+            onClick={() => router.push(STUDIO_ROUTES.projectDashboard)}
           >
             <BackIcon className="h-4 w-4 mr-2" />
             Back to Project Studio

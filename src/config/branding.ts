@@ -36,7 +36,7 @@ export const BRANDING = {
     /** Legacy icon reference */
     icon: "ModuleIcon",
     /** Favicon path */
-    favicon: "/favicon.ico",
+    favicon: "/logos/xp-token.png",
     /** OG image for social sharing */
     ogImage: "/og-image.png",
   },

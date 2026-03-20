@@ -147,7 +147,9 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         </h1>
 
         <p className="text-base sm:text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
-          Support Cardano development. Get on-chain proof you contributed.
+          Support Cardano development.
+          <br />
+          Get on-chain proof you contributed.
         </p>
 
         <p className="font-mono text-xs text-muted-foreground/60 tracking-wide">
@@ -166,7 +168,6 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         <AndamioButton
           onClick={() => router.push("/about")}
           className="w-full lg:w-auto"
-          variant="outline"
         >
           What is this?
         </AndamioButton>

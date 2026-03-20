@@ -382,6 +382,33 @@ export interface BadRequestResponse {
   status_code: number;
 }
 
+export interface BillingStatusResponse {
+  api?: SubscriptionStatus;
+  platform?: SubscriptionStatus;
+}
+
+/** Standard API response envelope for billing status */
+export interface BillingStatusResponseEnvelope {
+  data: BillingStatusResponse;
+}
+
+export interface CheckoutRequest {
+  /** @example "api" */
+  product: "api" | "platform";
+  /** @example "developer" */
+  tier: string;
+}
+
+export interface CheckoutResponse {
+  /** @example "https://checkout.stripe.com/c/pay/cs_xxx" */
+  url: string;
+}
+
+/** Standard API response envelope for checkout session */
+export interface CheckoutResponseEnvelope {
+  data: CheckoutResponse;
+}
+
 export interface ClaimCourseCredentialsTxRequest {
   /** Plain text alias. Any characters allowed. */
   alias?: string;
@@ -1310,6 +1337,8 @@ export interface MergedProjectDetail {
   submissions?: ProjectSubmissionOnChain[];
   tasks?: ProjectTaskOnChain[];
   treasury_address?: string;
+  /** Aggregated native asset balances across all fundings */
+  treasury_assets?: Asset[];
   /** Spendable lovelace (total fundings minus 5 ADA reserve) */
   treasury_balance?: number;
   treasury_fundings?: ProjectTreasuryFundingOnChain[];
@@ -1559,6 +1588,16 @@ export interface PendingTxResponse {
    * @example "user_abc123"
    */
   user_id?: string;
+}
+
+export interface PortalResponse {
+  /** @example "https://billing.stripe.com/p/session/xxx" */
+  url: string;
+}
+
+/** Standard API response envelope for portal session */
+export interface PortalResponseEnvelope {
+  data: PortalResponse;
 }
 
 export interface PostProjectContributorCommitmentDeleteJSONRequestBody {
@@ -2070,6 +2109,17 @@ export interface SubmitAssignmentCommitmentV2Request {
   pending_tx_hash?: string;
   /** SltHash The SLT hash identifying the module (on-chain identifier) */
   slt_hash?: string;
+}
+
+export interface SubscriptionStatus {
+  /** @example false */
+  cancel_at_period_end?: boolean;
+  /** @example "2026-04-18T00:00:00Z" */
+  current_period_end?: string;
+  /** @example "active" */
+  status?: string;
+  /** @example "starter" */
+  tier?: string;
 }
 
 export interface SuccessResponse {

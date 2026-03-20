@@ -856,6 +856,12 @@ export interface ErrorDetail {
 }
 
 /** Standard error response envelope */
+export interface ErrorEnvelope {
+  /** Error details with code, message, and optional debug info */
+  error: ErrorDetail;
+}
+
+/** Standard error response envelope */
 export interface ErrorResponse {
   /** Error details with code, message, and optional debug info */
   error: ErrorDetail;
@@ -1876,6 +1882,21 @@ export interface RegisterSessionResponse {
   session_id?: string;
 }
 
+export interface RegisterTokenRequest {
+  /** AssetName Hex-encoded asset name — 2-64 hex characters */
+  asset_name?: string;
+  /** AssetNameDecoded Human-readable asset name (auto-decoded from hex if omitted) */
+  asset_name_decoded?: string;
+  /** Decimals Number of decimal places */
+  decimals?: number;
+  /** Name Display name for the token */
+  name?: string;
+  /** PolicyId Cardano policy ID — exactly 56 hex characters */
+  policy_id?: string;
+  /** Ticker Token ticker symbol (e.g., ANDA) */
+  ticker?: string;
+}
+
 export interface RegisteredSltItem {
   /** 1-based index */
   slt_index?: number;
@@ -2247,6 +2268,37 @@ export interface TeacherDashboard {
   courses?: DashboardCourseSummary[];
   pending_reviews?: DashboardPendingReviewSummary[];
   total_pending_reviews?: number;
+}
+
+/** Single registered native asset token */
+export interface TokenDetailResponse {
+  data: TokenRegistryEntry;
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+/** List of registered native asset tokens */
+export interface TokenListResponse {
+  data: TokenRegistryEntry[];
+  /** Optional metadata for API responses */
+  meta?: Meta;
+}
+
+export interface TokenRegistryEntry {
+  /** @example "416e64616d696f546f6b656e" */
+  asset_name: string;
+  /** @example "AndamioToken" */
+  asset_name_decoded: string;
+  /** @example 6 */
+  decimals?: number;
+  /** @example "Andamio Token" */
+  name?: string;
+  /** @example "f4c9f9c4252d86702c2f4c2e49e6648873ca2ac01c8b5c76f2d4da5f" */
+  policy_id: string;
+  /** @example "f4c9f9c4252d86702c2f4c2e49e6648873ca2ac01c8b5c76f2d4da5f416e64616d696f546f6b656e" */
+  subject: string;
+  /** @example "ANDA" */
+  ticker?: string;
 }
 
 export interface TokenResponse {

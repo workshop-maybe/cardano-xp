@@ -28,6 +28,14 @@ export function AppFooter() {
           <span className="text-muted-foreground/70">agent</span>
           <span className="text-emerald-500/80">ready for feedback</span>
         </span>
+        <a
+          href="https://github.com/workshop-maybe/cardano-xp/tree/main/journal"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-muted-foreground/70 hover:text-foreground/90 transition-colors"
+        >
+          build journal
+        </a>
         <span className="text-muted-foreground/70">
           built on <span className="text-foreground/70">cardano</span>
         </span>

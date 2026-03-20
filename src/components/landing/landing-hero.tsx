@@ -149,6 +149,10 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         <p className="text-base sm:text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
           Support Cardano development. Get on-chain proof you contributed.
         </p>
+
+        <p className="font-mono text-xs text-muted-foreground/60 tracking-wide">
+          vibe-coded experiment &middot; built in public &middot; seeking feedback
+        </p>
       </div>
 
       {/* CTA */}

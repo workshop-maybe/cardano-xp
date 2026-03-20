@@ -194,7 +194,7 @@ export default function AndamioAccessTokenPage() {
           <div className="pt-2">
             <AndamioButton asChild variant="outline">
               <a
-                href="https://github.com/Andamio-Platform/cardano-xp/issues/new"
+                href="https://github.com/workshop-maybe/cardano-xp/issues/new"
                 target="_blank"
                 rel="noopener noreferrer"
               >

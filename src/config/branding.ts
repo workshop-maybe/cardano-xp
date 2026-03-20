@@ -48,7 +48,7 @@ export const BRANDING = {
     /** Documentation (Andamio docs — used for transaction help) */
     docs: "https://docs.andamio.io",
     /** GitHub repository */
-    github: "https://github.com/Andamio-Platform/cardano-xp",
+    github: "https://github.com/workshop-maybe/cardano-xp",
   },
 
   /** Support/contact info */

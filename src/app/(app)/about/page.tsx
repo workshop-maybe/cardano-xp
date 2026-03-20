@@ -77,6 +77,13 @@ export default function AboutPage() {
           </h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
+          <div className="border-2 border-secondary/40 bg-secondary/5 rounded-lg p-5 space-y-2">
+            <p className="font-medium text-foreground">This app</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Cardano XP itself was vibe-coded and is the first feedback target.
+              Is it clear? Is it useful? What&apos;s broken? Tell us.
+            </p>
+          </div>
           <div className="border border-border rounded-lg p-5 space-y-2">
             <p className="font-medium text-foreground">Apps</p>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -181,7 +188,7 @@ export default function AboutPage() {
           </AndamioButton>
           <AndamioButton asChild variant="outline">
             <a
-              href="https://github.com/Andamio-Platform/cardano-xp/issues/new"
+              href="https://github.com/workshop-maybe/cardano-xp/issues/new"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -264,11 +271,20 @@ export default function AboutPage() {
           <div className="flex flex-wrap gap-3 pt-2">
             <AndamioButton asChild variant="outline">
               <a
-                href="https://github.com/Andamio-Platform/cardano-xp"
+                href="https://github.com/workshop-maybe/cardano-xp"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 View Source
+              </a>
+            </AndamioButton>
+            <AndamioButton asChild variant="outline">
+              <a
+                href="https://github.com/workshop-maybe/cardano-xp/tree/main/journal"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Build Journal
               </a>
             </AndamioButton>
           </div>

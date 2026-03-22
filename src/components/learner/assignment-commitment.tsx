@@ -20,7 +20,7 @@ import { AndamioSeparator } from "~/components/andamio/andamio-separator";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { ContentDisplay } from "~/components/content-display";
 import { CredentialClaim } from "~/components/tx/credential-claim";
-import { hashNormalizedContent } from "~/lib/hashing";
+import { computeAssignmentInfoHash } from "@andamio/core/hashing";
 import type { JSONContent } from "@tiptap/core";
 import {
   AlertIcon,
@@ -182,7 +182,7 @@ export function AssignmentCommitment({
 
   const handleLockEvidence = async () => {
     if (!localEvidenceContent || !sltHash) return;
-    const hash = hashNormalizedContent(localEvidenceContent);
+    const hash = computeAssignmentInfoHash(localEvidenceContent);
 
     // Save evidence to DB at finalize time - MUST succeed before showing TX button
     // This is a new commitment, so isUpdate=false (creates new DB record)
@@ -220,7 +220,7 @@ export function AssignmentCommitment({
   // Finalize revision - save to DB first, then show TX button
   const handleLockRevision = async () => {
     if (!localEvidenceContent || !sltHash) return;
-    const hash = hashNormalizedContent(localEvidenceContent);
+    const hash = computeAssignmentInfoHash(localEvidenceContent);
 
     // Check if there's an existing DB record
     // If networkEvidence exists or source is not "chain_only", we have a DB record

@@ -12,7 +12,7 @@ import {
   LoadingIcon,
   ExternalLinkIcon,
 } from "~/components/icons";
-import { hashNormalizedContent } from "~/lib/hashing";
+import { computeAssignmentInfoHash } from "@andamio/core/hashing";
 import type { JSONContent } from "@tiptap/core";
 import type { TxStatus } from "~/hooks/tx/use-tx-watcher";
 import type { SimpleTransactionResult } from "~/hooks/tx/use-transaction";
@@ -173,7 +173,7 @@ export function EvidenceEditorSection({
         />
       </div>
       {showHash && content && (
-        <EvidenceHashDisplay label="New Hash:" hash={hashNormalizedContent(content)} />
+        <EvidenceHashDisplay label="New Hash:" hash={computeAssignmentInfoHash(content)} />
       )}
       {onLock && (
         <div className="flex justify-end pt-2">
@@ -278,7 +278,7 @@ export function UpdateEvidenceActions({
         <TransactionButton
           txState={txState}
           onClick={async () => {
-            const evidenceHash = hashNormalizedContent(localEvidenceContent);
+            const evidenceHash = computeAssignmentInfoHash(localEvidenceContent);
             await onExecuteTx(evidenceHash);
           }}
           stateText={{

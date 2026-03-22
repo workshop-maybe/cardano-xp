@@ -420,7 +420,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
           <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
             <InfoIcon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
             <AndamioText variant="small" className="text-muted-foreground">
-              Once connected, you&apos;ll be signed in automatically with your new on-chain identity.
+              Once connected, you&apos;ll be signed in automatically with your new access token.
             </AndamioText>
           </div>
         </AndamioCardContent>
@@ -476,7 +476,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
           <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
             <InfoIcon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
             <AndamioText variant="small" className="text-muted-foreground">
-              This will reconnect your wallet and sign in with your new on-chain identity.
+              This will reconnect your wallet and sign in with your new access token.
             </AndamioText>
           </div>
 
@@ -516,7 +516,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
           </div>
           <div className="flex-1">
             <AndamioCardTitle>{ui.title}</AndamioCardTitle>
-            <AndamioCardDescription>Mint your unique on-chain identity</AndamioCardDescription>
+            <AndamioCardDescription>Mint your access token to get started</AndamioCardDescription>
           </div>
         </div>
       </AndamioCardHeader>
@@ -525,7 +525,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
         <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
           <div className="flex items-center gap-2">
             <ShieldIcon className="h-4 w-4 text-primary" />
-            <AndamioText className="font-medium">On-Chain Identity</AndamioText>
+            <AndamioText className="font-medium">Your Access Token</AndamioText>
           </div>
           <AndamioText variant="small" className="text-xs">
             {ui.description[0]}

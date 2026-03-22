@@ -159,7 +159,7 @@ export function PostMintAuthPrompt({ onAuthenticated }: PostMintAuthPromptProps)
             </div>
             <AndamioCardTitle className="text-xl">Access Token Created!</AndamioCardTitle>
             <AndamioCardDescription>
-              Your on-chain identity is ready. One last step to go.
+              Your access token is ready. One last step to go.
             </AndamioCardDescription>
           </AndamioCardHeader>
 

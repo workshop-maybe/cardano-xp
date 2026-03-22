@@ -140,13 +140,12 @@ interface EvidenceEditorSectionProps {
   placeholder: string;
   content: JSONContent | null;
   onContentChange: (content: JSONContent) => void;
-  showHash?: boolean;
   onLock?: () => void;
   lockDisabled?: boolean;
 }
 
 /**
- * Evidence editor with label, description, content hash, and optional lock button.
+ * Evidence editor with label, description, and optional lock button.
  */
 export function EvidenceEditorSection({
   label,
@@ -154,7 +153,6 @@ export function EvidenceEditorSection({
   placeholder,
   content,
   onContentChange,
-  showHash = false,
   onLock,
   lockDisabled,
 }: EvidenceEditorSectionProps) {
@@ -172,14 +170,11 @@ export function EvidenceEditorSection({
           placeholder={placeholder}
         />
       </div>
-      {showHash && content && (
-        <EvidenceHashDisplay label="New Hash:" hash={computeAssignmentInfoHash(content)} />
-      )}
       {onLock && (
         <div className="flex justify-end pt-2">
           <AndamioButton onClick={onLock} disabled={lockDisabled}>
             <SuccessIcon className="h-4 w-4 mr-2" />
-            Lock My Work
+            Finalize
           </AndamioButton>
         </div>
       )}
@@ -246,15 +241,12 @@ interface UpdateEvidenceActionsProps {
   txConfirmed: boolean;
   localEvidenceContent: JSONContent | null;
   accessTokenAlias: string | null;
-  courseId: string;
-  sltHash: string;
   onExecuteTx: (evidenceHash: string) => Promise<void>;
-  onRefresh?: () => void;
   submitLabel: string;
 }
 
 /**
- * Action buttons: Refresh Status + TransactionButton for update flows.
+ * Action buttons: TransactionButton for submit/update flows.
  */
 export function UpdateEvidenceActions({
   txState,
@@ -262,18 +254,12 @@ export function UpdateEvidenceActions({
   localEvidenceContent,
   accessTokenAlias,
   onExecuteTx,
-  onRefresh,
   submitLabel,
 }: UpdateEvidenceActionsProps) {
   if (txState !== "idle" || txConfirmed) return null;
 
   return (
     <div className="flex justify-end gap-2">
-      {onRefresh && (
-        <AndamioButton variant="outline" size="sm" onClick={onRefresh}>
-          Refresh Status
-        </AndamioButton>
-      )}
       {accessTokenAlias && localEvidenceContent && (
         <TransactionButton
           txState={txState}

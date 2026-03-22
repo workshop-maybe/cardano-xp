@@ -53,7 +53,7 @@ export default function CredentialsPage() {
     return (
       <ConnectWalletGate
         title="My Credentials"
-        description="Connect your wallet to view your on-chain credentials"
+        description="Connect your wallet to view your credentials"
       />
     );
   }

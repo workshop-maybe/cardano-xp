@@ -57,7 +57,7 @@ export { Crown as InstructorIcon } from "@phosphor-icons/react";
 /** Owner - entity owner (courses, projects) */
 export { Crown as OwnerIcon } from "@phosphor-icons/react";
 
-/** Access Token - user's on-chain identity */
+/** Access Token - links alias to wallet */
 export { Key as AccessTokenIcon } from "@phosphor-icons/react";
 
 /** API Key - authentication key for programmatic access */

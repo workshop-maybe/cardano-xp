@@ -107,23 +107,22 @@ export default function LearnAssignmentPage() {
       <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back to Module" />
 
       <AndamioPageHeader
-        title={assignment.title ?? "Assignment"}
+        title={assignment.title ?? "Submit Feedback"}
         description={undefined}
       />
 
-      <div className="flex items-center gap-2">
-        <AndamioBadge variant="outline" className="font-mono text-xs">
-          {moduleCode}
-        </AndamioBadge>
-        {commitmentStatus && <CommitmentStatusBadge status={commitmentStatus} />}
-      </div>
+      {commitmentStatus && (
+        <div className="flex items-center gap-2">
+          <CommitmentStatusBadge status={commitmentStatus} />
+        </div>
+      )}
 
       {sortedSlts.length > 0 && (
         <AndamioCard>
           <AndamioCardHeader>
-            <AndamioCardTitle>Learning Targets</AndamioCardTitle>
+            <AndamioCardTitle>What to give feedback on</AndamioCardTitle>
             <AndamioCardDescription>
-              This assignment covers {sortedSlts.length} Student Learning Target{sortedSlts.length !== 1 ? 's' : ''}
+              Share your thoughts on {sortedSlts.length === 1 ? "this topic" : `these ${sortedSlts.length} topics`}
             </AndamioCardDescription>
           </AndamioCardHeader>
           <AndamioCardContent>
@@ -144,8 +143,8 @@ export default function LearnAssignmentPage() {
       {!!assignment.contentJson && (
         <AndamioCard>
           <AndamioCardHeader>
-            <AndamioCardTitle>Assignment Details</AndamioCardTitle>
-            <AndamioCardDescription>Read the full assignment below</AndamioCardDescription>
+            <AndamioCardTitle>Details</AndamioCardTitle>
+            <AndamioCardDescription>Read this before submitting your feedback</AndamioCardDescription>
           </AndamioCardHeader>
           <AndamioCardContent>
             <ContentViewer content={assignment.contentJson} />

@@ -167,7 +167,7 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
             <InfoIcon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
             <AndamioText variant="small" className="text-muted-foreground">
-              Once connected, you&apos;ll be signed in automatically with your new on-chain identity.
+              Once connected, you&apos;ll be signed in automatically with your new access token.
             </AndamioText>
           </div>
         </AndamioCardContent>
@@ -265,7 +265,7 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
             <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3">
               <InfoIcon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
               <AndamioText variant="small" className="text-muted-foreground">
-                This will reconnect your wallet and sign in with your new on-chain identity.
+                This will reconnect your wallet and sign in with your new access token.
               </AndamioText>
             </div>
           </>

@@ -85,8 +85,8 @@ export function AndamioTxSummary({
               value={`Minting Access Token with alias: ${p.alias}`}
             />
             <SummaryItem
-              label="Identity"
-              value="This token becomes your permanent on-chain identity in Andamio."
+              label="What it does"
+              value="This token links your alias to your wallet. You need it to earn XP and claim credentials."
               icon={WalletIcon}
             />
           </>

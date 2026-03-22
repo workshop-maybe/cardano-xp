@@ -53,7 +53,7 @@ export function LearnModuleCard({
   isOnChain = false,
   commitmentStatus,
 }: LearnModuleCardProps) {
-  const displayCode = moduleCode || (sltHash ? `#${sltHash.slice(0, 4)}` : String(index));
+  const displayCode = String(index);
 
   // Link to /learn routes (no course ID needed)
   const linkPath = moduleCode

@@ -130,23 +130,19 @@ export default function LearnModulePage() {
         title={courseModule.title ?? "Module"}
         description={typeof courseModule.description === "string" ? courseModule.description : undefined}
       />
-      <AndamioBadge variant="outline" className="font-mono text-xs">
-        {courseModule.moduleCode}
-      </AndamioBadge>
-
       <AndamioCard>
         <AndamioCardContent className="pt-6 space-y-4">
-          <div className="flex items-center gap-2">
-            <AndamioSectionHeader title="Student Learning Targets & Lessons" />
-            {onChainModule && (
+          <AndamioSectionHeader
+            title="What You'll Learn"
+            badge={onChainModule ? (
               <AndamioBadge variant="outline" className="text-primary border-primary">
                 <OnChainIcon className="h-3 w-3 mr-1" />
                 On-chain
               </AndamioBadge>
-            )}
-          </div>
+            ) : undefined}
+          />
           <AndamioText variant="muted">
-            The learning targets below define what you will learn in this module. Each target is paired with a lesson to guide your learning journey.
+            Each learning target has a short lesson. Read through them, then submit your feedback to earn this credential.
           </AndamioText>
           <SLTLessonTable
             data={combinedData}
@@ -232,38 +228,38 @@ function getAssignmentCTAConfig(status: string | null) {
   switch (status) {
     case "PENDING_APPROVAL":
       return {
-        heading: "Assignment Submitted",
+        heading: "Feedback Submitted",
         description:
-          "Your assignment is being reviewed. You can view your submission while you wait.",
-        buttonLabel: "View Assignment",
+          "Your feedback is being reviewed. You can view your submission while you wait.",
+        buttonLabel: "View Feedback",
       };
     case "ASSIGNMENT_ACCEPTED":
       return {
-        heading: "Assignment Accepted!",
+        heading: "Feedback Accepted!",
         description:
-          "Your assignment has been approved. Claim your credential to record your achievement on-chain.",
+          "Your feedback has been approved. Claim your credential to record it on-chain.",
         buttonLabel: "Claim Credential",
       };
     case "CREDENTIAL_CLAIMED":
       return {
         heading: "Credential Earned",
         description:
-          "You've claimed your credential for this module. Your achievement is recorded on-chain.",
-        buttonLabel: "View Assignment",
+          "You've earned this credential. Your contribution is recorded on-chain.",
+        buttonLabel: "View Feedback",
       };
     case "ASSIGNMENT_REFUSED":
       return {
         heading: "Revision Requested",
         description:
-          "Your assignment needs some revisions. Review the feedback and resubmit when ready.",
-        buttonLabel: "Revise Assignment",
+          "Your feedback needs some changes. Review the notes and resubmit when ready.",
+        buttonLabel: "Revise Feedback",
       };
     default:
       return {
-        heading: "Ready to demonstrate your learning?",
+        heading: "Ready to share your feedback?",
         description:
-          "Complete the assignment to show your understanding of this module\u2019s learning targets and earn your credential.",
-        buttonLabel: "Start Assignment",
+          "Tell us what you think about what you've learned. Accepted feedback earns you a credential.",
+        buttonLabel: "Give Feedback",
       };
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
+import { useWallet } from "@meshsdk/react";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useSuccessNotification } from "~/hooks/ui/use-success-notification";
 import { UI_TIMEOUTS } from "~/config/ui-constants";
@@ -62,6 +63,7 @@ export function AssignmentCommitment({
   sltHash,
 }: AssignmentCommitmentProps) {
   const { isAuthenticated, user } = useAndamioAuth();
+  const { wallet, connected } = useWallet();
   const queryClient = useQueryClient();
   const { isSuccess: showSuccess, message: successMessage, showSuccess: triggerSuccess } = useSuccessNotification(UI_TIMEOUTS.WORKFLOW_NOTIFICATION);
 
@@ -72,6 +74,32 @@ export function AssignmentCommitment({
   // V2 Transaction hooks
   const commitTx = useTransaction();
   const updateTx = useTransaction();
+
+  // Wallet addresses for initiator_data (required by Atlas TX builder)
+  const [initiatorData, setInitiatorData] = useState<{
+    used_addresses: string[];
+    change_address: string;
+  } | null>(null);
+
+  const fetchInitiatorData = useCallback(async () => {
+    if (!connected || !wallet) return;
+    try {
+      const changeAddress = await wallet.getChangeAddressBech32();
+      let usedAddresses: string[];
+      try {
+        usedAddresses = await wallet.getUsedAddressesBech32();
+      } catch {
+        usedAddresses = [changeAddress];
+      }
+      setInitiatorData({ used_addresses: usedAddresses, change_address: changeAddress });
+    } catch (err) {
+      console.error("Failed to fetch wallet data:", err);
+    }
+  }, [connected, wallet]);
+
+  useEffect(() => {
+    void fetchInitiatorData();
+  }, [fetchInitiatorData]);
 
   // Assignment commitment query hook
   const {
@@ -199,7 +227,7 @@ export function AssignmentCommitment({
     } catch (dbError) {
       // STOP - evidence must be saved before we allow TX
       console.error("[AssignmentCommitment] Failed to save evidence:", dbError);
-      toast.error("Failed to save your work", {
+      toast.error("Failed to save your feedback", {
         description: "Please try again. Your work must be saved before submitting.",
       });
       return; // Don't proceed - don't lock, don't show TX button
@@ -267,6 +295,7 @@ export function AssignmentCommitment({
         alias: user.accessTokenAlias,
         course_id: courseId,
         assignment_info: evidenceHashToSubmit,
+        initiator_data: initiatorData ?? undefined,
       },
       metadata: {
         slt_hash: sltHash,
@@ -288,8 +317,8 @@ export function AssignmentCommitment({
     return (
       <AndamioCard>
         <AndamioCardHeader>
-          <AndamioCardTitle>Assignment Progress</AndamioCardTitle>
-          <AndamioCardDescription>Connect your wallet to write and submit your work for this module</AndamioCardDescription>
+          <AndamioCardTitle>Your Feedback</AndamioCardTitle>
+          <AndamioCardDescription>Connect your wallet to submit feedback for this module</AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent>
           <ConnectWalletPrompt />
@@ -302,14 +331,14 @@ export function AssignmentCommitment({
     return (
       <AndamioCard>
         <AndamioCardHeader>
-          <AndamioCardTitle>Assignment Progress</AndamioCardTitle>
+          <AndamioCardTitle>Your Feedback</AndamioCardTitle>
           <AndamioCardDescription>This module is not yet available on-chain</AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent>
           <AndamioAlert>
             <AlertIcon className="h-4 w-4" />
             <AndamioAlertDescription>
-              This module is being prepared by the instructor. You will be able to submit your work once setup is complete.
+              This module is being set up. You'll be able to submit feedback once it's ready.
             </AndamioAlertDescription>
           </AndamioAlert>
         </AndamioCardContent>
@@ -321,7 +350,7 @@ export function AssignmentCommitment({
     return (
       <AndamioCard>
         <AndamioCardHeader>
-          <AndamioCardTitle>Assignment Progress</AndamioCardTitle>
+          <AndamioCardTitle>Your Feedback</AndamioCardTitle>
           <AndamioCardDescription>Loading your progress...</AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent>
@@ -338,8 +367,8 @@ export function AssignmentCommitment({
   return (
     <AndamioCard>
       <AndamioCardHeader>
-        <AndamioCardTitle>Your Progress</AndamioCardTitle>
-        <AndamioCardDescription>Track and submit your work for &quot;{assignmentTitle}&quot;</AndamioCardDescription>
+        <AndamioCardTitle>Your Feedback</AndamioCardTitle>
+        <AndamioCardDescription>Share your thoughts on &quot;{assignmentTitle}&quot;</AndamioCardDescription>
       </AndamioCardHeader>
       <AndamioCardContent className="space-y-4">
         {displayError && (
@@ -359,7 +388,7 @@ export function AssignmentCommitment({
         {/* Top-level TX success — persists after view transition to new branch */}
         {(commitTxConfirmed || updateTxConfirmed) && (
           <TxConfirmationSuccess
-            message={commitTxConfirmed ? "Assignment submitted successfully!" : "Evidence updated successfully!"}
+            message={commitTxConfirmed ? "Feedback submitted!" : "Feedback updated!"}
           />
         )}
 
@@ -375,7 +404,7 @@ export function AssignmentCommitment({
             </div>
             {commitment?.networkEvidence && (
               <div className="space-y-2">
-                <AndamioLabel>Your Approved Work</AndamioLabel>
+                <AndamioLabel>Your Accepted Feedback</AndamioLabel>
                 <ContentDisplay content={commitment.networkEvidence} variant="muted" />
                 {commitment.networkEvidenceHash && (
                   <EvidenceHashDisplay label="Evidence Hash:" hash={commitment.networkEvidenceHash} />
@@ -390,15 +419,15 @@ export function AssignmentCommitment({
             <div className="flex items-center gap-3 p-4 border rounded-lg bg-primary/10 border-primary/20">
               <SuccessIcon className="h-8 w-8 text-primary shrink-0" />
               <div>
-                <AndamioText className="font-medium">Assignment Accepted!</AndamioText>
+                <AndamioText className="font-medium">Feedback Accepted!</AndamioText>
                 <AndamioText variant="small" className="text-muted-foreground">
-                  Your teacher has approved your work. You can now claim your credential.
+                  Your feedback has been accepted. You can now claim your credential.
                 </AndamioText>
               </div>
             </div>
             {commitment.networkEvidence && (
               <div className="space-y-2">
-                <AndamioLabel>Your Approved Work</AndamioLabel>
+                <AndamioLabel>Your Accepted Feedback</AndamioLabel>
                 <ContentDisplay content={commitment.networkEvidence} variant="muted" />
               </div>
             )}
@@ -422,7 +451,7 @@ export function AssignmentCommitment({
               <div>
                 <AndamioText className="font-medium">Needs Revision</AndamioText>
                 <AndamioText variant="small" className="text-muted-foreground">
-                  Your instructor reviewed your submission and requested changes. Update your work below and resubmit.
+                  Your feedback needs some changes. Update it below and resubmit.
                 </AndamioText>
               </div>
             </div>
@@ -441,8 +470,8 @@ export function AssignmentCommitment({
               /* Step 1: Edit and Finalize */
               <EvidenceEditorSection
                 label="Revised Work"
-                description="Edit your work below. When ready, click Finalize to save and prepare for resubmission."
-                placeholder="Revise your assignment work..."
+                description="Edit your feedback below. When ready, click Finalize to prepare for resubmission."
+                placeholder="Revise your feedback..."
                 content={localEvidenceContent}
                 onContentChange={handleEvidenceContentChange}
                 onLock={handleLockRevision}
@@ -481,12 +510,10 @@ export function AssignmentCommitment({
                         txConfirmed={updateTxConfirmed}
                         localEvidenceContent={localEvidenceContent}
                         accessTokenAlias={user.accessTokenAlias}
-                        courseId={courseId}
-                        sltHash={sltHash}
                         onExecuteTx={async () => {
                           await handleUpdateTxExecute(revisionHash);
                         }}
-                        submitLabel="Resubmit Work"
+                        submitLabel="Resubmit Feedback"
                       />
                     )}
                   </div>
@@ -500,9 +527,9 @@ export function AssignmentCommitment({
           <div className="space-y-4">
             {!isLocked ? (
               <EvidenceEditorSection
-                label="Your Work"
-                description="Write your assignment work below. When you are ready, click Finalize to prepare it for submission."
-                placeholder="Write your assignment work..."
+                label="Your Feedback"
+                description="Write your feedback below. When you're ready, click Finalize to prepare it for submission."
+                placeholder="Write your feedback..."
                 content={localEvidenceContent}
                 onContentChange={handleEvidenceContentChange}
                 onLock={handleLockEvidence}
@@ -511,7 +538,7 @@ export function AssignmentCommitment({
             ) : (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <AndamioLabel>Finalized Work</AndamioLabel>
+                  <AndamioLabel>Ready to Submit</AndamioLabel>
                   {evidenceContent && (
                     <ContentDisplay content={evidenceContent} variant="muted" />
                   )}
@@ -528,12 +555,12 @@ export function AssignmentCommitment({
                     txStatus={commitTxStatus}
                     txConfirmed={commitTxConfirmed}
                     onRetry={() => commitTx.reset()}
-                    successMessage="Assignment submitted successfully!"
+                    successMessage="Feedback submitted!"
                   />
                   {commitTx.state === "idle" && !commitTxConfirmed && (
                     <div className="flex justify-end gap-2">
                       <AndamioButton variant="outline" onClick={handleUnlockEvidence}>
-                        Edit Work
+                        Edit Feedback
                       </AndamioButton>
                       {user?.accessTokenAlias && sltHash && evidenceHash && (
                         <UpdateEvidenceActions
@@ -541,8 +568,6 @@ export function AssignmentCommitment({
                           txConfirmed={commitTxConfirmed}
                           localEvidenceContent={evidenceContent}
                           accessTokenAlias={user.accessTokenAlias}
-                          courseId={courseId}
-                          sltHash={sltHash}
                           onExecuteTx={async (hash) => {
                             await commitTx.execute({
                               txType: "COURSE_STUDENT_ASSIGNMENT_COMMIT",
@@ -551,6 +576,7 @@ export function AssignmentCommitment({
                                 course_id: courseId,
                                 slt_hash: sltHash,
                                 assignment_info: hash,
+                                initiator_data: initiatorData ?? undefined,
                               },
                               metadata: {
                                 slt_hash: sltHash,
@@ -564,7 +590,7 @@ export function AssignmentCommitment({
                               onError: (err) => setTxError(err.message),
                             });
                           }}
-                          submitLabel="Submit Assignment"
+                          submitLabel="Submit Feedback"
                         />
                       )}
                     </div>
@@ -579,7 +605,7 @@ export function AssignmentCommitment({
           <div className="space-y-4">
             <CommitmentStatusBanner networkStatus={commitment.networkStatus} />
             <div className="space-y-2">
-              <AndamioLabel>Your Submitted Work</AndamioLabel>
+              <AndamioLabel>Your Submitted Feedback</AndamioLabel>
               {commitment.networkEvidence ? (
                 <>
                   <ContentDisplay content={commitment.networkEvidence} variant="muted" />
@@ -621,7 +647,7 @@ function getBannerConfig(networkStatus: string): BannerConfig | null {
         iconClass: "text-secondary",
         bannerClass: "bg-secondary/10 border-secondary/30",
         title: "Pending Teacher Review",
-        subtitle: "Your assignment has been submitted and is awaiting review by your teacher.",
+        subtitle: "Your feedback has been submitted and is awaiting review.",
       };
     case "CREDENTIAL_CLAIMED":
       return {
@@ -637,7 +663,7 @@ function getBannerConfig(networkStatus: string): BannerConfig | null {
         iconClass: "text-secondary",
         bannerClass: "bg-secondary/10 border-secondary/30",
         title: "In Progress",
-        subtitle: "Your assignment is in progress. Submit your work when ready.",
+        subtitle: "Your feedback is in progress. Submit when ready.",
       };
     default:
       // PENDING_TX_* states (except PENDING_TX_COMMIT which is handled in the submit flow)

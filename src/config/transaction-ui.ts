@@ -212,28 +212,28 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
   // ===========================================================================
 
   COURSE_STUDENT_ASSIGNMENT_COMMIT: {
-    buttonText: "Submit Assignment",
-    title: "Submit Assignment",
+    buttonText: "Submit Feedback",
+    title: "Submit Feedback",
     description: [
-      "Submit an assignment in this course. This creates an on-chain record of your submission.",
-      "You must select a module and provide assignment evidence.",
+      "Submit your feedback for this module. This creates an on-chain record of your contribution.",
+      "Your feedback will be reviewed before you can claim a credential.",
     ],
     footerLink: getDocsUrl("assignmentCommit"),
     footerLinkText: "Tx Documentation",
-    successInfo: "Assignment Submitted!",
+    successInfo: "Feedback Submitted!",
     requiresDBUpdate: true,
   },
 
   COURSE_STUDENT_ASSIGNMENT_UPDATE: {
-    buttonText: "Resubmit Assignment",
-    title: "Update Assignment",
+    buttonText: "Resubmit Feedback",
+    title: "Update Feedback",
     description: [
-      "Update your assignment evidence while keeping the same module commitment.",
+      "Update your feedback while keeping the same module commitment.",
       "To commit to a different module, use the commit transaction instead.",
     ],
     footerLink: getDocsUrl("assignmentUpdate"),
     footerLinkText: "Tx Documentation",
-    successInfo: "Assignment Updated!",
+    successInfo: "Feedback Updated!",
     requiresDBUpdate: true,
   },
 

@@ -24,6 +24,9 @@ export const PUBLIC_ROUTES = {
   projects: "/tasks",
   task: (taskHash: string) => `/tasks/${taskHash}`,
 
+  /** XP leaderboard */
+  leaderboard: "/xp/leaderboard",
+
   /** Utility routes */
   sitemap: "/sitemap",
   components: "/components",

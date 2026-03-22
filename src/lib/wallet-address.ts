@@ -9,8 +9,6 @@
  * (hex) + manual bech32 conversion via `@meshsdk/core`.
  */
 
-import { core } from "@meshsdk/core";
-
 interface WalletLike {
   getChangeAddressBech32?: () => Promise<string>;
   getChangeAddress?: () => Promise<string>;
@@ -39,7 +37,8 @@ export async function getWalletAddressBech32(wallet: WalletLike): Promise<string
     return rawAddress; // Already bech32
   }
 
-  // Hex → bech32 conversion via @meshsdk/core
+  // Hex → bech32 conversion via @meshsdk/core (lazy import to avoid SSR libsodium init)
+  const { core } = await import("@meshsdk/core");
   const addressObj = core.Address.fromString(rawAddress);
   if (!addressObj) {
     throw new Error(`Failed to parse wallet address: ${rawAddress.slice(0, 20)}...`);

@@ -161,7 +161,7 @@ export function useSLTs(
 
       return rawSlts.map((raw) => transformSLT(raw as Record<string, unknown>));
     },
-    staleTime: 60_000,
+
     enabled: !!courseId && !!moduleCode,
   });
 }
@@ -195,7 +195,7 @@ export function useLessons(
       // No batch endpoint exists - lessons are fetched individually or embedded in SLTs
       return [];
     },
-    staleTime: 60_000,
+
     enabled: !!courseId && !!moduleCode,
   });
 }
@@ -265,7 +265,7 @@ export function useLesson(
 
       return raw ? transformLesson(raw) : null;
     },
-    staleTime: 60_000,
+
     enabled: !!courseId && !!moduleCode && sltIndex !== undefined,
   });
 }
@@ -360,7 +360,7 @@ export function useAssignment(
 
       return raw ? transformAssignment(raw) : null;
     },
-    staleTime: 60_000,
+
     enabled: !!courseId && !!moduleCode,
   });
 }
@@ -433,7 +433,7 @@ export function useIntroduction(
 
       return raw ? transformIntroduction(raw) : null;
     },
-    staleTime: 60_000,
+
     enabled: !!courseId && !!moduleCode,
   });
 }

@@ -244,6 +244,6 @@ export function useStudentAssignmentCommitments(courseId: string | undefined) {
     queryKey: studentCommitmentsQueryKey(courseId ?? ""),
     queryFn: () => fetchStudentCommitments(courseId ?? "", authenticatedFetch),
     enabled: isAuthenticated && !!courseId,
-    staleTime: 60_000,
+
   });
 }

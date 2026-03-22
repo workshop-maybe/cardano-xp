@@ -531,7 +531,7 @@ export function useCourseModules(courseId: string | undefined) {
       return sortModulesByCode(modules);
     },
     enabled: !!courseId,
-    staleTime: 60_000,
+
   });
 }
 
@@ -601,7 +601,7 @@ export function useTeacherCourseModules(courseId: string | undefined) {
       return sortModulesByCode(modules);
     },
     enabled: !!courseId && isAuthenticated,
-    staleTime: 60_000,
+
     // Keep previous data visible during refetch to prevent UI flicker
     placeholderData: keepPreviousData,
   });

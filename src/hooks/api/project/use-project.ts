@@ -706,7 +706,7 @@ export function useProject(projectId: string | undefined) {
       return transformProjectDetail(result.data);
     },
     enabled: !!projectId,
-    staleTime: 60_000,
+    // Uses global staleTime (5 min) from query-client.ts
   });
 }
 
@@ -739,7 +739,7 @@ export function useProjectRaw(projectId: string | undefined) {
       return result.data ?? null;
     },
     enabled: !!projectId,
-    staleTime: 60_000,
+    // Uses global staleTime (5 min) from query-client.ts
   });
 }
 
@@ -806,7 +806,7 @@ export function useProjects() {
 
       return items.map(transformProjectListItem);
     },
-    staleTime: 60 * 1000,
+    // Uses global staleTime (5 min) from query-client.ts
   });
 }
 
@@ -873,7 +873,7 @@ export function useProjectTasks(projectId: string | undefined) {
       return items.map(transformMergedTask);
     },
     enabled: !!projectId,
-    staleTime: 60_000,
+    // Uses global staleTime (5 min) from query-client.ts
   });
 }
 
@@ -923,7 +923,7 @@ export function useProjectTask(projectId: string | undefined, taskHash: string |
     },
     select: (tasks) => tasks.find((t) => t.taskHash === taskHash) ?? null,
     enabled: !!projectId && !!taskHash,
-    staleTime: 60_000,
+    // Uses global staleTime (5 min) from query-client.ts
   });
 }
 

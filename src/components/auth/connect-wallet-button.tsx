@@ -33,7 +33,7 @@ import {
 } from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
-import { WEB3_SERVICES_CONFIG } from "~/config/wallet";
+import { getWeb3ServicesConfig } from "~/config/wallet";
 
 /* -------------------------------------------------------------------------- */
 /*  Mesh SDK logo SVG (kept for "Powered by" attribution)                     */
@@ -253,7 +253,7 @@ interface ConnectWalletButtonProps {
   label?: string;
   onConnected?: () => void;
   persist?: boolean;
-  /** Pass `undefined` to hide social login icons. Defaults to WEB3_SERVICES_CONFIG. */
+  /** Pass `undefined` to hide social login icons. Defaults to config from env. */
   web3Services?: EnableWeb3WalletOptions;
 }
 
@@ -272,12 +272,19 @@ export function ConnectWalletButton({
   label = "Connect Wallet",
   onConnected,
   persist = true,
-  web3Services = WEB3_SERVICES_CONFIG,
+  web3Services: web3ServicesProp,
 }: ConnectWalletButtonProps) {
   const [open, setOpen] = React.useState(false);
   const [connectingId, setConnectingId] = React.useState<string | null>(null);
   const [socialLoading, setSocialLoading] = React.useState<string | null>(null);
   const [mounted, setMounted] = React.useState(false);
+  const [web3Services, setWeb3Services] = React.useState<EnableWeb3WalletOptions | undefined>(web3ServicesProp);
+
+  // Resolve web3 services config lazily (avoids SSR libsodium init)
+  React.useEffect(() => {
+    if (web3ServicesProp !== undefined) return; // explicit prop takes precedence
+    void getWeb3ServicesConfig().then(setWeb3Services);
+  }, [web3ServicesProp]);
   const wallets = useWalletList();
   const { connect, connected, setWallet, setWeb3UserData, setPersist } = useWallet();
 

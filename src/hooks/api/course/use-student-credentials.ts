@@ -146,6 +146,6 @@ export function useStudentCredentials(options?: { enabled?: boolean }) {
       return (result.data ?? []).map(transformStudentCredential);
     },
     enabled: isAuthenticated && (options?.enabled ?? true),
-    staleTime: 60_000,
+
   });
 }

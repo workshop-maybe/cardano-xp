@@ -15,8 +15,13 @@ export const createQueryClient = () =>
         gcTime: 1000 * 60 * 30,
         // Don't refetch on window focus - rely on explicit invalidation
         refetchOnWindowFocus: false,
-        // Single retry on failure
-        retry: 1,
+        // Retry once on failure, but never on rate limits or auth errors
+        retry: (failureCount, error) => {
+          if (failureCount >= 1) return false;
+          const msg = error instanceof Error ? error.message : "";
+          if (msg.includes("429") || msg.includes("401") || msg.includes("403")) return false;
+          return true;
+        },
       },
       dehydrate: {
         serializeData: SuperJSON.serialize,

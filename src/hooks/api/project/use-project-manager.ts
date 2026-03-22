@@ -322,7 +322,7 @@ export function useManagerProjects() {
       return (result.data ?? []).map(transformManagerProject);
     },
     enabled: isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 
@@ -386,7 +386,7 @@ export function useManagerCommitments(
       return (result.data ?? []).map(transformManagerCommitment);
     },
     enabled: isAuthenticated && (options?.enabled ?? true),
-    staleTime: 60_000,
+
   });
 }
 
@@ -454,7 +454,7 @@ export function useManagerTasks(projectId: string | undefined) {
       return items.map(transformMergedTask);
     },
     enabled: !!projectId && isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 

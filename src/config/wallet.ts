@@ -1,4 +1,3 @@
-import { BlockfrostProvider } from "@meshsdk/core";
 import type { EnableWeb3WalletOptions } from "@utxos/sdk";
 import { env } from "~/env";
 
@@ -9,27 +8,34 @@ import { env } from "~/env";
  * via the extension. But MeshWallet (used by social login) is a software wallet
  * with no extension — it needs an explicit provider to fetch UTXOs and submit TX.
  *
- * Returns undefined when no Blockfrost key is configured (social wallets will
- * connect but won't be able to submit transactions).
+ * Lazily initialized to avoid importing @meshsdk/core at module scope,
+ * which triggers libsodium WASM initialization and breaks SSR.
  */
-const blockfrostProvider = env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID
-  ? new BlockfrostProvider(env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID)
-  : undefined;
+let _blockfrostProvider: import("@meshsdk/core").BlockfrostProvider | undefined;
+
+async function getBlockfrostProvider() {
+  if (!env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID) return undefined;
+  if (!_blockfrostProvider) {
+    const { BlockfrostProvider } = await import("@meshsdk/core");
+    _blockfrostProvider = new BlockfrostProvider(env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID);
+  }
+  return _blockfrostProvider;
+}
 
 /**
  * Shared Web3 Services config for social wallet login (Google, Discord, X).
  *
- * Used as the default `web3Services` prop for ConnectWalletButton.
- * Project ID and network are configured via env vars (NEXT_PUBLIC_WEB3_SDK_*).
- *
  * Returns undefined when no project ID is configured (social login will be hidden).
+ * Fetcher/submitter are set lazily via getWeb3ServicesConfig().
  */
-export const WEB3_SERVICES_CONFIG: EnableWeb3WalletOptions | undefined =
-  env.NEXT_PUBLIC_WEB3_SDK_PROJECT_ID
-    ? {
-        networkId: env.NEXT_PUBLIC_WEB3_SDK_NETWORK === "mainnet" ? 1 : 0,
-        projectId: env.NEXT_PUBLIC_WEB3_SDK_PROJECT_ID,
-        fetcher: blockfrostProvider,
-        submitter: blockfrostProvider,
-      }
-    : undefined;
+export async function getWeb3ServicesConfig(): Promise<EnableWeb3WalletOptions | undefined> {
+  if (!env.NEXT_PUBLIC_WEB3_SDK_PROJECT_ID) return undefined;
+
+  const provider = await getBlockfrostProvider();
+  return {
+    networkId: env.NEXT_PUBLIC_WEB3_SDK_NETWORK === "mainnet" ? 1 : 0,
+    projectId: env.NEXT_PUBLIC_WEB3_SDK_PROJECT_ID,
+    fetcher: provider,
+    submitter: provider,
+  };
+}

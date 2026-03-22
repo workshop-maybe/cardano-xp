@@ -336,7 +336,7 @@ export function useContributorProjects() {
       return (result.data ?? []).map(transformContributorProject);
     },
     enabled: isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 
@@ -397,7 +397,7 @@ export function useContributorCommitments(projectId?: string) {
       return (result.data ?? []).map(transformContributorCommitment);
     },
     enabled: isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 
@@ -463,7 +463,7 @@ export function useContributorCommitment(
       return transformContributorCommitment(result.data);
     },
     enabled: !!projectId && !!taskHash && isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 

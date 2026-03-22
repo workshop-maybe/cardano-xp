@@ -101,7 +101,7 @@ export function useOwnerCourses() {
       return items.map(transformCourse);
     },
     enabled: isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 

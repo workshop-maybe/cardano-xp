@@ -16,9 +16,7 @@ export default function AboutPage() {
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
           Now that anyone can build an app in a day, we have a new problem:
-          how do we know what&apos;s actually good? Not everything we build
-          needs to exist. The way we find out is by trying each other&apos;s
-          work and saying what we think.
+          how do we know what&apos;s actually good?
         </p>
       </div>
 
@@ -26,10 +24,10 @@ export default function AboutPage() {
       <section className="space-y-8">
         <div className="space-y-2">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Two problems, one solution
+            problem
           </p>
           <h2 className="font-display font-bold text-2xl text-foreground">
-            The people who build need feedback. The people who care
+            People who build need feedback. People who care
             need a way to help.
           </h2>
         </div>
@@ -42,9 +40,8 @@ export default function AboutPage() {
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Everyone can create now. Tools are faster than ever. But speed
-              without feedback is just noise. The builders who win are the ones
-              who learn what works from real people using real things. Feedback
-              is one of the most precious things we can give each other.
+              without feedback is just noise. We know that not everything we build needs
+              to exist, but what if we're not sure?
             </p>
           </div>
           <div className="bg-card p-8 space-y-3">
@@ -53,19 +50,18 @@ export default function AboutPage() {
               Cardano has passionate people with nowhere to contribute
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Five and a half years of Catalyst. Thousands of people who care
-              deeply about this ecosystem. But if you don&apos;t write code,
-              your options are: vote, post on Twitter, and hope someone
-              listens. That&apos;s not contribution. That&apos;s commentary.
+              Five years of Catalyst. Thousands of people who care
+              deeply about this ecosystem. Where are the receipts? If you don&apos;t write code,
+              your options are: trade tokens, post on Twitter, sit on
+              committees, or be an anonymous reviewer. Are you really using the blockchain you showed up to use?
             </p>
           </div>
         </div>
 
         <div className="border-l-4 border-secondary bg-card border border-border shadow-lg p-8">
           <p className="text-lg text-foreground font-display font-semibold leading-snug">
-            Cardano XP connects these two sides. Builders post tasks.
-            Contributors give feedback. XP records the exchange — on-chain,
-            permanent, verifiable.
+            Cardano XP connects builders and reviewers. Builders ask for feedback.
+            Anyone can give feedback. XP records the exchange.
           </p>
         </div>
       </section>
@@ -159,7 +155,9 @@ export default function AboutPage() {
               <p className="font-medium text-foreground">Earn XP on-chain</p>
               <p className="text-sm text-muted-foreground">
                 Your contribution is reviewed by a human. When accepted, XP
-                tokens are released to your wallet as permanent proof of work.
+                tokens are released to your wallet. You can pay XP forward to
+                others — your total earned is always recorded, even after
+                you give it away.
               </p>
             </div>
           </div>
@@ -168,9 +166,9 @@ export default function AboutPage() {
             <div>
               <p className="font-medium text-foreground">Build your record</p>
               <p className="text-sm text-muted-foreground">
-                Claim a credential. Your XP balance is snapshotted permanently.
-                Your contribution history becomes your identity — not your
-                Twitter following, not who you know.
+                Claim a credential that snapshots your earned XP permanently
+                on-chain. Credentials unlock new opportunities. New projects
+                can require them for access, roles, or higher-stakes tasks.
               </p>
             </div>
           </div>
@@ -212,9 +210,11 @@ export default function AboutPage() {
             someone who showed up yesterday.
           </p>
           <p>
-            XP changes that. Earned by doing, circulated by giving. Every
-            token on this ledger is backed by work someone actually did. Not
-            speculation. Not governance theater. Contribution.
+            XP changes that. Earned by doing, circulated by giving — you
+            can send XP to someone whose work you value, and your earned
+            total still stands. Every token on this ledger is backed by work
+            someone actually did. Not speculation. Not governance theater.
+            Contribution.
           </p>
           <p className="text-foreground font-medium">
             XP replaces &ldquo;take my word for it&rdquo; with &ldquo;check

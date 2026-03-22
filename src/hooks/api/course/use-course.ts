@@ -252,7 +252,7 @@ export function useCourse(courseId: string | undefined) {
       return transformCourseDetail(result.data);
     },
     enabled: !!courseId,
-    staleTime: 60_000,
+
   });
 }
 
@@ -323,6 +323,6 @@ export function useActiveCourses() {
       // Transform to app-level types with camelCase fields, then keep public only
       return items.map(transformCourse).filter((course) => course.isPublic);
     },
-    staleTime: 60_000,
+
   });
 }

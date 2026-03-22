@@ -170,7 +170,7 @@ export function useStudentCourses() {
       );
     },
     enabled: isAuthenticated,
-    staleTime: 60_000,
+
   });
 }
 

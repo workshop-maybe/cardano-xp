@@ -35,6 +35,7 @@ import { AndamioText } from "~/components/andamio/andamio-text";
 import { ConfirmDialog } from "~/components/ui/confirm-dialog";
 import { TaskIcon, TransactionIcon, AlertIcon, SuccessIcon, ContributorIcon, LoadingIcon } from "~/components/icons";
 import { toast } from "sonner";
+import { parseTxErrorMessage } from "~/lib/tx-error-messages";
 import { TRANSACTION_UI } from "~/config/transaction-ui";
 import type { JSONContent } from "@tiptap/core";
 
@@ -88,6 +89,12 @@ export interface TaskCommitProps {
   willClaimRewards?: boolean;
 
   /**
+   * Task publication status - used for defensive validation.
+   * If provided and not "ON_CHAIN", the component will not allow commits.
+   */
+  taskStatus?: "DRAFT" | "PENDING_TX" | "ON_CHAIN";
+
+  /**
    * Callback fired when commitment is successful
    */
   onSuccess?: () => void | Promise<void>;
@@ -133,6 +140,7 @@ export function TaskCommit({
   taskEvidence,
   isFirstCommit = false,
   willClaimRewards = false,
+  taskStatus,
   onSuccess,
 }: TaskCommitProps) {
   const { user, isAuthenticated } = useAndamioAuth();
@@ -230,7 +238,8 @@ export function TaskCommit({
   const hasAccessToken = !!user.accessTokenAlias;
   const hasEvidence = taskEvidence && Object.keys(taskEvidence).length > 0;
   const hasValidTaskHash = taskHash.length === 64;
-  const canCommit = hasAccessToken && hasEvidence && hasValidTaskHash;
+  const isTaskPublished = taskStatus === undefined || taskStatus === "ON_CHAIN";
+  const canCommit = hasAccessToken && hasEvidence && hasValidTaskHash && isTaskPublished;
 
   // Dynamic title, description, and button text based on context
   const cardTitle = isFirstCommit ? "Join & Commit" : ui.title;
@@ -335,7 +344,7 @@ export function TaskCommit({
           <TransactionStatus
             state={state}
             result={result}
-            error={error?.message ?? null}
+            error={parseTxErrorMessage(error?.message)}
             onRetry={() => reset()}
             messages={{
               success: "Transaction submitted! Waiting for confirmation...",
@@ -380,12 +389,14 @@ export function TaskCommit({
           </div>
         )}
 
-        {/* Invalid Task Hash Warning */}
-        {!hasValidTaskHash && (
+        {/* Validation Warning */}
+        {(!hasValidTaskHash || !isTaskPublished) && (
           <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3">
             <AlertIcon className="h-4 w-4 shrink-0 mt-0.5 text-destructive" />
             <AndamioText variant="small" className="text-xs text-destructive">
-              This task is not yet published on-chain. Tasks must be published before contributors can commit.
+              {!hasValidTaskHash
+                ? "Invalid task hash. Tasks must have a valid 64-character hash."
+                : "This task is not yet published on-chain. Tasks must be published before contributors can commit."}
             </AndamioText>
           </div>
         )}

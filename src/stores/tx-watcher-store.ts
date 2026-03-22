@@ -40,6 +40,7 @@ import type {
 } from "~/types/tx-stream";
 import { parseSSEChunk } from "~/lib/sse-parser";
 import { pollUntilTerminal } from "~/lib/tx-polling-fallback";
+import { useCelebrationStore } from "./celebration-store";
 
 // =============================================================================
 // Constants
@@ -47,11 +48,28 @@ import { pollUntilTerminal } from "~/lib/tx-polling-fallback";
 
 const STREAM_PROXY_BASE = "/api/gateway-stream/api/v2";
 
+/** Transaction types that trigger celebration UI on success */
+const MOMENTS_OF_COMMITMENT = [
+  "GLOBAL_GENERAL_ACCESS_TOKEN_MINT",
+  "INSTANCE_COURSE_CREATE",
+  "INSTANCE_PROJECT_CREATE",
+  "COURSE_STUDENT_CREDENTIAL_CLAIM",
+  "PROJECT_CONTRIBUTOR_CREDENTIAL_CLAIM",
+  "PROJECT_CONTRIBUTOR_TASK_COMMIT",
+] as const;
+
 /** Spinner icon for dismissible loading toasts (toast.loading doesn't support closeButton) */
 const loadingSpinner = React.createElement(LoadingIcon, { className: "size-4 animate-spin" });
 
 /** Remove completed transactions from the map after this delay */
 const CLEANUP_DELAY_MS = 60_000;
+
+/**
+ * If a TX stays in "confirmed" state (on-chain) without reaching "updated"
+ * (DB synced) for this duration, treat it as stalled. This covers the case
+ * where the SSE `complete` event is missed due to network issues.
+ */
+const CONFIRMED_TIMEOUT_MS = 30_000;
 
 /** Maximum age before a transaction entry is considered stale */
 const MAX_AGE_MS = 60 * 60 * 1000; // 1 hour (Cardano TTL max)
@@ -82,6 +100,8 @@ export interface WatchedTransaction {
   registeredAt: number;
   /** @internal AbortController for the SSE/polling connection */
   _abortController: AbortController | null;
+  /** @internal Timer ID for confirmed-state timeout */
+  _confirmedTimeout: ReturnType<typeof setTimeout> | null;
 }
 
 interface TxWatcherState {
@@ -182,11 +202,15 @@ function handleTerminal(
   const entry = transactions.get(txHash);
   if (!entry) return;
 
-  // Mark as terminal and clear abort controller
+  // Clear confirmed-state timeout
+  if (entry._confirmedTimeout) clearTimeout(entry._confirmedTimeout);
+
+  // Mark as terminal and clear connection/timer refs
   updateTxEntry(get, set, txHash, {
     status: finalStatus,
     isTerminal: true,
     _abortController: null,
+    _confirmedTimeout: null,
   });
 
   // Always dismiss the loading toast first. This is a no-op if the user
@@ -196,6 +220,17 @@ function handleTerminal(
   // until the terminal toast fires.
   toast.dismiss(txHash);
 
+  // Trigger Celebration for "Moments of Commitment"
+  if (
+    finalStatus.state === "updated" &&
+    MOMENTS_OF_COMMITMENT.includes(entry.txType as (typeof MOMENTS_OF_COMMITMENT)[number])
+  ) {
+    useCelebrationStore.getState().trigger({
+      title: entry.toastConfig.successTitle,
+      description: entry.toastConfig.successDescription,
+    });
+  }
+
   // Only fire terminal toast if no component is currently mounted and
   // handling it. When subscriberCount > 0, the component fires its own toast.
   const currentEntry = get().transactions.get(txHash);
@@ -204,6 +239,16 @@ function handleTerminal(
       toast.success(entry.toastConfig.successTitle, {
         description: entry.toastConfig.successDescription,
         duration: 5000,
+      });
+    } else if (
+      finalStatus.state === "confirmed" &&
+      finalStatus.last_error
+    ) {
+      // Stalled: confirmed on-chain but DB sync timed out
+      toast.success("Transaction Confirmed", {
+        description:
+          "Your transaction is on the blockchain. Database sync is delayed — refresh to see updated data.",
+        duration: 8000,
       });
     } else if (
       finalStatus.state === "failed" ||
@@ -324,6 +369,33 @@ function startWatching(
                     icon: loadingSpinner,
                     duration: Infinity,
                   });
+
+                  // Start confirmed-state timeout: if "updated" doesn't
+                  // arrive within 30s, treat as stalled and call handleTerminal.
+                  // Guard: only one timer per TX (SSE reconnects may replay this event)
+                  const confirmedEntry = get().transactions.get(txHash);
+                  if (confirmedEntry && !confirmedEntry._confirmedTimeout) {
+                    const timeoutId = setTimeout(() => {
+                      const { transactions: txs } = get();
+                      const tx = txs.get(txHash);
+                      if (!tx || tx.isTerminal) return;
+
+                      console.warn(
+                        `[TxWatcherStore] TX ${txHash} stuck in "confirmed" for ${CONFIRMED_TIMEOUT_MS / 1000}s — treating as stalled`
+                      );
+
+                      const stalledStatus = toTxStatus(txHash, "confirmed", {
+                        ...tx.status,
+                        last_error:
+                          "Transaction confirmed on-chain but the platform update timed out. Your data may still sync — please refresh shortly.",
+                      });
+                      handleTerminal(txHash, stalledStatus, get, set);
+                    }, CONFIRMED_TIMEOUT_MS);
+
+                    updateTxEntry(get, set, txHash, {
+                      _confirmedTimeout: timeoutId,
+                    });
+                  }
                 }
                 break;
               }
@@ -430,6 +502,7 @@ export const txWatcherStore = createStore<TxWatcherStore>()((set, get) => ({
       toastConfig,
       registeredAt: Date.now(),
       _abortController: controller,
+      _confirmedTimeout: null,
     };
 
     const next = new Map(transactions);
@@ -445,6 +518,7 @@ export const txWatcherStore = createStore<TxWatcherStore>()((set, get) => ({
     const entry = transactions.get(txHash);
     if (!entry) return;
 
+    if (entry._confirmedTimeout) clearTimeout(entry._confirmedTimeout);
     entry._abortController?.abort();
     toast.dismiss(txHash);
 
@@ -495,6 +569,7 @@ export const txWatcherStore = createStore<TxWatcherStore>()((set, get) => ({
 
     for (const [hash, entry] of next) {
       if (now - entry.registeredAt > MAX_AGE_MS) {
+        if (entry._confirmedTimeout) clearTimeout(entry._confirmedTimeout);
         entry._abortController?.abort();
         next.delete(hash);
         changed = true;
@@ -509,8 +584,9 @@ export const txWatcherStore = createStore<TxWatcherStore>()((set, get) => ({
   clearAll: () => {
     const { transactions } = get();
 
-    // Abort all active connections
+    // Abort all active connections and clear timers
     for (const entry of transactions.values()) {
+      if (entry._confirmedTimeout) clearTimeout(entry._confirmedTimeout);
       entry._abortController?.abort();
       toast.dismiss(entry.txHash);
     }

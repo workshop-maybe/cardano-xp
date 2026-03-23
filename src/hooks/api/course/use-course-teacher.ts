@@ -232,8 +232,7 @@ const TEACHER_STATUS_MAP: Record<string, string> = {
   APPROVED: "ACCEPTED",
   REJECTED: "REFUSED",
   // DB statuses that may survive before gateway healing (andamio-api#133)
-  COMMITTED: "COMMITTED",
-  AWAITING_SUBMISSION: "COMMITTED",
+  AWAITING_SUBMISSION: "AWAITING_SUBMISSION",
   LEFT: "LEFT",
 };
 

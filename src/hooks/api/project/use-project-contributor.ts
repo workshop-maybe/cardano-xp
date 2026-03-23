@@ -162,11 +162,11 @@ export interface ContributorCommitment {
 /**
  * Normalize project commitment status to uppercase display values.
  *
- * The gateway may send lowercase (OpenAPI: "committed, submitted, approved")
- * or uppercase (DB: "DRAFT, COMMITTED, SUBMITTED, ACCEPTED"). Components
+ * The gateway may send lowercase (OpenAPI: "submitted, approved")
+ * or uppercase (DB: "DRAFT, SUBMITTED, ACCEPTED"). Components
  * expect uppercase. This normalizer handles both and maps legacy values.
  *
- * DB values: DRAFT, COMMITTED, SUBMITTED, ACCEPTED, REFUSED, PENDING_TX_SUBMIT
+ * DB values: DRAFT, SUBMITTED, ACCEPTED, REFUSED, PENDING_TX_COMMIT
  * Legacy aliases: APPROVED → ACCEPTED, REJECTED/DENIED → REFUSED
  */
 const PROJECT_STATUS_MAP: Record<string, string> = {

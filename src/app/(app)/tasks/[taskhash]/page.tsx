@@ -123,7 +123,7 @@ export default function TaskDetailPage() {
 
   // isFirstCommit
   const isFirstCommit = allMyCommitments.filter(
-    (c) => c.commitmentStatus !== "PENDING_TX_SUBMIT"
+    (c) => c.commitmentStatus !== "PENDING_TX_COMMIT"
   ).length === 0;
 
   // Fallback for REFUSED state
@@ -433,7 +433,7 @@ export default function TaskDetailPage() {
                 </>
               )}
             </div>
-          ) : commitmentStatus === "PENDING_TX_SUBMIT" ? (
+          ) : commitmentStatus === "PENDING_TX_COMMIT" ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <AndamioText as="span" variant="small" className="font-medium">Status</AndamioText>
@@ -494,7 +494,7 @@ export default function TaskDetailPage() {
                 Refresh Status
               </AndamioButton>
             </div>
-          ) : commitmentStatus === "COMMITTED" || commitmentStatus === "SUBMITTED" || commitmentStatus === "REFUSED" ? (
+          ) : commitmentStatus === "SUBMITTED" || commitmentStatus === "REFUSED" ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <AndamioText as="span" variant="small" className="font-medium">Status</AndamioText>
@@ -512,12 +512,6 @@ export default function TaskDetailPage() {
                     </AndamioText>
                   </div>
                 </div>
-              )}
-
-              {commitmentStatus === "COMMITTED" && (
-                <AndamioText variant="small" className="text-muted-foreground">
-                  You&apos;ve joined this task. Your manager may review at any time — submit evidence when ready.
-                </AndamioText>
               )}
 
               {commitmentStatus === "SUBMITTED" && (

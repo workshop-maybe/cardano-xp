@@ -5,10 +5,8 @@
 
 const COMMITMENT_STATUS_LABELS: Record<string, string> = {
   AWAITING_SUBMISSION: "Awaiting Submission",
-  COMMITTED: "Committed",
   SUBMITTED: "Submitted",
   PENDING_TX_COMMIT: "Joining...",
-  PENDING_TX_SUBMIT: "Submitting...",
   PENDING_TX_ASSESS: "Under Review",
   ACCEPTED: "Accepted",
   REFUSED: "Needs Revision",

@@ -85,10 +85,9 @@ export default function TasksPage() {
     const hasClaimed = (project.credentialClaims ?? []).some((c) => c.alias === alias);
 
     const hasPending = myCommitments.some(c =>
-      c.commitmentStatus === "COMMITTED" ||
       c.commitmentStatus === "SUBMITTED" ||
       c.commitmentStatus === "REFUSED" ||
-      c.commitmentStatus === "PENDING_TX_SUBMIT"
+      c.commitmentStatus === "PENDING_TX_COMMIT"
     );
     if (hasPending) return "task_pending" as const;
 

@@ -24,7 +24,6 @@ const STATUS_ALIASES: Record<string, AssignmentStatus> = {
   CURRENT: "IN_PROGRESS",
   PENDING: "PENDING_APPROVAL",
   // Legacy (remove after migration confirmed)
-  COMMITTED: "PENDING_APPROVAL",
   SAVE_FOR_LATER: "IN_PROGRESS",
   COMMITMENT: "IN_PROGRESS",
   NETWORK_READY: "IN_PROGRESS",

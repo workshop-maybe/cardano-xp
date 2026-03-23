@@ -73,10 +73,8 @@ function getLifecycleFromStatus(status: string | undefined): TaskLifecycle {
       return "refused";
     case "DENIED":
       return "denied";
-    case "COMMITTED":
     case "AWAITING_SUBMISSION":
     case "PENDING_TX_COMMIT":
-    case "PENDING_TX_SUBMIT":
     case "PENDING_TX_ASSESS":
     case "DRAFT":
       return "in_progress";

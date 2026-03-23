@@ -86,7 +86,7 @@ export default function ProjectDashboardPage() {
 
   // Commitment categorization (mirrors course studio pattern)
   const pendingCommitments = useMemo(
-    () => allCommitments.filter((c) => c.commitmentStatus === "SUBMITTED" || c.commitmentStatus === "COMMITTED"),
+    () => allCommitments.filter((c) => c.commitmentStatus === "SUBMITTED"),
     [allCommitments]
   );
   const inProgressCommitments = useMemo(

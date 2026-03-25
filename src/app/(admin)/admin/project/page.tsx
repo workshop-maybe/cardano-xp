@@ -130,8 +130,9 @@ export default function ProjectDashboardPage() {
     return null;
   })();
 
-  // On-chain counts from hook data
-  const onChainTaskCount = projectDetail?.tasks?.filter(t => t.taskStatus === "ON_CHAIN").length ?? 0;
+  // On-chain counts — use useManagerTasks for consistency with treasury page
+  // (projectDetail.tasks doesn't reliably populate all fields)
+  const onChainTaskCount = tasks.filter(t => t.taskStatus === "ON_CHAIN").length;
   const onChainContributorCount = projectDetail?.contributors?.length ?? 0;
 
   // Cache invalidation for onSuccess callbacks

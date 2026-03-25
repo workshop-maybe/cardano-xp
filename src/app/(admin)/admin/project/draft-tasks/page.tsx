@@ -193,14 +193,14 @@ export default function DraftTasksPage() {
     return map;
   }, [allCommitments]);
 
-  // Build set of on-chain task hashes from project detail (source of truth)
-  // to exclude from draft list when manager tasks API lags behind
+  // Build set of on-chain task hashes from useManagerTasks for consistency
+  // with treasury page (projectDetail.tasks doesn't reliably populate all fields)
   const onChainTaskHashes = useMemo(() => new Set(
-    (projectDetail?.tasks ?? [])
+    (tasks ?? [])
       .filter((t) => t.taskStatus === "ON_CHAIN")
       .map((t) => t.taskHash)
       .filter(Boolean)
-  ), [projectDetail?.tasks]);
+  ), [tasks]);
 
   // Separate tasks by status, excluding drafts that are already on-chain
   const draftTasksRaw = useMemo(() => tasks.filter(

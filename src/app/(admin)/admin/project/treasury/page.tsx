@@ -94,16 +94,19 @@ export default function AdminProjectPage() {
   const [selectedTaskIndices, setSelectedTaskIndices] = useState<Set<number>>(new Set());
   const [selectedOnChainTaskIds, setSelectedOnChainTaskIds] = useState<Set<string>>(new Set());
 
+  // Source on-chain tasks from useManagerTasks instead of projectDetail.tasks
+  // because the project detail endpoint (GET /project/user/project/{id}) doesn't
+  // populate assets on embedded tasks, causing native_assets to be empty in
+  // deletion requests and XP deposit calculations to be incorrect.
   const onChainTasks: Task[] = useMemo(() => {
-    const raw = (projectDetail?.tasks ?? []).filter(t => t.taskStatus === "ON_CHAIN");
+    const raw = (tasks ?? []).filter((t) => t.taskStatus === "ON_CHAIN");
     const seen = new Set<string>();
     return raw.filter((t) => {
-      if (!t.taskHash) return true;
-      if (seen.has(t.taskHash)) return false;
+      if (!t.taskHash || seen.has(t.taskHash)) return false;
       seen.add(t.taskHash);
       return true;
     });
-  }, [projectDetail?.tasks]);
+  }, [tasks]);
 
   const onChainTaskCount = onChainTasks.length;
 

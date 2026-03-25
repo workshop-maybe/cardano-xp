@@ -222,15 +222,6 @@ export default function AdminProjectPage() {
       expirationMs = expirationMs * 1000;
     }
 
-    // Defensive check: warn if an ON_CHAIN task has no tokens — this would
-    // produce an empty native_assets array that won't match the on-chain datum.
-    if (!task.tokens || task.tokens.length === 0) {
-      console.warn(
-        `[treasury] ON_CHAIN task "${task.title}" has no tokens — native_assets will be empty. ` +
-        `This may cause a hash mismatch if the on-chain datum includes native assets.`
-      );
-    }
-
     // Build native_assets with hex-encoded asset names.
     // The API returns decoded names ("XP") but on-chain expects hex ("5850").
     const nativeAssets: ListValue = (task.tokens ?? []).map((t) => {

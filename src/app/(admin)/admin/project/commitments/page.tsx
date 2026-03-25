@@ -90,6 +90,14 @@ const getStatusVariant = (
   return "outline";
 };
 
+/**
+ * Whether a commitment is assessable by the manager.
+ * All items from useManagerCommitments come from Andamioscan's pending assessments
+ * list, so they are on-chain submitted regardless of DB status. Chain-only items
+ * (no DB record) have commitmentStatus "UNKNOWN" but are still assessable.
+ */
+const isAssessable = (c: ManagerCommitment): boolean =>
+  c.commitmentStatus === "SUBMITTED" || c.status === "unregistered";
 
 const getManagerStatusHint = (status: string | undefined | null): string | null => {
   switch (status) {
@@ -276,7 +284,7 @@ export default function ProjectCommitmentsPage() {
     (current: ManagerCommitment | null) => {
       const pending = commitments.filter(
         (c) =>
-          c.commitmentStatus === "SUBMITTED" &&
+          isAssessable(c) &&
           !(c.taskHash === current?.taskHash && c.submittedBy === current?.submittedBy)
       );
       return pending[0] ?? null;
@@ -310,9 +318,7 @@ export default function ProjectCommitmentsPage() {
     );
   }
 
-  const pendingCount = commitments.filter(
-    (c) => c.commitmentStatus === "SUBMITTED"
-  ).length;
+  const pendingCount = commitments.filter(isAssessable).length;
 
   return (
     <div className="full-bleed h-full">
@@ -635,7 +641,7 @@ export default function ProjectCommitmentsPage() {
                       Try Again
                     </AndamioButton>
                   </div>
-                ) : selectedCommitment.commitmentStatus === "SUBMITTED" ? (
+                ) : isAssessable(selectedCommitment) ? (
                   // Decision buttons
                   <div className="sticky bottom-0 bg-background border-t pt-4 pb-2 -mx-6 px-6 space-y-3">
                     {/* Irreversibility warning */}

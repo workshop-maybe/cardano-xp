@@ -45,7 +45,7 @@ export const AUTH_ROUTES = {
   credentials: "/credentials",
 
   /** Contributor workflow */
-  contributor: (projectId: string) => `/tasks/${projectId}/contributor`,
+  contributor: "/contributor",
 } as const;
 
 /**

@@ -27,7 +27,7 @@ import { PendingIcon, TokenIcon, TeacherIcon, EditIcon, SuccessIcon, Contributor
 import type { JSONContent } from "@tiptap/core";
 import { formatLovelace, formatXP } from "~/lib/cardano-utils";
 import { CARDANO_XP } from "~/config/cardano-xp";
-import { formatCommitmentStatus, formatTaskStatus } from "~/lib/format-status";
+import { formatCommitmentStatus, formatTaskStatus, getCommitmentStatusVariant } from "~/lib/format-status";
 import { TaskCommit, TaskAction, ProjectCredentialClaim } from "~/components/tx";
 import { ConnectWalletPrompt } from "~/components/auth/connect-wallet-prompt";
 import { useProjectTask, useProject, projectKeys } from "~/hooks/api/project/use-project";
@@ -52,15 +52,6 @@ function formatPosixTimestamp(timestamp: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
-
-function getCommitmentStatusVariant(
-  status: string,
-): "default" | "secondary" | "outline" | "destructive" {
-  if (status.includes("ACCEPTED") || status === "REWARDS_CLAIMED") return "default";
-  if (status.includes("DENIED") || status.includes("REFUSED")) return "destructive";
-  if (status.includes("PENDING")) return "outline";
-  return "secondary";
 }
 
 function truncateAlias(alias: string | undefined, maxLength = 12): string {

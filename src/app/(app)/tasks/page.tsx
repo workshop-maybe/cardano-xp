@@ -42,7 +42,7 @@ import { useStudentCompletionsForPrereqs } from "~/hooks/api/course/use-student-
 import { checkProjectEligibility } from "~/lib/project-eligibility";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { NextIcon, PendingIcon } from "~/components/icons";
-import { PUBLIC_ROUTES } from "~/config/routes";
+import { PUBLIC_ROUTES, AUTH_ROUTES } from "~/config/routes";
 
 /**
  * Tasks page — public view of all available tasks.
@@ -170,7 +170,7 @@ export default function TasksPage() {
           description="Pick a task, give feedback, earn XP. Your contribution history becomes your identity."
           action={
             isReturningContributor ? (
-              <Link href="/contributor">
+              <Link href={AUTH_ROUTES.contributor}>
                 <AndamioButton variant="outline">
                   <ContributorIcon className="h-4 w-4 mr-2" />
                   My Contributions
@@ -213,7 +213,7 @@ export default function TasksPage() {
               </AndamioText>
             </div>
           </div>
-          <Link href="/contributor">
+          <Link href={AUTH_ROUTES.contributor}>
             <AndamioButton size="sm" variant={contributorStatus === "task_accepted" ? "default" : "outline"}>
               {contributorStatus === "task_accepted" ? "Claim Reward" : "Contributor Dashboard"}
               <NextIcon className="h-3.5 w-3.5 ml-1.5" />

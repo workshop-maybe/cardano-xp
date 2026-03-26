@@ -42,6 +42,19 @@ export function formatCommitmentStatus(status: string): string {
 }
 
 /**
+ * Map a commitment status to a badge variant for visual styling.
+ * Extracted from tasks/[taskhash]/page.tsx for reuse across pages.
+ */
+export function getCommitmentStatusVariant(
+  status: string,
+): "default" | "secondary" | "outline" | "destructive" {
+  if (status.includes("ACCEPTED") || status === "REWARDS_CLAIMED") return "default";
+  if (status.includes("DENIED") || status.includes("REFUSED")) return "destructive";
+  if (status.includes("PENDING")) return "outline";
+  return "secondary";
+}
+
+/**
  * Convert a raw task status code to a human-readable label.
  * Falls back to title-cased version if unknown.
  */

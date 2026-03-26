@@ -170,9 +170,17 @@ export interface ContributorCommitment {
  * Legacy aliases: APPROVED → ACCEPTED, REJECTED/DENIED → REFUSED
  */
 const PROJECT_STATUS_MAP: Record<string, string> = {
+  SUBMITTED: "SUBMITTED",
   ACCEPTED: "ACCEPTED",
   REFUSED: "REFUSED",
-  // Legacy aliases
+  // On-chain status aliases (from Andamioscan via on_chain_status field).
+  // "committed" = task in TasksAccepted list = manager accepted the work.
+  // This differs from the DB status "COMMITTED" (which the API normalizes
+  // to SUBMITTED before sending). The on_chain_status fallback only fires
+  // for chain-only records where Content is null, so COMMITTED here always
+  // means the on-chain accepted state.
+  COMMITTED: "ACCEPTED",
+  // Legacy/DB aliases
   APPROVED: "ACCEPTED",
   REJECTED: "REFUSED",
   DENIED: "REFUSED",
@@ -262,8 +270,13 @@ function transformContributorCommitment(
     onChainContent: api.on_chain_content,
     onChainStatus: api.on_chain_status,
 
-    // Off-chain content (normalized to uppercase)
-    commitmentStatus: normalizeProjectCommitmentStatus(content?.commitment_status),
+    // Off-chain content, falling back to on-chain status for chain-only records.
+    // Chain-only commitments (source: "chain_only") have no DB content, so
+    // content?.commitment_status is undefined. The on_chain_status field
+    // carries the authoritative status from Andamioscan in that case.
+    commitmentStatus: normalizeProjectCommitmentStatus(
+      content?.commitment_status ?? api.on_chain_status
+    ),
     taskEvidenceHash: content?.task_evidence_hash,
     evidence: content?.evidence,
     assessedBy: content?.assessed_by,

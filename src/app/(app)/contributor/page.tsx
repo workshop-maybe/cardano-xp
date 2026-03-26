@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -37,7 +37,6 @@ import {
   TaskIcon,
   SuccessIcon,
   AlertIcon,
-  PendingIcon,
   OnChainIcon,
   RefreshIcon,
   CredentialIcon,
@@ -81,8 +80,7 @@ export default function ContributorPage() {
 
   const [editingTaskHash, setEditingTaskHash] = useState<string | null>(null);
   const [evidence, setEvidence] = useState<JSONContent | null>(null);
-  const [showClaimFlow, setShowClaimFlow] = useState(false);
-  const [isTxInFlight, setIsTxInFlight] = useState(false);
+  const [claimFlowTaskHash, setClaimFlowTaskHash] = useState<string | null>(null);
   const [justClaimed, setJustClaimed] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -120,8 +118,6 @@ export default function ContributorPage() {
     return project.credentialClaims.some((c) => c.alias === alias);
   }, [user?.accessTokenAlias, project?.credentialClaims, justClaimed]);
 
-  const contributorStateId = project?.contributorStateId ?? "0".repeat(56);
-
   // ── Callbacks ────────────────────────────────────────────────────────
 
   const refreshData = useCallback(async () => {
@@ -133,6 +129,7 @@ export default function ContributorPage() {
   }, [queryClient, projectId]);
 
   const handleRefresh = useCallback(async () => {
+    if (isRefreshing) return;
     setIsRefreshing(true);
     try {
       await refreshData();
@@ -140,19 +137,33 @@ export default function ContributorPage() {
     } finally {
       setIsRefreshing(false);
     }
-  }, [refreshData]);
+  }, [refreshData, isRefreshing]);
 
-  // Refetch on mount to catch TXs that completed while user was elsewhere
+  // Refetch on mount only if cache exists (returning user, not first visit)
   useEffect(() => {
-    void refreshData();
+    const hasCache = queryClient.getQueryData(projectContributorKeys.commitments(projectId));
+    if (hasCache) {
+      void refreshData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Clear editor state when commitment status changes
+  // Clear editor state when the *edited* commitment's status changes
+  const editedCommitmentStatus = useMemo(
+    () => editingTaskHash
+      ? commitments?.find((c) => c.taskHash === editingTaskHash)?.commitmentStatus ?? null
+      : null,
+    [commitments, editingTaskHash]
+  );
+
   useEffect(() => {
-    setEditingTaskHash(null);
-    setEvidence(null);
-  }, [commitments?.map((c) => c.commitmentStatus).join(",")]);
+    if (editingTaskHash && editedCommitmentStatus) {
+      // Status changed while editing — notify user rather than silently discarding
+      toast.info("This task's status was updated.");
+      setEditingTaskHash(null);
+      setEvidence(null);
+    }
+  }, [editedCommitmentStatus, editingTaskHash]);
 
   // ── Auth gate ────────────────────────────────────────────────────────
 
@@ -227,6 +238,10 @@ export default function ContributorPage() {
     );
   }
 
+  // ── Helpers ──────────────────────────────────────────────────────────
+
+  const contributorStateId = project?.contributorStateId;
+
   // ── Render ───────────────────────────────────────────────────────────
 
   return (
@@ -258,405 +273,292 @@ export default function ContributorPage() {
       )}
 
       {/* Commitment list */}
-      {commitmentsWithTasks.map((item) => (
-        <CommitmentCard
-          key={`${item.commitment.taskHash}-${item.commitment.commitmentStatus}`}
-          item={item}
-          projectId={projectId}
-          contributorStateId={contributorStateId}
-          projectTitle={project?.title}
-          hasClaimed={hasClaimed}
-          isTxInFlight={isTxInFlight}
-          isRefreshing={isRefreshing}
-          editingTaskHash={editingTaskHash}
-          evidence={evidence}
-          showClaimFlow={showClaimFlow}
-          onEditEvidence={(taskHash) => {
-            setEditingTaskHash(taskHash);
-            setEvidence(null);
-          }}
-          onEvidenceChange={setEvidence}
-          onCancelEdit={() => {
-            setEditingTaskHash(null);
-            setEvidence(null);
-          }}
-          onShowClaimFlow={setShowClaimFlow}
-          onTxStart={() => setIsTxInFlight(true)}
-          onTxEnd={() => setIsTxInFlight(false)}
-          onSuccess={async () => {
-            setIsTxInFlight(false);
-            await refreshData();
-          }}
-          onClaimSuccess={async () => {
-            setIsTxInFlight(false);
-            setJustClaimed(true);
-            await refreshData();
-          }}
-          onRefresh={handleRefresh}
-        />
-      ))}
-    </div>
-  );
-}
+      {commitmentsWithTasks.map((item) => {
+        const { commitment, task, xpReward } = item;
+        const status = commitment.commitmentStatus ?? "UNKNOWN";
+        const taskTitle = task?.title || "Task no longer available";
+        const isEditing = editingTaskHash === commitment.taskHash;
+        const showClaimFlow = claimFlowTaskHash === commitment.taskHash;
 
-// ── CommitmentCard ────────────────────────────────────────────────────────
-
-interface CommitmentCardProps {
-  item: CommitmentWithTask;
-  projectId: string;
-  contributorStateId: string;
-  projectTitle?: string;
-  hasClaimed: boolean;
-  isTxInFlight: boolean;
-  isRefreshing: boolean;
-  editingTaskHash: string | null;
-  evidence: JSONContent | null;
-  showClaimFlow: boolean;
-  onEditEvidence: (taskHash: string) => void;
-  onEvidenceChange: (content: JSONContent | null) => void;
-  onCancelEdit: () => void;
-  onShowClaimFlow: (show: boolean) => void;
-  onTxStart: () => void;
-  onTxEnd: () => void;
-  onSuccess: () => Promise<void>;
-  onClaimSuccess: () => Promise<void>;
-  onRefresh: () => Promise<void>;
-}
-
-function CommitmentCard({
-  item,
-  projectId,
-  contributorStateId,
-  projectTitle,
-  hasClaimed,
-  isTxInFlight,
-  isRefreshing,
-  editingTaskHash,
-  evidence,
-  showClaimFlow,
-  onEditEvidence,
-  onEvidenceChange,
-  onCancelEdit,
-  onShowClaimFlow,
-  onTxStart,
-  onTxEnd,
-  onSuccess,
-  onClaimSuccess,
-  onRefresh,
-}: CommitmentCardProps) {
-  const { commitment, task, xpReward } = item;
-  const status = commitment.commitmentStatus ?? "UNKNOWN";
-  const taskTitle = task?.title || "Task no longer available";
-  const isEditing = editingTaskHash === commitment.taskHash;
-
-  return (
-    <AndamioCard>
-      <AndamioCardHeader>
-        <div className="flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <AndamioCardTitle className="text-base">
-              {task?.taskHash ? (
-                <Link href={PUBLIC_ROUTES.task(task.taskHash)} className="hover:underline">
-                  {taskTitle}
-                </Link>
-              ) : (
-                taskTitle
-              )}
-            </AndamioCardTitle>
-            {xpReward > 0 && (
-              <AndamioCardDescription className="flex items-center gap-2 mt-1">
-                <XpBadge amount={xpReward} />
-                {task?.lovelaceAmount && (
-                  <AndamioText variant="small" className="text-muted-foreground">
-                    + {formatLovelace(task.lovelaceAmount)}
-                  </AndamioText>
-                )}
-              </AndamioCardDescription>
-            )}
-          </div>
-          <AndamioBadge variant={getCommitmentStatusVariant(status)}>
-            {formatCommitmentStatus(status)}
-          </AndamioBadge>
-        </div>
-      </AndamioCardHeader>
-
-      <AndamioCardContent className="space-y-4">
-        {/* ── PENDING_TX states ──────────────────────────────────────── */}
-        {status.startsWith("PENDING_TX") && (
-          <>
-            {commitment.pendingTxHash && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <OnChainIcon className="h-4 w-4 text-muted-foreground" />
-                  <AndamioText variant="small" className="font-medium">Pending Transaction</AndamioText>
+        return (
+          <AndamioCard key={`${commitment.taskHash}-${status}`}>
+            <AndamioCardHeader>
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <AndamioCardTitle className="text-base">
+                    {task?.taskHash ? (
+                      <Link href={PUBLIC_ROUTES.task(task.taskHash)} className="hover:underline">
+                        {taskTitle}
+                      </Link>
+                    ) : (
+                      taskTitle
+                    )}
+                  </AndamioCardTitle>
+                  {xpReward > 0 && (
+                    <AndamioCardDescription className="flex items-center gap-2 mt-1">
+                      <XpBadge amount={xpReward} />
+                      {task?.lovelaceAmount && (
+                        <AndamioText variant="small" className="text-muted-foreground">
+                          + {formatLovelace(task.lovelaceAmount)}
+                        </AndamioText>
+                      )}
+                    </AndamioCardDescription>
+                  )}
                 </div>
-                <a
-                  href={getTransactionExplorerUrl(commitment.pendingTxHash)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-xs text-primary hover:underline"
-                >
-                  {commitment.pendingTxHash.slice(0, 12)}...
-                </a>
+                <AndamioBadge variant={getCommitmentStatusVariant(status)}>
+                  {formatCommitmentStatus(status)}
+                </AndamioBadge>
               </div>
-            )}
-            <AndamioText variant="small" className="text-muted-foreground">
-              Waiting for blockchain confirmation. This usually takes a few minutes.
-            </AndamioText>
-            <AndamioButton
-              variant="outline"
-              size="sm"
-              onClick={onRefresh}
-              disabled={isRefreshing}
-            >
-              <RefreshIcon className="h-4 w-4 mr-2" />
-              {isRefreshing ? "Refreshing..." : "Refresh Status"}
-            </AndamioButton>
-          </>
-        )}
+            </AndamioCardHeader>
 
-        {/* ── SUBMITTED ─────────────────────────────────────────────── */}
-        {status === "SUBMITTED" && (
-          <>
-            <AndamioText variant="small" className="text-muted-foreground">
-              Evidence submitted. Waiting for manager review.
-            </AndamioText>
-
-            {commitment.submissionTx && (
-              <>
-                <AndamioSeparator />
-                <div className="flex items-center justify-between">
-                  <AndamioText variant="small">Submission TX</AndamioText>
-                  <a
-                    href={getTransactionExplorerUrl(commitment.submissionTx)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-xs text-primary hover:underline"
-                  >
-                    {commitment.submissionTx.slice(0, 16)}...
-                  </a>
-                </div>
-              </>
-            )}
-
-            {/* Evidence display */}
-            {commitment.evidence != null && !isEditing && (
-              <>
-                <AndamioSeparator />
-                <div>
-                  <AndamioText variant="small" className="font-medium mb-2">Your Evidence</AndamioText>
-                  <div className="min-h-[80px] border rounded-lg bg-muted/20 p-4">
-                    <ContentViewer content={commitment.evidence as JSONContent} />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Edit button / editor */}
-            {!hasClaimed && !isEditing && (
-              <AndamioButton
-                variant="outline"
-                size="sm"
-                onClick={() => onEditEvidence(commitment.taskHash)}
-                disabled={isTxInFlight}
-              >
-                <EditIcon className="h-4 w-4 mr-2" />
-                Update Evidence
-              </AndamioButton>
-            )}
-
-            {isEditing && task && (
-              <>
-                <AndamioSeparator />
-                <div className="space-y-3">
-                  <AndamioText className="font-medium">Update Your Evidence</AndamioText>
-                  <div className="min-h-[200px] border rounded-lg">
-                    <ContentEditor
-                      content={evidence ?? (commitment.evidence as JSONContent | null)}
-                      onContentChange={onEvidenceChange}
-                    />
-                  </div>
-                </div>
-                <TaskAction
-                  projectNftPolicyId={projectId}
-                  contributorStateId={contributorStateId}
-                  taskHash={commitment.taskHash}
-                  taskCode={`TASK_${task.index}`}
-                  taskTitle={task.title ?? undefined}
-                  taskEvidence={evidence ?? (commitment.evidence as JSONContent | undefined)}
-                  onSuccess={async () => {
-                    onTxStart();
-                    await onSuccess();
-                  }}
-                />
-                <AndamioButton variant="ghost" size="sm" onClick={onCancelEdit}>
-                  Cancel
-                </AndamioButton>
-              </>
-            )}
-          </>
-        )}
-
-        {/* ── REFUSED ───────────────────────────────────────────────── */}
-        {status === "REFUSED" && (
-          <>
-            <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
-              <div className="flex items-start gap-2">
-                <AlertIcon className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-                <AndamioText variant="small">
-                  Your work was not accepted. Update your evidence and resubmit.
-                </AndamioText>
-              </div>
-            </div>
-
-            {!isEditing && (
-              <AndamioButton
-                variant="outline"
-                size="sm"
-                onClick={() => onEditEvidence(commitment.taskHash)}
-                disabled={isTxInFlight}
-              >
-                <EditIcon className="h-4 w-4 mr-2" />
-                Revise Evidence
-              </AndamioButton>
-            )}
-
-            {isEditing && task && (
-              <>
-                <div className="space-y-3">
-                  <AndamioText className="font-medium">Resubmit Your Evidence</AndamioText>
-                  <div className="min-h-[200px] border rounded-lg">
-                    <ContentEditor
-                      content={evidence ?? (commitment.evidence as JSONContent | null)}
-                      onContentChange={onEvidenceChange}
-                    />
-                  </div>
-                </div>
-                <TaskAction
-                  projectNftPolicyId={projectId}
-                  contributorStateId={contributorStateId}
-                  taskHash={commitment.taskHash}
-                  taskCode={`TASK_${task.index}`}
-                  taskTitle={task.title ?? undefined}
-                  taskEvidence={evidence ?? (commitment.evidence as JSONContent | undefined)}
-                  onSuccess={async () => {
-                    onTxStart();
-                    await onSuccess();
-                  }}
-                />
-                <AndamioButton variant="ghost" size="sm" onClick={onCancelEdit}>
-                  Cancel
-                </AndamioButton>
-              </>
-            )}
-          </>
-        )}
-
-        {/* ── ACCEPTED ──────────────────────────────────────────────── */}
-        {status === "ACCEPTED" && !hasClaimed && (
-          <>
-            <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
-              <div className="flex items-start gap-3">
-                <SuccessIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <AndamioText className="font-medium text-primary">
-                    Your work was accepted!
-                  </AndamioText>
-                  <AndamioText variant="small" className="mt-1">
-                    Choose your next step below.
-                  </AndamioText>
-                </div>
-              </div>
-            </div>
-
-            {!showClaimFlow ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Link href={PUBLIC_ROUTES.projects} className="block">
-                  <div className="rounded-lg border p-4 space-y-3 hover:border-primary/50 transition-colors cursor-pointer h-full">
-                    <div className="flex items-center gap-2">
-                      <TaskIcon className="h-5 w-5 text-primary" />
-                      <AndamioText className="font-medium">Browse Tasks</AndamioText>
+            <AndamioCardContent className="space-y-4">
+              {/* ── PENDING_TX states ────────────────────────────────── */}
+              {status.startsWith("PENDING_TX") && (
+                <>
+                  {commitment.pendingTxHash && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <OnChainIcon className="h-4 w-4 text-muted-foreground" />
+                        <AndamioText variant="small" className="font-medium">Pending Transaction</AndamioText>
+                      </div>
+                      <a
+                        href={getTransactionExplorerUrl(commitment.pendingTxHash)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-xs text-primary hover:underline"
+                      >
+                        {commitment.pendingTxHash.slice(0, 12)}...
+                      </a>
                     </div>
-                    <AndamioText variant="small">
-                      Commit to a new task. Your pending reward will be claimed automatically.
-                    </AndamioText>
-                  </div>
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={() => onShowClaimFlow(true)}
-                  disabled={isTxInFlight}
-                  className="rounded-lg border border-primary/20 p-4 space-y-3 hover:border-primary/50 transition-colors cursor-pointer h-full text-left xp-card-glow"
-                >
-                  <div className="flex items-center gap-2">
-                    <CredentialIcon className="h-5 w-5 text-primary" />
-                    <AndamioText className="font-medium">Leave & Claim</AndamioText>
-                  </div>
-                  <AndamioText variant="small">
-                    Leave the project, claim rewards, and mint your credential NFT.
+                  )}
+                  <AndamioText variant="small" className="text-muted-foreground">
+                    Waiting for blockchain confirmation. This usually takes a few minutes.
                   </AndamioText>
-                </button>
-              </div>
-            ) : (
-              <>
-                <ProjectCredentialClaim
-                  projectNftPolicyId={projectId}
-                  contributorStateId={contributorStateId}
-                  projectTitle={projectTitle}
-                  pendingRewardLovelace={task?.lovelaceAmount}
-                  onSuccess={async () => {
-                    onTxStart();
-                    await onClaimSuccess();
-                  }}
-                />
-                <AndamioButton
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onShowClaimFlow(false)}
-                >
-                  Back to options
-                </AndamioButton>
-              </>
-            )}
-          </>
-        )}
-
-        {/* ── ACCEPTED + already claimed (read-only) ────────────────── */}
-        {status === "ACCEPTED" && hasClaimed && (
-          <div className="rounded-lg border bg-muted/30 p-4">
-            <div className="flex items-start gap-3">
-              <SuccessIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <div>
-                <AndamioText className="font-medium">Rewards Claimed</AndamioText>
-                <AndamioText variant="small" className="mt-1 text-muted-foreground">
-                  You&apos;ve claimed your credential and rewards for this task.
-                </AndamioText>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── Unknown / other status ────────────────────────────────── */}
-        {!["SUBMITTED", "REFUSED", "ACCEPTED", "UNKNOWN"].includes(status) &&
-          !status.startsWith("PENDING_TX") && (
-            <div className="flex items-center justify-between">
-              <AndamioText variant="small" className="text-muted-foreground">
-                Status: {formatCommitmentStatus(status)}
-              </AndamioText>
-              {commitment.submissionTx && (
-                <a
-                  href={getTransactionExplorerUrl(commitment.submissionTx)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-xs text-primary hover:underline"
-                >
-                  {commitment.submissionTx.slice(0, 12)}...
-                </a>
+                  <AndamioButton
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRefresh}
+                    disabled={isRefreshing}
+                  >
+                    <RefreshIcon className="h-4 w-4 mr-2" />
+                    {isRefreshing ? "Refreshing..." : "Refresh Status"}
+                  </AndamioButton>
+                </>
               )}
-            </div>
-          )}
-      </AndamioCardContent>
-    </AndamioCard>
+
+              {/* ── SUBMITTED / REFUSED (merged) ────────────────────── */}
+              {(status === "SUBMITTED" || status === "REFUSED") && (
+                <>
+                  {status === "REFUSED" && (
+                    <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+                      <div className="flex items-start gap-2">
+                        <AlertIcon className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                        <AndamioText variant="small">
+                          Your work was not accepted. Update your evidence and resubmit.
+                        </AndamioText>
+                      </div>
+                    </div>
+                  )}
+
+                  {status === "SUBMITTED" && (
+                    <AndamioText variant="small" className="text-muted-foreground">
+                      Evidence submitted. Waiting for manager review.
+                    </AndamioText>
+                  )}
+
+                  {commitment.submissionTx && (
+                    <>
+                      <AndamioSeparator />
+                      <div className="flex items-center justify-between">
+                        <AndamioText variant="small">Submission TX</AndamioText>
+                        <a
+                          href={getTransactionExplorerUrl(commitment.submissionTx)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono text-xs text-primary hover:underline"
+                        >
+                          {commitment.submissionTx.slice(0, 16)}...
+                        </a>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Evidence display (read-only) */}
+                  {commitment.evidence != null && !isEditing && (
+                    <>
+                      <AndamioSeparator />
+                      <div>
+                        <AndamioText variant="small" className="font-medium mb-2">Your Evidence</AndamioText>
+                        <div className="min-h-[80px] border rounded-lg bg-muted/20 p-4">
+                          <ContentViewer content={commitment.evidence as JSONContent} />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Edit button */}
+                  {!hasClaimed && !isEditing && (
+                    <AndamioButton
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditingTaskHash(commitment.taskHash);
+                        setEvidence(null);
+                      }}
+                    >
+                      <EditIcon className="h-4 w-4 mr-2" />
+                      {status === "REFUSED" ? "Revise Evidence" : "Update Evidence"}
+                    </AndamioButton>
+                  )}
+
+                  {/* Editor + TaskAction */}
+                  {isEditing && task && contributorStateId && (
+                    <>
+                      <AndamioSeparator />
+                      <div className="space-y-3">
+                        <AndamioText className="font-medium">
+                          {status === "REFUSED" ? "Resubmit Your Evidence" : "Update Your Evidence"}
+                        </AndamioText>
+                        <div className="min-h-[200px] border rounded-lg">
+                          <ContentEditor
+                            content={evidence ?? (commitment.evidence as JSONContent | null)}
+                            onContentChange={setEvidence}
+                          />
+                        </div>
+                      </div>
+                      <TaskAction
+                        projectNftPolicyId={projectId}
+                        contributorStateId={contributorStateId}
+                        taskHash={commitment.taskHash}
+                        taskCode={`TASK_${task.index}`}
+                        taskTitle={task.title ?? undefined}
+                        taskEvidence={evidence ?? (commitment.evidence as JSONContent | undefined)}
+                        onSuccess={async () => {
+                          await refreshData();
+                        }}
+                      />
+                      <AndamioButton
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setEditingTaskHash(null);
+                          setEvidence(null);
+                        }}
+                      >
+                        Cancel
+                      </AndamioButton>
+                    </>
+                  )}
+                </>
+              )}
+
+              {/* ── ACCEPTED ────────────────────────────────────────── */}
+              {status === "ACCEPTED" && !hasClaimed && (
+                <>
+                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
+                    <div className="flex items-start gap-3">
+                      <SuccessIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <div>
+                        <AndamioText className="font-medium text-primary">
+                          Your work was accepted!
+                        </AndamioText>
+                        <AndamioText variant="small" className="mt-1">
+                          Choose your next step below.
+                        </AndamioText>
+                      </div>
+                    </div>
+                  </div>
+
+                  {!showClaimFlow ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Link href={PUBLIC_ROUTES.projects} className="block">
+                        <div className="rounded-lg border p-4 space-y-3 hover:border-primary/50 transition-colors cursor-pointer h-full">
+                          <div className="flex items-center gap-2">
+                            <TaskIcon className="h-5 w-5 text-primary" />
+                            <AndamioText className="font-medium">Browse Tasks</AndamioText>
+                          </div>
+                          <AndamioText variant="small">
+                            Commit to a new task. Your pending reward will be claimed automatically.
+                          </AndamioText>
+                        </div>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => setClaimFlowTaskHash(commitment.taskHash)}
+                        className="rounded-lg border border-primary/20 p-4 space-y-3 hover:border-primary/50 transition-colors cursor-pointer h-full text-left xp-card-glow"
+                      >
+                        <div className="flex items-center gap-2">
+                          <CredentialIcon className="h-5 w-5 text-primary" />
+                          <AndamioText className="font-medium">Leave & Claim</AndamioText>
+                        </div>
+                        <AndamioText variant="small">
+                          Leave the project, claim rewards, and mint your credential NFT.
+                        </AndamioText>
+                      </button>
+                    </div>
+                  ) : contributorStateId ? (
+                    <>
+                      <ProjectCredentialClaim
+                        projectNftPolicyId={projectId}
+                        contributorStateId={contributorStateId}
+                        projectTitle={project?.title}
+                        pendingRewardLovelace={task?.lovelaceAmount}
+                        onSuccess={async () => {
+                          setJustClaimed(true);
+                          await refreshData();
+                        }}
+                      />
+                      <AndamioButton
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setClaimFlowTaskHash(null)}
+                      >
+                        Back to options
+                      </AndamioButton>
+                    </>
+                  ) : null}
+                </>
+              )}
+
+              {/* ── ACCEPTED + already claimed (read-only) ──────────── */}
+              {status === "ACCEPTED" && hasClaimed && (
+                <div className="rounded-lg border bg-muted/30 p-4">
+                  <div className="flex items-start gap-3">
+                    <SuccessIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <div>
+                      <AndamioText className="font-medium">Rewards Claimed</AndamioText>
+                      <AndamioText variant="small" className="mt-1 text-muted-foreground">
+                        You&apos;ve claimed your credential and rewards for this task.
+                      </AndamioText>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Unknown / other status ──────────────────────────── */}
+              {!["SUBMITTED", "REFUSED", "ACCEPTED", "UNKNOWN"].includes(status) &&
+                !status.startsWith("PENDING_TX") && (
+                  <div className="flex items-center justify-between">
+                    <AndamioText variant="small" className="text-muted-foreground">
+                      Status: {formatCommitmentStatus(status)}
+                    </AndamioText>
+                    {commitment.submissionTx && (
+                      <a
+                        href={getTransactionExplorerUrl(commitment.submissionTx)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-xs text-primary hover:underline"
+                      >
+                        {commitment.submissionTx.slice(0, 12)}...
+                      </a>
+                    )}
+                  </div>
+                )}
+            </AndamioCardContent>
+          </AndamioCard>
+        );
+      })}
+    </div>
   );
 }

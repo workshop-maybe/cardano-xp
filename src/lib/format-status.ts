@@ -42,10 +42,6 @@ export function formatCommitmentStatus(status: string): string {
 }
 
 /**
- * Convert a raw task status code to a human-readable label.
- * Falls back to title-cased version if unknown.
- */
-/**
  * Map a commitment status to a badge variant for visual styling.
  * Extracted from tasks/[taskhash]/page.tsx for reuse across pages.
  */
@@ -58,6 +54,10 @@ export function getCommitmentStatusVariant(
   return "secondary";
 }
 
+/**
+ * Convert a raw task status code to a human-readable label.
+ * Falls back to title-cased version if unknown.
+ */
 export function formatTaskStatus(status: string): string {
   return (
     TASK_STATUS_LABELS[status] ??

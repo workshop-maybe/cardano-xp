@@ -234,7 +234,7 @@ export function RegistrationFlow({ onMinted, onBack }: RegistrationFlowProps) {
             <div className="rounded-lg border border-secondary/30 bg-secondary/5 p-3 space-y-1.5">
               <AndamioText className="font-medium text-sm">Wallet tip</AndamioText>
               <AndamioText variant="small" className="text-xs text-muted-foreground">
-                We recommend starting a new wallet for this experiment and funding it with about 25 ADA. You&apos;ll earn ADA and tokens as you go, but each on-chain action has a transaction fee.
+                We recommend starting a new wallet for this experiment and funding it with about 25 ADA. You&apos;ll earn ADA and tokens as you go, but each action has a transaction fee.
               </AndamioText>
             </div>
 

@@ -2,9 +2,11 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useCourse, useCourseModules, useStudentCourses } from "~/hooks/api";
 import { useStudentAssignmentCommitments } from "~/hooks/api/course/use-student-assignment-commitments";
+import { studentCredentialKeys } from "~/hooks/api/course/use-student-credentials";
 import { useTransaction } from "~/hooks/tx/use-transaction";
 import { useTxStream } from "~/hooks/tx/use-tx-stream";
 import { TransactionButton } from "~/components/tx/transaction-button";
@@ -39,6 +41,7 @@ interface UserCourseStatusProps {
 
 export function UserCourseStatus({ courseId }: UserCourseStatusProps) {
   const { isAuthenticated } = useAndamioAuth();
+  const queryClient = useQueryClient();
 
   // Fetch merged course data
   const { data: course, isLoading: courseLoading } = useCourse(courseId);
@@ -93,7 +96,7 @@ export function UserCourseStatus({ courseId }: UserCourseStatusProps) {
           <div className="flex items-center gap-2">
             <SuccessIcon className="h-5 w-5 text-success" />
             <div>
-              <AndamioCardTitle>Course Complete!</AndamioCardTitle>
+              <AndamioCardTitle>Course Complete</AndamioCardTitle>
               <AndamioCardDescription>
                 You&apos;ve earned your credential for {courseTitle}
               </AndamioCardDescription>
@@ -158,7 +161,10 @@ export function UserCourseStatus({ courseId }: UserCourseStatusProps) {
             courseTitle={courseTitle}
             accepted={accepted}
             totalModules={totalModules}
-            onSuccess={() => void refetchStudent()}
+            onSuccess={() => {
+              void refetchStudent();
+              void queryClient.invalidateQueries({ queryKey: studentCredentialKeys.all });
+            }}
           />
         )}
 
@@ -233,7 +239,7 @@ function CredentialClaimCTA({
       {allAccepted ? (
         <div className="rounded-lg border border-success/30 bg-success/5 p-3 space-y-1">
           <AndamioText variant="small" className="font-medium text-success">
-            All assignments complete!
+            All assignments complete
           </AndamioText>
           <AndamioText variant="small">
             You earned it. Claim your {accepted === 1 ? "credential" : "credentials"} to record {accepted === 1 ? "it" : "them"} on-chain as proof of your achievement.

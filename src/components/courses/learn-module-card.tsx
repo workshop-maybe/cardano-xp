@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { OnChainIcon, NextIcon, SuccessIcon } from "~/components/icons";
+import { NextIcon, SuccessIcon } from "~/components/icons";
 import { PUBLIC_ROUTES } from "~/config/routes";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
@@ -73,8 +73,8 @@ export function LearnModuleCard({
                 <AndamioCardTitle className="text-base sm:text-lg flex items-center gap-2">
                   <span className="truncate">{title}</span>
                   {isOnChain && (
-                    <span title="Module on-chain" className="shrink-0">
-                      <OnChainIcon className="h-4 w-4 text-primary" />
+                    <span title="Verified" className="shrink-0">
+                      <SuccessIcon className="h-4 w-4 text-primary" />
                     </span>
                   )}
                 </AndamioCardTitle>
@@ -85,7 +85,7 @@ export function LearnModuleCard({
                 <AssignmentStatusBadge status={commitmentStatus} />
               ) : (
                 <AndamioButton size="sm" rightIcon={<NextIcon className="h-3.5 w-3.5" />}>
-                  Give Feedback
+                  Give Your First Feedback
                 </AndamioButton>
               )}
             </div>

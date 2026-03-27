@@ -83,7 +83,7 @@ export function SLTLessonTable({
                   {item.module_index}
                 </AndamioBadge>
                 {isOnChain && (
-                  <span title="Verified on-chain">
+                  <span title="Verified">
                     <SuccessIcon className="h-3.5 w-3.5 text-primary shrink-0" />
                   </span>
                 )}

@@ -85,7 +85,7 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <SuccessIcon className="h-8 w-8 text-primary" />
           </div>
-          <AndamioCardTitle className="text-2xl">Welcome to Cardano XP!</AndamioCardTitle>
+          <AndamioCardTitle className="text-2xl">Welcome to Cardano XP</AndamioCardTitle>
           <AndamioCardDescription className="mx-auto max-w-sm text-center">
             Signed in as <span className="font-mono font-semibold text-foreground">{user.accessTokenAlias}</span>. Redirecting...
           </AndamioCardDescription>
@@ -131,7 +131,7 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           </div>
           <AndamioCardTitle className="text-2xl">Almost There</AndamioCardTitle>
           <AndamioCardDescription className="mx-auto max-w-sm text-center">
-            There was a problem signing in. Your token may still be confirming on-chain.
+            There was a problem signing in. Your token may still be confirming.
           </AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent className="space-y-4">
@@ -187,13 +187,13 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           )}
         </div>
         <AndamioCardTitle className="text-2xl">
-          {txConfirmed ? "Access Token Confirmed" : "Access Token Submitted!"}
+          {txConfirmed ? "Access Token Confirmed" : "Access Token Submitted"}
         </AndamioCardTitle>
         <AndamioCardDescription className="mx-auto max-w-sm text-center text-base">
           {txConfirmed ? (
-            <>Your alias <span className="font-mono font-semibold text-foreground">{alias}</span> is now live on-chain.</>
+            <>Your alias <span className="font-mono font-semibold text-foreground">{alias}</span> is now live.</>
           ) : (
-            <>Your alias <span className="font-mono font-semibold text-foreground">{alias}</span> is being minted on-chain.</>
+            <>Your alias <span className="font-mono font-semibold text-foreground">{alias}</span> is being minted.</>
           )}
         </AndamioCardDescription>
       </AndamioCardHeader>
@@ -246,7 +246,7 @@ export function FirstLoginCard({ alias, txHash }: FirstLoginCardProps) {
           <>
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-5 text-center space-y-2">
               <AndamioText className="font-semibold text-lg">
-                Welcome to Cardano XP!
+                Welcome to Cardano XP
               </AndamioText>
               <AndamioText variant="muted">
                 Now you can authenticate to Cardano XP

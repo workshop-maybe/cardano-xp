@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import { useLearnParams } from "~/hooks/use-learn-params";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
-import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import {
   AndamioPageHeader,
@@ -15,7 +14,7 @@ import {
   AndamioCardContent,
   AndamioBackButton,
 } from "~/components/andamio";
-import { OnChainIcon, AssignmentIcon, NextIcon } from "~/components/icons";
+import { NextIcon } from "~/components/icons";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { useCourse, useCourseModule, useSLTs } from "~/hooks/api";
@@ -124,7 +123,7 @@ export default function LearnModulePage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href={PUBLIC_ROUTES.courses} label="Back to Course" />
+      <AndamioBackButton href={PUBLIC_ROUTES.courses} label="Back" />
 
       <AndamioPageHeader
         title={courseModule.title ?? "Module"}
@@ -134,16 +133,17 @@ export default function LearnModulePage() {
         <AndamioCardContent className="pt-6 space-y-4">
           <AndamioSectionHeader
             title="What You'll Learn"
-            badge={onChainModule ? (
-              <AndamioBadge variant="outline" className="text-primary border-primary">
-                <OnChainIcon className="h-3 w-3 mr-1" />
-                On-chain
-              </AndamioBadge>
-            ) : undefined}
           />
           <AndamioText variant="muted">
-            Each learning target has a short lesson. Read through them, then submit your feedback to earn this credential.
+            If you already know what to say, skip straight to the assignment. Otherwise, the lessons below will help you get there.
           </AndamioText>
+          <div className="pt-1">
+            <Link href={`${PUBLIC_ROUTES.courses}/${moduleCode}/assignment`}>
+              <AndamioButton size="sm" rightIcon={<NextIcon className="h-3.5 w-3.5" />}>
+                Go to Assignment
+              </AndamioButton>
+            </Link>
+          </div>
           <SLTLessonTable
             data={combinedData}
             courseId={courseId}
@@ -191,32 +191,20 @@ function LearnAssignmentCTA({
   const ctaConfig = getAssignmentCTAConfig(commitmentStatus);
 
   return (
-    <AndamioCard className="border-primary/50 bg-primary/5">
-      <AndamioCardContent className="pt-6">
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="flex-shrink-0">
-            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-              <AssignmentIcon className="h-8 w-8 text-primary" />
-            </div>
-          </div>
-          <div className="flex-1 text-center sm:text-left space-y-2">
-            <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <AndamioHeading level={3} size="lg">{ctaConfig.heading}</AndamioHeading>
-              {commitmentStatus && (
-                <AssignmentStatusBadge status={commitmentStatus} />
-              )}
-            </div>
-            <AndamioText variant="muted">{ctaConfig.description}</AndamioText>
-          </div>
+    <AndamioCard className="border-secondary/30 bg-secondary/5 py-0">
+      <AndamioCardContent className="px-4 sm:px-5 py-4">
+        <div className="space-y-5">
+          {commitmentStatus && (
+            <AssignmentStatusBadge status={commitmentStatus} />
+          )}
+          <AndamioHeading level={3} size="lg">{ctaConfig.heading}</AndamioHeading>
+          <AndamioText variant="muted">{ctaConfig.description}</AndamioText>
           {ctaConfig.buttonLabel && (
-            <div className="flex-shrink-0">
-              <Link href={`${PUBLIC_ROUTES.courses}/${moduleCode}/assignment`}>
-                <AndamioButton size="lg">
-                  {ctaConfig.buttonLabel}
-                  <NextIcon className="h-4 w-4 ml-2" />
-                </AndamioButton>
-              </Link>
-            </div>
+            <Link href={`${PUBLIC_ROUTES.courses}/${moduleCode}/assignment`}>
+              <AndamioButton size="lg" rightIcon={<NextIcon className="h-4 w-4" />}>
+                {ctaConfig.buttonLabel}
+              </AndamioButton>
+            </Link>
           )}
         </div>
       </AndamioCardContent>
@@ -235,16 +223,16 @@ function getAssignmentCTAConfig(status: string | null) {
       };
     case "ASSIGNMENT_ACCEPTED":
       return {
-        heading: "Feedback Accepted!",
+        heading: "Feedback Accepted",
         description:
-          "Your feedback has been approved. Claim your credential to record it on-chain.",
+          "Your feedback has been approved. Claim a credential to make it permanent.",
         buttonLabel: "Claim Credential",
       };
     case "CREDENTIAL_CLAIMED":
       return {
         heading: "Credential Earned",
         description:
-          "You've earned this credential. Your contribution is recorded on-chain.",
+          "You've earned this credential. Your contribution is permanently recorded.",
         buttonLabel: "View Feedback",
       };
     case "ASSIGNMENT_REFUSED":
@@ -256,10 +244,10 @@ function getAssignmentCTAConfig(status: string | null) {
       };
     default:
       return {
-        heading: "Ready to share your feedback?",
+        heading: "Ready?",
         description:
-          "Tell us what you think about what you've learned. Accepted feedback earns you a credential.",
-        buttonLabel: "Give Feedback",
+          "Tell us what you think about this app. Once accepted, you'll earn a credential and can start picking up tasks.",
+        buttonLabel: "Give Your First Feedback",
       };
   }
 }

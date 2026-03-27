@@ -2,7 +2,6 @@
 
 import { Suspense, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import {
   AndamioPageLoading,
   AndamioNotFoundCard,
@@ -14,7 +13,6 @@ import { AndamioHeading } from "~/components/andamio/andamio-heading";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useLearnParams } from "~/hooks/use-learn-params";
 import { UserCourseStatus } from "~/components/learner/user-course-status";
-import { OnChainSltsBadge } from "~/components/courses/on-chain-slts-viewer";
 import { LearnModuleCard } from "~/components/courses/learn-module-card";
 import { useCourse, useCourseModules, useTeacherCourseModules } from "~/hooks/api";
 import { useStudentAssignmentCommitments, getModuleCommitmentStatus, groupCommitmentsByModule } from "~/hooks/api/course/use-student-assignment-commitments";
@@ -113,45 +111,32 @@ function LearnContent() {
     );
   }
 
-  const totalSlts = resolvedModules.reduce((sum, m) => {
-    const dbCount = m.slts?.length ?? 0;
-    const chainCount = m.onChainSlts?.length ?? 0;
-    return sum + (dbCount > 0 ? dbCount : chainCount);
-  }, 0);
-
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <div className="flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-3 mb-2">
+    <div className="space-y-10">
+      {/* Onboarding Header */}
+      <div className="space-y-5 pt-2">
+        <div>
           <AndamioHeading level={1} size="2xl">{pageTitle}</AndamioHeading>
-          <OnChainSltsBadge courseId={courseId} />
+          <AndamioText variant="lead">
+            Complete this quick assignment and you can start giving feedback and earning XP.
+          </AndamioText>
         </div>
-        {pageDescription && (
-          <AndamioText variant="lead">{pageDescription}</AndamioText>
-        )}
-        <div className="flex flex-wrap gap-3 sm:gap-4 mt-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <SLTIcon className="h-4 w-4 shrink-0" />
-            <span>{totalSlts} {totalSlts === 1 ? "SLT" : "SLTs"} across {resolvedModules.length} {resolvedModules.length === 1 ? "credential" : "credentials"}</span>
-          </div>
+        <div className="rounded-lg border border-secondary/20 bg-secondary/5 p-5 space-y-2">
+          <AndamioText variant="small" className="font-medium text-foreground">
+            How it works
+          </AndamioText>
+          <AndamioText variant="small">
+            Give quick feedback on the learning targets below and earn a credential.
+            That credential is your ticket to pick up tasks, contribute to the project, and earn XP.
+          </AndamioText>
         </div>
       </div>
 
       {/* Progress */}
       <UserCourseStatus courseId={courseId} />
 
-      {/* Credentials */}
+      {/* Modules */}
       <div className="space-y-6">
-        <div>
-          <AndamioText variant="muted">
-            Request access by giving quick feedback on each SLT. Feedback will be stored by Andamio.{" "}
-            <Link href="/about" className="text-primary hover:underline">
-              Learn more
-            </Link>
-          </AndamioText>
-        </div>
-
         <div className="space-y-4">
           {resolvedModules.map((courseModule, moduleIndex) => {
             const dbSlts = (courseModule.slts ?? [])

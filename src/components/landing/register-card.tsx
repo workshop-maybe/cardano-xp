@@ -38,7 +38,7 @@ export function RegisterCard() {
           <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
             <SuccessIcon className="h-5 w-5 text-primary" />
           </div>
-          <AndamioCardTitle>You&apos;re all set!</AndamioCardTitle>
+          <AndamioCardTitle>You&apos;re all set</AndamioCardTitle>
           <AndamioCardDescription>
             You already have an access token: {user.accessTokenAlias}
           </AndamioCardDescription>
@@ -118,7 +118,7 @@ export function MintCard({ onMinted }: MintCardProps) {
         </div>
         <AndamioCardTitle className="text-2xl">Mint Your Access Token</AndamioCardTitle>
         <AndamioCardDescription className="mx-auto max-w-sm text-center">
-          Choose an alias and mint your on-chain access token to get started.
+          Choose an alias and mint your access token to get started.
         </AndamioCardDescription>
       </AndamioCardHeader>
       <AndamioCardContent>

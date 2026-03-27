@@ -46,17 +46,17 @@ export default function AndamioAccessTokenPage() {
             completions, and contribution records across Andamio apps.
           </p>
           <p>
-            Because the token lives on-chain, no central authority manages it
+            Because the token lives in your wallet, no central authority manages it
             and no one can revoke it. You control your identity. We recommend
             a dedicated wallet for this experiment.
           </p>
         </div>
       </section>
 
-      {/* ── REFERENCE ── What happens on chain */}
+      {/* ── REFERENCE ── What happens when you mint */}
       <section className="space-y-4">
         <h2 className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
-          What happens on chain
+          What happens when you mint
         </h2>
         <div className="border border-border rounded-lg p-6 space-y-4">
           <div className="space-y-3 text-muted-foreground leading-relaxed">
@@ -93,7 +93,7 @@ export default function AndamioAccessTokenPage() {
           <div className="divide-y divide-border">
             {[
               { action: "Mint access token", cost: "~8 ADA", note: "One-time. Most ADA locked with the token." },
-              { action: "Transaction fee", cost: "~0.2–0.4 ADA", note: "Per on-chain action (submit, claim, etc.)." },
+              { action: "Transaction fee", cost: "~0.2–0.4 ADA", note: "Per action (submit, claim, etc.)." },
               { action: "Task reward", cost: "+2.5 ADA + XP", note: "Earned per completed task." },
               { action: "Recommended starting balance", cost: "~25 ADA", note: "Enough to mint and complete several tasks." },
             ].map((row) => (

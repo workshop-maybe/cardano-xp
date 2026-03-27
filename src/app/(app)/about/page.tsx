@@ -159,7 +159,7 @@ export default function AboutPage() {
           <div className="flex items-start gap-4">
             <span className="font-mono text-xl font-bold text-secondary/50">3</span>
             <div>
-              <p className="font-medium text-foreground">Earn XP on-chain</p>
+              <p className="font-medium text-foreground">Earn XP</p>
               <p className="text-sm text-muted-foreground">
                 Your contribution is reviewed by a human. When accepted, XP
                 tokens are released to your wallet. You can pay XP forward to
@@ -173,8 +173,8 @@ export default function AboutPage() {
             <div>
               <p className="font-medium text-foreground">Build your record</p>
               <p className="text-sm text-muted-foreground">
-                Claim a credential that snapshots your earned XP permanently
-                on-chain. Credentials unlock new opportunities. New projects
+                Claim a credential that snapshots your earned XP permanently.
+                Credentials unlock new opportunities. New projects
                 can require them for access, roles, or higher-stakes tasks.
               </p>
             </div>

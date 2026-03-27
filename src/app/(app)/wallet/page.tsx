@@ -40,7 +40,7 @@ export default function WalletPage() {
         </div>
         <p className="text-lg text-muted-foreground leading-relaxed">
           Every ADA spent on this project and every donation from the
-          community is recorded on-chain. This is the wallet.
+          community is recorded. This is the wallet.
         </p>
       </div>
 

@@ -33,7 +33,7 @@ export default function XPPage() {
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
           Not DeFi yield. Not learn-to-earn. XP is proof you showed up and
-          did something useful — recorded on-chain, composable, permanent.
+          did something useful — recorded, composable, permanent.
           While everyone else is trading tokens, we built one that means
           something because it&apos;s backed by contribution, not speculation.
         </p>
@@ -61,7 +61,7 @@ export default function XPPage() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               Your contribution history becomes your identity. Not your Twitter
               following, not who you know. What you&apos;ve demonstrated —
-              on-chain, verifiable by anyone. Claim a credential and your XP
+              verifiable by anyone. Claim a credential and your XP
               balance is snapshotted permanently.
             </p>
           </div>
@@ -108,9 +108,6 @@ export default function XPPage() {
       {project && (
         <section className="space-y-4">
           <div className="space-y-2">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              On-chain
-            </p>
             <h2 className="font-display font-bold text-2xl text-foreground">
               Treasury
             </h2>
@@ -181,8 +178,8 @@ export default function XPPage() {
             Developers have git commits. Designers have portfolios. But
             community reviewers, educators, product testers, facilitators —
             you post threads. You hope people remember. Five and a half years
-            of Catalyst. Thousands of contributors. Almost nothing on-chain
-            to show for any of it.
+            of Catalyst. Thousands of contributors. Almost nothing to show
+            for any of it.
           </p>
           <p className="text-muted-foreground leading-relaxed">
             As long as we&apos;re on Twitter, we&apos;ve changed nothing.
@@ -207,7 +204,7 @@ export default function XPPage() {
           <div className="flex flex-col gap-4 font-mono text-sm">
             {[
               { step: "1", action: "Pick up a feedback task", result: "Review something real" },
-              { step: "2", action: "Submit your feedback", result: "Earn XP on-chain" },
+              { step: "2", action: "Submit your feedback", result: "Earn XP" },
               { step: "3", action: "Accumulate XP", result: "Claim a credential" },
               { step: "4", action: "Hold XP", result: "Give it to others" },
             ].map((item) => (
@@ -256,7 +253,7 @@ export default function XPPage() {
           <p className="text-muted-foreground leading-relaxed">
             Let&apos;s not get ahead of ourselves. Let&apos;s run this experiment
             first — see if the mechanics work, if people actually use it, if
-            on-chain reputation means something in practice.
+            reputation means something in practice.
           </p>
           <p className="text-muted-foreground leading-relaxed">
             If it does, we continue with V2 of this token. The people who
@@ -278,7 +275,7 @@ export default function XPPage() {
         <div className="bg-card border border-border shadow-lg p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
             Create a project, post feedback tasks, distribute XP. You get
-            structured feedback from real people. They get on-chain proof they
+            structured feedback from real people. They get proof they
             contributed. No one needs to approve you — the protocol enforces it.
           </p>
           <p className="text-muted-foreground leading-relaxed">
@@ -318,7 +315,7 @@ export default function XPPage() {
             This is scaffolding — designed to be outgrown by whatever the
             community builds next. If it works, the people who earned XP in
             V1 decide what V2 looks like. If it doesn&apos;t, we learned
-            something. Either way, it&apos;s on-chain.
+            something. Either way, it&apos;s permanent.
           </p>
           <p className="text-foreground font-medium leading-relaxed">
             We&apos;re not asking anyone to believe this will work.

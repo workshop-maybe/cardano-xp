@@ -262,7 +262,7 @@ export default function ContributorPage() {
                 Credential Claimed
               </AndamioText>
               <AndamioText variant="small" className="mt-1">
-                You&apos;ve earned your on-chain credential for this project.{" "}
+                You&apos;ve earned your credential for this project.{" "}
                 <Link href={AUTH_ROUTES.credentials} className="text-primary hover:underline">
                   View credentials
                 </Link>
@@ -460,7 +460,7 @@ export default function ContributorPage() {
                       <SuccessIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                       <div>
                         <AndamioText className="font-medium text-primary">
-                          Your work was accepted!
+                          Your work was accepted
                         </AndamioText>
                         <AndamioText variant="small" className="mt-1">
                           Choose your next step below.

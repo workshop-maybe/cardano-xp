@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useWallet } from "@meshsdk/react";
 import { useTheme } from "next-themes";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
@@ -219,8 +220,8 @@ export function AuthStatusBar() {
             </>
           )}
 
-          {/* User Alias - Only show when authenticated, hidden on very small screens */}
-          {isAuthenticated && user?.accessTokenAlias && (
+          {/* User Alias or Mint Prompt - Only show when authenticated, hidden on very small screens */}
+          {isAuthenticated && user?.accessTokenAlias ? (
             <>
               <div className="hidden sm:block h-4 w-px bg-primary-foreground/20 flex-shrink-0" />
               <div className="hidden sm:flex items-center gap-1.5">
@@ -230,7 +231,18 @@ export function AuthStatusBar() {
                 </span>
               </div>
             </>
-          )}
+          ) : isAuthenticated && !user?.accessTokenAlias ? (
+            <>
+              <div className="hidden sm:block h-4 w-px bg-primary-foreground/20 flex-shrink-0" />
+              <Link
+                href="/andamio-access-token"
+                className="hidden sm:flex items-center gap-1.5 text-xs text-warning hover:text-warning/80 transition-colors"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-warning animate-pulse flex-shrink-0" />
+                <span className="whitespace-nowrap">Mint Token</span>
+              </Link>
+            </>
+          ) : null}
         </div>
 
         {/* Right: Actions */}

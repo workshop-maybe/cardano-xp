@@ -22,7 +22,6 @@ import { AndamioCardIconHeader } from "~/components/andamio/andamio-card-icon-he
 import {
   CredentialIcon,
   CourseIcon,
-  OnChainIcon,
   ExternalLinkIcon,
   ContributorIcon,
 } from "~/components/icons";
@@ -64,7 +63,7 @@ export default function CredentialsPage() {
       <div className="space-y-6">
         <AndamioPageHeader
           title="My Credentials"
-          description="View your on-chain course completions and earned credentials"
+          description="View your course completions and earned credentials"
         />
         <AndamioEmptyState
           icon={CredentialIcon}
@@ -91,7 +90,7 @@ export default function CredentialsPage() {
       <div className="space-y-6">
         <AndamioPageHeader
           title="My Credentials"
-          description="View your on-chain course completions and earned credentials"
+          description="View your course completions and earned credentials"
         />
         <AndamioEmptyState
           icon={CredentialIcon}
@@ -111,12 +110,12 @@ export default function CredentialsPage() {
       <div className="space-y-6">
         <AndamioPageHeader
           title="My Credentials"
-          description="View your on-chain course completions and earned credentials"
+          description="View your course completions and earned credentials"
         />
         <AndamioEmptyState
           icon={CredentialIcon}
           title="Start Earning Credentials"
-          description="Complete courses to earn on-chain credentials. Your achievements will be permanently recorded on the Cardano blockchain."
+          description="Complete courses to earn credentials. Your achievements will be permanently recorded."
           action={
             <Link href={CARDANO_XP.routes.course}>
               <AndamioButton>
@@ -135,7 +134,7 @@ export default function CredentialsPage() {
     <div className="space-y-6">
       <AndamioPageHeader
         title="My Credentials"
-        description={`You have earned ${completedCourses.length} on-chain ${completedCourses.length === 1 ? "credential" : "credentials"}`}
+        description={`You have earned ${completedCourses.length} ${completedCourses.length === 1 ? "credential" : "credentials"}`}
         action={
           <Link href={CARDANO_XP.routes.course}>
             <AndamioButton variant="outline">
@@ -163,10 +162,9 @@ export default function CredentialsPage() {
                 </AndamioText>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <OnChainIcon className="h-4 w-4" />
-              <AndamioText variant="small">Verified on Cardano</AndamioText>
-            </div>
+            <AndamioText variant="small" className="text-muted-foreground">
+              Permanently recorded
+            </AndamioText>
           </div>
         </AndamioCardContent>
       </AndamioCard>
@@ -208,13 +206,10 @@ export default function CredentialsPage() {
                 </code>
               </div>
 
-              {/* On-chain info */}
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <OnChainIcon className="h-3.5 w-3.5" />
-                <AndamioText variant="small" className="text-xs">
-                  Verified on Cardano blockchain
-                </AndamioText>
-              </div>
+              {/* Credential status */}
+              <AndamioText variant="small" className="text-xs text-muted-foreground">
+                Permanently recorded
+              </AndamioText>
 
               {/* Actions */}
               <div className="space-y-1">

@@ -367,8 +367,6 @@ export function AssignmentCommitment({
   return (
     <AndamioCard>
       <AndamioCardHeader>
-        <AndamioCardTitle>Your Feedback</AndamioCardTitle>
-        <AndamioCardDescription>Share your thoughts on &quot;{assignmentTitle}&quot;</AndamioCardDescription>
       </AndamioCardHeader>
       <AndamioCardContent className="space-y-4">
         {displayError && (
@@ -419,7 +417,7 @@ export function AssignmentCommitment({
             <div className="flex items-center gap-3 p-4 border rounded-lg bg-primary/10 border-primary/20">
               <SuccessIcon className="h-8 w-8 text-primary shrink-0" />
               <div>
-                <AndamioText className="font-medium">Feedback Accepted!</AndamioText>
+                <AndamioText className="font-medium">Feedback Accepted</AndamioText>
                 <AndamioText variant="small" className="text-muted-foreground">
                   Your feedback has been accepted. You can now claim your credential.
                 </AndamioText>
@@ -528,7 +526,6 @@ export function AssignmentCommitment({
             {!isLocked ? (
               <EvidenceEditorSection
                 label="Your Feedback"
-                description="Write your feedback below. When you're ready, click Finalize to prepare it for submission."
                 placeholder="Write your feedback..."
                 content={localEvidenceContent}
                 onContentChange={handleEvidenceContentChange}

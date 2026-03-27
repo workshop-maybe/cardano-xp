@@ -32,14 +32,13 @@ import {
   TaskIcon,
   ContributorIcon,
   SuccessIcon,
-  AlertIcon,
-  CourseIcon,
 } from "~/components/icons";
 import { PrerequisiteList } from "~/components/project/prerequisite-list";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useContributorCommitments } from "~/hooks/api/project/use-project-contributor";
 import { useStudentCompletionsForPrereqs } from "~/hooks/api/course/use-student-completions-for-prereqs";
 import { checkProjectEligibility } from "~/lib/project-eligibility";
+import { useStudentAssignmentCommitments, getModuleCommitmentStatus, groupCommitmentsByModule } from "~/hooks/api/course/use-student-assignment-commitments";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { NextIcon, PendingIcon } from "~/components/icons";
 import { PUBLIC_ROUTES, AUTH_ROUTES } from "~/config/routes";
@@ -70,6 +69,30 @@ export default function TasksPage() {
     if (!isAuthenticated || prerequisites.length === 0) return null;
     return checkProjectEligibility(prerequisites, completions);
   }, [isAuthenticated, prerequisites, completions]);
+
+  // Check if user has accepted assignments but hasn't claimed the credential yet
+  const { data: studentCommitments } = useStudentAssignmentCommitments(
+    isAuthenticated ? CARDANO_XP.courseId : undefined,
+  );
+  const hasAcceptedAssignment = React.useMemo(() => {
+    if (!studentCommitments) return false;
+    return studentCommitments.some((c) => c.networkStatus === "ASSIGNMENT_ACCEPTED");
+  }, [studentCommitments]);
+  const readyToClaimCredential = hasAcceptedAssignment && eligibility && !eligibility.eligible;
+
+  // Build assignment status map (sltHash → highest-priority status) for prerequisite display
+  const assignmentStatuses = React.useMemo(() => {
+    if (!studentCommitments) return undefined;
+    const grouped = groupCommitmentsByModule(studentCommitments, CARDANO_XP.courseId);
+    const map = new Map<string, string>();
+    for (const [, moduleCommitments] of grouped) {
+      const status = getModuleCommitmentStatus(moduleCommitments);
+      if (status && moduleCommitments[0]?.sltHash) {
+        map.set(moduleCommitments[0].sltHash, status);
+      }
+    }
+    return map;
+  }, [studentCommitments]);
 
   // Authenticated contributor commitments
   const { data: myCommitments = [] } = useContributorCommitments(projectId);
@@ -144,22 +167,25 @@ export default function TasksPage() {
 
   // Derived stats
   const contributors = project.contributors ?? [];
-  const credentialClaims = project.credentialClaims ?? [];
-
-  const availableXp = availableTasks.reduce((sum, t) => {
-    const xpToken = t.tokens?.find(
-      (tok) => tok.policyId === CARDANO_XP.xpToken.policyId
-    );
-    return sum + (xpToken?.quantity ?? 0);
-  }, 0);
 
   // Helper to get XP from a task
-  const getTaskXp = (task: typeof availableTasks[0]) => {
+  const getTaskXp = (task: typeof allTasks[0]) => {
     const xpToken = task.tokens?.find(
       (tok) => tok.policyId === CARDANO_XP.xpToken.policyId
     );
     return xpToken?.quantity ?? 0;
   };
+
+  const availableXp = availableTasks.reduce((sum, t) => sum + getTaskXp(t), 0);
+
+  // XP distributed = sum of XP for each submitted task
+  const submissions = project.submissions ?? [];
+  const taskXpByHash = new Map(
+    allTasks.map((t) => [t.taskHash, getTaskXp(t)])
+  );
+  const distributedXp = submissions.reduce((sum, s) => {
+    return sum + (taskXpByHash.get(s.taskHash) ?? 0);
+  }, 0);
 
   return (
     <div className="space-y-8">
@@ -251,6 +277,52 @@ export default function TasksPage() {
         ) : null;
       })()}
 
+      {/* Onboarding for Feedback Providers */}
+      {prerequisites.length > 0 && (!eligibility || !eligibility.eligible) && (
+        <AndamioCard>
+          <AndamioCardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <AndamioCardTitle className="text-lg">Before you start</AndamioCardTitle>
+                <AndamioCardDescription>
+                  Complete this prerequisite to contribute. Moderated by humans — it moves at the speed of people.
+                </AndamioCardDescription>
+              </div>
+              {eligibility && (
+                <AndamioBadge variant="outline" className="gap-1 text-muted-foreground">
+                  {eligibility.totalCompleted}/{eligibility.totalRequired} done
+                </AndamioBadge>
+              )}
+            </div>
+          </AndamioCardHeader>
+          <AndamioCardContent>
+            <PrerequisiteList prerequisites={prerequisites} completions={completions} assignmentStatuses={assignmentStatuses} />
+          </AndamioCardContent>
+        </AndamioCard>
+      )}
+
+      {/* Claim credential CTA — assignment accepted but credential not yet claimed */}
+      {readyToClaimCredential && (
+        <div className="rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-background p-8 space-y-4 text-center">
+          <AndamioText className="text-2xl sm:text-3xl font-display font-bold text-foreground">
+            Your feedback was accepted
+          </AndamioText>
+          <AndamioText variant="lead" className="max-w-lg mx-auto">
+            Claim your credential to unlock tasks and start earning XP. You&apos;re one step away.
+          </AndamioText>
+          <div className="pt-2">
+            <Link href={PUBLIC_ROUTES.courses}>
+              <AndamioButton size="lg" rightIcon={<NextIcon className="h-4 w-4" />}>
+                Claim Your Credential
+              </AndamioButton>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Project details — only show when eligible, not authenticated, or no prerequisites */}
+      {(!prerequisites.length || !isAuthenticated || eligibility?.eligible) && (<>
+
       {/* Stats Bar */}
       <div className="grid gap-4 grid-cols-3">
         <div className="rounded-lg border p-4">
@@ -258,7 +330,7 @@ export default function TasksPage() {
             <TaskIcon className="h-4 w-4" />
             <AndamioText variant="small">Available XP</AndamioText>
           </div>
-          <AndamioText className="text-2xl font-bold text-secondary">
+          <AndamioText className="text-2xl font-bold">
             {availableXp.toLocaleString()} XP
           </AndamioText>
           <AndamioText variant="small" className="text-muted-foreground">
@@ -274,65 +346,24 @@ export default function TasksPage() {
           <AndamioText className="text-2xl font-bold">
             {contributors.length}
           </AndamioText>
-          {contributors.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2">
-              {contributors.slice(0, 5).map((c, i) => (
-                <AndamioBadge key={c.alias ?? i} variant="secondary" className="font-mono text-xs">
-                  {c.alias ?? "?"}
-                </AndamioBadge>
-              ))}
-              {contributors.length > 5 && (
-                <AndamioBadge variant="outline" className="text-xs">
-                  +{contributors.length - 5}
-                </AndamioBadge>
-              )}
-            </div>
-          )}
+          <AndamioText variant="small" className="text-muted-foreground">
+            giving feedback
+          </AndamioText>
         </div>
 
         <div className="rounded-lg border p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <SuccessIcon className="h-4 w-4" />
             <AndamioText variant="small">XP Distributed</AndamioText>
           </div>
-          <AndamioText className="text-2xl font-bold text-secondary">
-            0 XP
+          <AndamioText className="text-2xl font-bold">
+            {distributedXp.toLocaleString()} XP
           </AndamioText>
           <AndamioText variant="small" className="text-muted-foreground">
-            to {credentialClaims.length} contributor{credentialClaims.length !== 1 ? "s" : ""}
+            across {submissions.length} completed task{submissions.length !== 1 ? "s" : ""}
           </AndamioText>
         </div>
       </div>
-
-      {/* Onboarding for Feedback Providers */}
-      {prerequisites.length > 0 && (
-        <AndamioCard>
-          <AndamioCardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <AndamioCardTitle className="text-lg">Before you start</AndamioCardTitle>
-                <AndamioCardDescription>
-                  Complete these prerequisites to contribute. Moderated by humans — it moves at the speed of people.
-                </AndamioCardDescription>
-              </div>
-              {eligibility && (
-                eligibility.eligible ? (
-                  <AndamioBadge status="success" className="gap-1">
-                    <SuccessIcon className="h-3.5 w-3.5" />
-                    Ready
-                  </AndamioBadge>
-                ) : (
-                  <AndamioBadge variant="outline" className="gap-1 text-muted-foreground">
-                    {eligibility.totalCompleted}/{eligibility.totalRequired} done
-                  </AndamioBadge>
-                )
-              )}
-            </div>
-          </AndamioCardHeader>
-          <AndamioCardContent>
-            <PrerequisiteList prerequisites={prerequisites} completions={completions} />
-          </AndamioCardContent>
-        </AndamioCard>
-      )}
 
       {/* Available Tasks */}
       {availableTaskGroups.length > 0 ? (
@@ -373,8 +404,8 @@ export default function TasksPage() {
                                 </AndamioBadge>
                               )}
                             </div>
-                            <AndamioText variant="small" className="font-mono text-xs text-muted-foreground">
-                              {task.taskHash.slice(0, 20)}...
+                            <AndamioText variant="small" className="font-mono text-xs text-muted-foreground break-all">
+                              {task.taskHash}
                             </AndamioText>
                           </Link>
                         ) : (
@@ -462,6 +493,8 @@ export default function TasksPage() {
           </AndamioTableContainer>
         </div>
       )}
+
+      </>)}
     </div>
   );
 }

@@ -76,12 +76,20 @@ export function AppNavBar() {
             </div>
           )}
 
-          {/* User alias badge */}
-          {isAuthenticated && user?.accessTokenAlias && (
+          {/* User alias badge or mint prompt */}
+          {isAuthenticated && user?.accessTokenAlias ? (
             <span className="hidden sm:inline-flex items-center h-6 px-2 rounded-sm bg-secondary/15 text-[11px] font-mono text-secondary">
               {user.accessTokenAlias}
             </span>
-          )}
+          ) : isAuthenticated && !user?.accessTokenAlias ? (
+            <Link
+              href="/andamio-access-token"
+              className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-sm bg-secondary/15 text-[11px] font-medium text-secondary hover:bg-secondary/25 transition-colors"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-secondary animate-pulse" />
+              Mint Access Token
+            </Link>
+          ) : null}
 
           {/* Connected wallet indicator */}
           {isAuthenticated && walletName && (

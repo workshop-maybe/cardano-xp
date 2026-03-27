@@ -148,7 +148,7 @@ export default function LeaderboardPage() {
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
           Every alias that has completed a task and earned XP — ranked by total
-          contribution. On-chain, transparent, verifiable.
+          contribution. Transparent and verifiable.
         </p>
       </div>
 

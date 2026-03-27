@@ -20,7 +20,7 @@ import { useCourse, useCourseModule, useSLTs, useAssignment, type SLT } from "~/
 import { useStudentAssignmentCommitments, getModuleCommitmentStatus } from "~/hooks/api/course/use-student-assignment-commitments";
 import { CommitmentStatusBadge } from "~/components/courses/commitment-status-badge";
 import { computeSltHash } from "@andamio/core/hashing";
-import { AlertIcon, SuccessIcon } from "~/components/icons";
+import { AlertIcon } from "~/components/icons";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 
 /**
@@ -104,7 +104,7 @@ export default function LearnAssignmentPage() {
 
   return (
     <div className="space-y-6">
-      <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back to Module" />
+      <AndamioBackButton href={PUBLIC_ROUTES.module(moduleCode)} label="Back" />
 
       <AndamioPageHeader
         title={assignment.title ?? "Submit Feedback"}
@@ -120,10 +120,7 @@ export default function LearnAssignmentPage() {
       {sortedSlts.length > 0 && (
         <AndamioCard>
           <AndamioCardHeader>
-            <AndamioCardTitle>What to give feedback on</AndamioCardTitle>
-            <AndamioCardDescription>
-              Share your thoughts on {sortedSlts.length === 1 ? "this topic" : `these ${sortedSlts.length} topics`}
-            </AndamioCardDescription>
+            <AndamioCardTitle>Learning Targets</AndamioCardTitle>
           </AndamioCardHeader>
           <AndamioCardContent>
             <div className="space-y-2">
@@ -142,11 +139,7 @@ export default function LearnAssignmentPage() {
 
       {!!assignment.contentJson && (
         <AndamioCard>
-          <AndamioCardHeader>
-            <AndamioCardTitle>Details</AndamioCardTitle>
-            <AndamioCardDescription>Read this before submitting your feedback</AndamioCardDescription>
-          </AndamioCardHeader>
-          <AndamioCardContent>
+          <AndamioCardContent className="pt-6">
             <ContentViewer content={assignment.contentJson} />
           </AndamioCardContent>
         </AndamioCard>
@@ -158,22 +151,10 @@ export default function LearnAssignmentPage() {
         <AndamioAlert variant="destructive">
           <AlertIcon className="h-4 w-4" />
           <AndamioAlertDescription>
-            <AndamioText className="font-medium">Module Content Changed</AndamioText>
+            <AndamioText className="font-medium">Content Changed</AndamioText>
             <AndamioText variant="small">
-              This module has been updated since it was published. Your instructor may need to republish it. Please contact your course administrator.
+              This assignment has been updated since it was published. Contact the project admin if this looks wrong.
             </AndamioText>
-          </AndamioAlertDescription>
-        </AndamioAlert>
-      )}
-
-      {onChainModuleHash && !hashMismatch && (
-        <AndamioAlert>
-          <SuccessIcon className="h-4 w-4 text-primary" />
-          <AndamioAlertDescription>
-            <span className="font-medium">Module verified on-chain</span>
-            <span className="ml-2 text-xs font-mono text-muted-foreground">
-              {onChainModuleHash.slice(0, 16)}...
-            </span>
           </AndamioAlertDescription>
         </AndamioAlert>
       )}
@@ -184,6 +165,15 @@ export default function LearnAssignmentPage() {
         moduleCode={moduleCode}
         sltHash={sltHash}
       />
+
+      {onChainModuleHash && !hashMismatch && (
+        <div className="rounded-lg border bg-muted/30 px-4 py-3 space-y-1">
+          <p className="text-sm font-medium text-foreground">Credential ID</p>
+          <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed">
+            {onChainModuleHash}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

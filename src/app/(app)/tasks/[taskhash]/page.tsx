@@ -206,7 +206,7 @@ export default function TaskDetailPage() {
   } else if (!activeCommitment) {
     commitmentCardDescription = "Commit to this task to get started";
   } else if (commitmentStatus === "ACCEPTED") {
-    commitmentCardDescription = "Your work has been accepted!";
+    commitmentCardDescription = "Your work has been accepted";
   } else {
     commitmentCardDescription = "Track your progress on this task";
   }
@@ -263,7 +263,7 @@ export default function TaskDetailPage() {
 
       {/* Task Hash */}
       <div className="p-3 bg-muted rounded-lg">
-        <AndamioText variant="small" className="text-xs mb-1">Task Hash (On-Chain ID)</AndamioText>
+        <AndamioText variant="small" className="text-xs mb-1">Task ID</AndamioText>
         <AndamioText className="font-mono text-sm break-all">
           {task.taskHash || taskHash}
         </AndamioText>
@@ -349,7 +349,7 @@ export default function TaskDetailPage() {
                   <SuccessIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div>
                     <AndamioText className="font-medium text-primary">
-                      Your work was accepted!
+                      Your work was accepted
                     </AndamioText>
                     <AndamioText variant="small" className="mt-1">
                       You earned {formatLovelace(acceptedTaskReward)}. Choose your next step below.

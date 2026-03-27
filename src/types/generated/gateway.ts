@@ -327,6 +327,8 @@ export interface AssignmentCommitment {
 }
 
 export interface AssignmentCommitmentContent {
+  /** "accept" or "refuse" */
+  assessment_outcome?: string;
   /** Hash for on-chain verification */
   assignment_evidence_hash?: string;
   /** DRAFT, SUBMITTED, APPROVED, etc. */
@@ -2189,7 +2191,7 @@ export interface TaskCommitment {
 export interface TaskCommitmentContent {
   /** Manager who assessed */
   assessed_by?: string;
-  /** DRAFT, COMMITTED, SUBMITTED, ACCEPTED, etc. */
+  /** DRAFT, SUBMITTED, ACCEPTED, REFUSED, REWARDED, ABANDONED, PENDING_TX_*. Note: COMMITTED is normalized to SUBMITTED at API layer. */
   commitment_status?: string;
   /** Tiptap JSON document */
   evidence?: any;
@@ -2632,10 +2634,29 @@ export interface ValidTxTypesResponse {
   types?: string[];
 }
 
+/** Validates CIP-30/CIP-8 wallet signature and returns JWT token. */
 export interface ValidateSignatureRequest {
-  session_id: string;
-  /** CIP-30 signature data from a Cardano wallet, containing the COSE_Sign1 signature and COSE_Key. */
+  /**
+   * Access token alias (e.g. 'falcon'). For CLI/agent headless login.
+   * @example "falcon"
+   */
+  access_token_alias?: string;
+  /**
+   * Wallet address in bech32 or hex format
+   * @example "addr_test1qq..."
+   */
+  address?: string;
+  /** Full access token unit (policyId + hex-encoded name). For browser wallets. */
+  andamio_access_token_unit?: string;
+  /**
+   * Session ID from /auth/login/session
+   * @example "session-123"
+   */
+  id: string;
+  /** CIP-30 wallet signature */
   signature: SignatureData;
+  /** Wallet name for debugging */
+  wallet_preference?: string;
 }
 
 /** Response when verification fails, containing error details. */

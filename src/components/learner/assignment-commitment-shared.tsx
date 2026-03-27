@@ -136,7 +136,7 @@ export function EvidenceHashDisplay({
 
 interface EvidenceEditorSectionProps {
   label: string;
-  description: string;
+  description?: string;
   placeholder: string;
   content: JSONContent | null;
   onContentChange: (content: JSONContent) => void;
@@ -159,9 +159,11 @@ export function EvidenceEditorSection({
   return (
     <div className="space-y-2">
       <AndamioLabel>{label}</AndamioLabel>
-      <AndamioText variant="small" className="text-xs mb-2">
-        {description}
-      </AndamioText>
+      {description && (
+        <AndamioText variant="small" className="text-xs mb-2">
+          {description}
+        </AndamioText>
+      )}
       <div className="border border-foreground/30 dark:border-muted-foreground rounded-md overflow-hidden">
         <ContentEditor
           content={content}
@@ -174,7 +176,7 @@ export function EvidenceEditorSection({
         <div className="flex justify-end pt-2">
           <AndamioButton onClick={onLock} disabled={lockDisabled}>
             <SuccessIcon className="h-4 w-4 mr-2" />
-            Finalize
+            Continue
           </AndamioButton>
         </div>
       )}

@@ -39,6 +39,7 @@ export function AuthStatusBar() {
   const {
     isWalletConnected,
     isAuthenticated,
+    isAuthenticating,
     user,
     logout,
     authError,
@@ -161,6 +162,8 @@ export function AuthStatusBar() {
           >
             {isAuthenticated ? (
               <VerifiedIcon className="h-3.5 w-3.5 text-success-foreground flex-shrink-0" />
+            ) : isAuthenticating ? (
+              <PendingIcon className="h-3.5 w-3.5 text-primary-foreground/70 animate-pulse flex-shrink-0" />
             ) : authError || popupBlocked ? (
               <SecurityAlertIcon className="h-3.5 w-3.5 text-destructive flex-shrink-0" />
             ) : (
@@ -179,6 +182,8 @@ export function AuthStatusBar() {
                   "text-xs whitespace-nowrap",
                   isAuthenticated
                     ? "text-success-foreground"
+                    : isAuthenticating
+                    ? "text-primary-foreground/70 animate-pulse"
                     : authError
                     ? "text-destructive"
                     : "text-primary-foreground/50"
@@ -186,6 +191,8 @@ export function AuthStatusBar() {
               >
                 {isAuthenticated
                   ? "Auth"
+                  : isAuthenticating
+                  ? "Signing in..."
                   : authError
                   ? "Error"
                   : "Unauth"}

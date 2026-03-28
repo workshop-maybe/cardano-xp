@@ -30,6 +30,14 @@ const config = {
     turbopack: {
       root: dirname(fileURLToPath(import.meta.url)),
     },
+    experimental: {
+      optimizePackageImports: [
+        "@phosphor-icons/react",
+        "lucide-react",
+        "recharts",
+        "date-fns",
+      ],
+    },
     transpilePackages: ["@andamio/core"],
     images: {
     remotePatterns: [

@@ -5,8 +5,7 @@ import { Inter, DM_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { MeshProvider } from "~/components/providers/mesh-provider";
-import { AuthProvider } from "~/components/providers/auth-provider";
+import { CombinedProvider } from "~/components/providers/combined-provider";
 import { TxWatcherBridge } from "~/components/providers/tx-watcher-provider";
 import { Toaster } from "~/components/ui/sonner";
 import { BRANDING } from "~/config";
@@ -68,16 +67,14 @@ export default function RootLayout({
           forcedTheme="dark"
           disableTransitionOnChange
         >
-          <MeshProvider>
-            <AuthProvider>
-              <TRPCReactProvider>
-                <TxWatcherBridge>
-                  {children}
-                </TxWatcherBridge>
-              </TRPCReactProvider>
-              <Toaster position="top-right" richColors closeButton />
-            </AuthProvider>
-          </MeshProvider>
+          <CombinedProvider>
+            <TRPCReactProvider>
+              <TxWatcherBridge>
+                {children}
+              </TxWatcherBridge>
+            </TRPCReactProvider>
+            <Toaster position="top-right" richColors closeButton />
+          </CombinedProvider>
         </ThemeProvider>
       </body>
     </html>

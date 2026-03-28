@@ -53,7 +53,9 @@ export * from "./andamio-stat";
 export * from "./andamio-status-icon";
 export * from "./andamio-card-icon-header";
 export * from "./andamio-action-footer";
-export * from "./andamio-celebration";
+// andamio-celebration is excluded from barrel to avoid pulling framer-motion
+// into the main bundle. Import directly when needed:
+//   import { AndamioCelebration } from "~/components/andamio/andamio-celebration";
 export * from "./andamio-prerequisite-gate";
 export * from "./andamio-tx-summary";
 export * from "./copy-id";

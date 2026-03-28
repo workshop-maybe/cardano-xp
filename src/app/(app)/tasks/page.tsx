@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { getQueryClient, HydrateClient } from "~/trpc/server";
 import { projectKeys } from "~/hooks/api/project/use-project";
 import { fetchProjectDetail, fetchProjectTasks } from "~/lib/gateway-server";
 import { CARDANO_XP } from "~/config/cardano-xp";
+import { AndamioPageLoading } from "~/components/andamio";
 import { TasksContent } from "./tasks-content";
 
 /**
@@ -38,7 +40,9 @@ export default async function TasksPage() {
 
   return (
     <HydrateClient>
-      <TasksContent />
+      <Suspense fallback={<AndamioPageLoading variant="detail" />}>
+        <TasksContent />
+      </Suspense>
     </HydrateClient>
   );
 }

@@ -49,6 +49,10 @@ export interface TransactionUIConfig {
   footerLinkText: string;
   /** Success message shown after transaction completes */
   successInfo: string;
+  /** Contextual description shown in toast while waiting for on-chain confirmation */
+  waitDescription?: string;
+  /** Description shown in success toast (replaces generic "Transaction confirmed and database updated") */
+  successDescription?: string;
   /**
    * Whether this transaction requires DB updates after on-chain confirmation.
    * - true: Register with gateway for status tracking (default)
@@ -117,6 +121,8 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     footerLink: getDocsUrl("accessTokenMint"),
     footerLinkText: "Tx Documentation",
     successInfo: "Access Token Created!",
+    waitDescription: "Minting your access token on Cardano. This is your identity for the platform.",
+    successDescription: "Your access token is on-chain. You can now participate in courses and projects.",
     requiresDBUpdate: false, // No DB state to update after confirmation
     requiresOnChainConfirmation: true, // Track on-chain confirmation via gateway
   },
@@ -221,6 +227,8 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     footerLink: getDocsUrl("assignmentCommit"),
     footerLinkText: "Tx Documentation",
     successInfo: "Feedback Submitted!",
+    waitDescription: "Recording your feedback on Cardano. A reviewer will assess it to progress toward your credential.",
+    successDescription: "Your feedback is on-chain and ready for review.",
     requiresDBUpdate: true,
   },
 
@@ -246,6 +254,8 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     footerLink: getDocsUrl("credentialClaim"),
     footerLinkText: "Tx Documentation",
     successInfo: "Credential claimed successfully!",
+    waitDescription: "Claiming your on-chain credential. This permanently proves your achievement on Cardano.",
+    successDescription: "Your credential is on-chain. You can now contribute to the project and earn XP.",
     requiresDBUpdate: true,
   },
 
@@ -319,6 +329,8 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     footerLink: getDocsUrl("taskCommit"),
     footerLinkText: "Tx Documentation",
     successInfo: "Successfully committed to task!",
+    waitDescription: "Recording your task commitment on Cardano. XP will be distributed when your work is accepted.",
+    successDescription: "You're committed. Submit your evidence when ready.",
     requiresDBUpdate: true,
   },
 
@@ -343,6 +355,8 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     footerLink: getDocsUrl("contributorCredentialClaim"),
     footerLinkText: "Tx Documentation",
     successInfo: "Credentials claimed successfully!",
+    waitDescription: "Claiming your project credentials on Cardano. Your XP balance will be snapshotted as permanent proof.",
+    successDescription: "Your credentials are on-chain. Your XP history is now permanently verifiable.",
     requiresDBUpdate: true,
   },
 
@@ -359,6 +373,8 @@ export const TRANSACTION_UI: Record<TransactionType, TransactionUIConfig> = {
     footerLink: getDocsUrl("treasuryAddFunds"),
     footerLinkText: "Tx Documentation",
     successInfo: "Funds added to treasury successfully!",
+    waitDescription: "Transferring funds to the project treasury on Cardano.",
+    successDescription: "Treasury funded. These funds are now available for task rewards.",
     requiresDBUpdate: true,
   },
 };

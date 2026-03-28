@@ -442,7 +442,7 @@ export function transformCourseModule(item: MergedCourseModuleItem): CourseModul
  * Sort course modules alphabetically by moduleCode (ascending).
  * Modules without moduleCode (chain_only) are sorted to the end by sltHash.
  */
-function sortModulesByCode<T extends { moduleCode?: string; sltHash?: string }>(
+export function sortModulesByCode<T extends { moduleCode?: string; sltHash?: string }>(
   modules: T[]
 ): T[] {
   return [...modules].sort((a, b) => {

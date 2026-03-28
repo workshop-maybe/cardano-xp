@@ -273,7 +273,7 @@ export function useTransaction() {
           // The store opens an SSE connection that survives page navigation.
           txWatcherStore.getState().register(txHash, txType, {
             successTitle: ui.successInfo,
-            successDescription: "Transaction confirmed and database updated.",
+            successDescription: ui.successDescription ?? "Transaction confirmed and database updated.",
             errorTitle: "Transaction Failed",
           });
         } else {
@@ -305,9 +305,10 @@ export function useTransaction() {
             id: txHash,
             icon: loadingSpinner,
             duration: Infinity,
-            description: ui.requiresDBUpdate
-              ? "Transaction submitted. Waiting for confirmation..."
-              : "Transaction submitted to blockchain!",
+            description: ui.waitDescription
+              ?? (ui.requiresDBUpdate
+                ? "Transaction submitted. Waiting for on-chain confirmation..."
+                : "Transaction submitted to blockchain!"),
           });
         } else {
           toast.success(ui.successInfo, {

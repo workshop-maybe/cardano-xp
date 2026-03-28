@@ -158,16 +158,16 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
       </div>
 
       {/* CTA */}
-      <div className="flex flex-col lg:flex-row items-center lg:justify-between gap-3 w-full max-w-xs lg:max-w-none mt-6">
+      <div className="flex flex-col sm:flex-row items-center sm:justify-center gap-3 w-full max-w-xs sm:max-w-none mt-6">
         <AndamioButton
           onClick={handleEnter}
-          className="w-full lg:w-auto"
+          className="w-full sm:w-auto"
         >
           Connect Wallet
         </AndamioButton>
         <AndamioButton
           onClick={() => router.push("/about")}
-          className="w-full lg:w-auto"
+          className="w-full sm:w-auto"
         >
           What is this?
         </AndamioButton>

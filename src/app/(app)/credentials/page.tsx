@@ -148,7 +148,7 @@ export default function CredentialsPage() {
       {/* Summary Card */}
       <AndamioCard>
         <AndamioCardContent className="py-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20">
                 <CredentialIcon className="h-6 w-6 text-primary" />

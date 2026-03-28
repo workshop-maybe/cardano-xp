@@ -109,48 +109,50 @@ export default function WalletPage() {
           </div>
         ) : (
           <div className="border border-border rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-left text-muted-foreground font-mono text-xs uppercase tracking-wider">
-                  <th className="p-4">Date</th>
-                  <th className="p-4">Type</th>
-                  <th className="p-4 text-right">Amount</th>
-                  <th className="p-4 text-right">Tx</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((tx) => {
-                  const { label, color } = DIRECTION_LABELS[tx.direction];
-                  return (
-                    <tr
-                      key={tx.txHash}
-                      className="border-b border-border last:border-0"
-                    >
-                      <td className="p-4 text-muted-foreground">
-                        {tx.timestamp.toLocaleDateString()}
-                      </td>
-                      <td className={`p-4 font-medium ${color}`}>
-                        {label}
-                      </td>
-                      <td className="p-4 text-right font-mono text-foreground">
-                        {tx.adaAmount >= 0 ? "+" : ""}
-                        {formatAda(Math.abs(tx.adaAmount))}
-                      </td>
-                      <td className="p-4 text-right">
-                        <a
-                          href={tx.explorerUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-mono text-xs text-secondary hover:underline"
-                        >
-                          {tx.txHash.slice(0, 8)}...
-                        </a>
-                      </td>
-                    </tr>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border text-left text-muted-foreground font-mono text-xs uppercase tracking-wider">
+                    <th className="hidden sm:table-cell p-2 sm:p-4">Date</th>
+                    <th className="p-2 sm:p-4">Type</th>
+                    <th className="p-2 sm:p-4 text-right">Amount</th>
+                    <th className="p-2 sm:p-4 text-right">Tx</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.map((tx) => {
+                    const { label, color } = DIRECTION_LABELS[tx.direction];
+                    return (
+                      <tr
+                        key={tx.txHash}
+                        className="border-b border-border last:border-0"
+                      >
+                        <td className="hidden sm:table-cell p-2 sm:p-4 text-muted-foreground">
+                          {tx.timestamp.toLocaleDateString()}
+                        </td>
+                        <td className={`p-2 sm:p-4 font-medium ${color}`}>
+                          {label}
+                        </td>
+                        <td className="p-2 sm:p-4 text-right font-mono text-foreground whitespace-nowrap">
+                          {tx.adaAmount >= 0 ? "+" : ""}
+                          {formatAda(Math.abs(tx.adaAmount))}
+                        </td>
+                        <td className="p-2 sm:p-4 text-right">
+                          <a
+                            href={tx.explorerUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-mono text-xs text-secondary hover:underline"
+                          >
+                            {tx.txHash.slice(0, 8)}...
+                          </a>
+                        </td>
+                      </tr>
                   );
                 })}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </section>

@@ -266,7 +266,7 @@ export default function ProjectDashboardPage() {
       {/* Tabbed Interface */}
       <AndamioTabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {/* Note: Blacklist tab hidden for v2 release - will enable after user research */}
-        <AndamioTabsList className="w-auto inline-flex h-9 mb-6">
+        <AndamioTabsList className="w-full overflow-x-auto inline-flex h-9 mb-6">
           <AndamioTabsTrigger value="overview" className="text-sm gap-1.5 px-4">
             <ChartIcon className="h-4 w-4" />
             Overview

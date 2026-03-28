@@ -82,7 +82,7 @@ export default function AdminSidebarLayout({
   return (
     <AndamioResizablePanelGroup direction="horizontal" className="h-full">
       {/* Left Panel: Static Nav */}
-      <AndamioResizablePanel defaultSize={20} minSize={12} maxSize={30}>
+      <AndamioResizablePanel defaultSize={22} minSize={15} maxSize={30}>
         <AndamioScrollArea className="h-full">
           <nav className="flex flex-col gap-1 p-3">
             {navItems.map((item) => (

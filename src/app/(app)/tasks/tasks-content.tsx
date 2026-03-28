@@ -212,7 +212,7 @@ export function TasksContent() {
 
       {/* Contributor Status Bar */}
       {contributorStatus && (
-        <div className={`rounded-lg border p-4 flex items-center justify-between gap-4 ${
+        <div className={`rounded-lg border p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 ${
           contributorStatus === "task_accepted"
             ? "border-primary/30 bg-primary/5"
             : "border-muted-foreground/20 bg-muted/30"
@@ -327,7 +327,7 @@ export function TasksContent() {
       {(!prerequisites.length || !isAuthenticated || eligibility?.eligible) && (<>
 
       {/* Stats Bar */}
-      <div className="grid gap-4 grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
         <div className="rounded-lg border p-4">
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <TaskIcon className="h-4 w-4" />

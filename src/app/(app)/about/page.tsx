@@ -33,7 +33,7 @@ export default function AboutPage() {
         </div>
 
         <div className="grid gap-px md:grid-cols-2 bg-border">
-          <div className="bg-card p-8 space-y-3">
+          <div className="bg-card p-4 sm:p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-secondary/30">01</span>
             <h3 className="font-display font-bold text-lg text-foreground">
               Builders can&apos;t improve alone
@@ -44,7 +44,7 @@ export default function AboutPage() {
               to exist, but what if we're not sure?
             </p>
           </div>
-          <div className="bg-card p-8 space-y-3">
+          <div className="bg-card p-4 sm:p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-primary/30">02</span>
             <h3 className="font-display font-bold text-lg text-foreground">
               Cardano has passionate people with nowhere to contribute
@@ -58,7 +58,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="border-l-4 border-secondary bg-card border border-border shadow-lg p-8">
+        <div className="border-l-4 border-secondary bg-card border border-border shadow-lg p-4 sm:p-8">
           <p className="text-lg text-foreground font-display font-semibold leading-snug">
             Cardano XP connects builders and reviewers. Builders ask for feedback.
             Anyone can give feedback. XP records the exchange.
@@ -232,7 +232,7 @@ export default function AboutPage() {
 
       {/* Builder CTA */}
       <section>
-        <div className="rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 p-8 space-y-4 text-center">
+        <div className="rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 p-4 sm:p-8 space-y-4 text-center">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60">
             Coming soon
           </p>
@@ -257,7 +257,7 @@ export default function AboutPage() {
 
       {/* Open invitation */}
       <section className="space-y-6 pb-12">
-        <div className="border-l-4 border-primary bg-card border border-border shadow-lg p-8 space-y-4">
+        <div className="border-l-4 border-primary bg-card border border-border shadow-lg p-4 sm:p-8 space-y-4">
           <p className="text-foreground leading-relaxed">
             This is an experiment. It&apos;s open source, built in public, and
             designed to be outgrown by whatever the community builds next. The

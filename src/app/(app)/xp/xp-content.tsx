@@ -52,7 +52,7 @@ export function XPContent() {
       {/* The mechanism — framed as a feedback journey */}
       <section className="space-y-6">
         <div className="grid gap-px md:grid-cols-3 bg-border">
-          <div className="bg-card p-8 space-y-3">
+          <div className="bg-card p-4 sm:p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-secondary/30">01</span>
             <h3 className="font-display font-bold text-xl text-foreground">
               Give feedback, earn XP
@@ -63,7 +63,7 @@ export function XPContent() {
               XP is released to your wallet as proof that effort happened.
             </p>
           </div>
-          <div className="bg-card p-8 space-y-3">
+          <div className="bg-card p-4 sm:p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-primary/30">02</span>
             <h3 className="font-display font-bold text-xl text-foreground">
               Build a track record
@@ -75,7 +75,7 @@ export function XPContent() {
               balance is snapshotted permanently.
             </p>
           </div>
-          <div className="bg-card p-8 space-y-3">
+          <div className="bg-card p-4 sm:p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-success/30">03</span>
             <h3 className="font-display font-bold text-xl text-foreground">
               Let others earn it too
@@ -179,7 +179,7 @@ export function XPContent() {
         <h2 className="font-display font-bold text-2xl text-foreground">
           The problem
         </h2>
-        <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-8 space-y-4">
+        <div className="border-l-4 border-l-secondary bg-card border border-border shadow-lg p-4 sm:p-8 space-y-4">
           <p className="text-xl text-foreground font-display font-semibold leading-snug">
             There&apos;s nothing on this public ledger that distinguishes
             a five-year builder from someone who showed up yesterday.
@@ -210,7 +210,7 @@ export function XPContent() {
             The loop
           </h2>
         </div>
-        <div className="bg-card border border-border shadow-lg p-8">
+        <div className="bg-card border border-border shadow-lg p-4 sm:p-8">
           <div className="flex flex-col gap-4 font-mono text-sm">
             {[
               { step: "1", action: "Pick up a feedback task", result: "Review something real" },
@@ -218,13 +218,15 @@ export function XPContent() {
               { step: "3", action: "Accumulate XP", result: "Claim a credential" },
               { step: "4", action: "Hold XP", result: "Give it to others" },
             ].map((item) => (
-              <div key={item.step} className="flex items-center gap-4">
-                <span className="text-2xl font-bold text-secondary/30 w-8">
+              <div key={item.step} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <span className="text-2xl font-bold text-secondary/30 w-8 sm:w-8">
                   {item.step}
                 </span>
-                <span className="text-muted-foreground flex-1">{item.action}</span>
-                <span className="text-secondary">→</span>
-                <span className="text-foreground font-semibold flex-1">{item.result}</span>
+                <div className="flex items-center gap-2 sm:gap-4 flex-1">
+                  <span className="text-muted-foreground flex-1">{item.action}</span>
+                  <span className="text-secondary">→</span>
+                  <span className="text-foreground font-semibold flex-1">{item.result}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -236,7 +238,7 @@ export function XPContent() {
         <h2 className="font-display font-bold text-2xl text-foreground">
           What this is not
         </h2>
-        <div className="bg-card border border-border shadow-lg p-8 space-y-4">
+        <div className="bg-card border border-border shadow-lg p-4 sm:p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
             Not learn-to-earn. Not a financial token. Not governance (yet).
             XP has no market value and is not designed to be traded.
@@ -259,7 +261,7 @@ export function XPContent() {
         <h2 className="font-display font-bold text-2xl text-foreground">
           What happens when the 100,000 XP are used?
         </h2>
-        <div className="bg-card border border-border shadow-lg p-8 space-y-4">
+        <div className="bg-card border border-border shadow-lg p-4 sm:p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
             Let&apos;s not get ahead of ourselves. Let&apos;s run this experiment
             first — see if the mechanics work, if people actually use it, if
@@ -282,7 +284,7 @@ export function XPContent() {
             Want feedback on what you&apos;re building?
           </h2>
         </div>
-        <div className="bg-card border border-border shadow-lg p-8 space-y-4">
+        <div className="bg-card border border-border shadow-lg p-4 sm:p-8 space-y-4">
           <p className="text-muted-foreground leading-relaxed">
             Create a project, post feedback tasks, distribute XP. You get
             structured feedback from real people. They get proof they
@@ -295,7 +297,7 @@ export function XPContent() {
             difference between a public ledger and a better database.
           </p>
         </div>
-        <div className="rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 p-8 space-y-4 text-center">
+        <div className="rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 p-4 sm:p-8 space-y-4 text-center">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/60">
             Coming soon
           </p>
@@ -320,7 +322,7 @@ export function XPContent() {
 
       {/* Invitation */}
       <section className="space-y-6 pb-12">
-        <div className="border-l-4 border-primary bg-card border border-border shadow-lg p-8 space-y-4">
+        <div className="border-l-4 border-primary bg-card border border-border shadow-lg p-4 sm:p-8 space-y-4">
           <p className="text-foreground leading-relaxed">
             This is scaffolding — designed to be outgrown by whatever the
             community builds next. If it works, the people who earned XP in

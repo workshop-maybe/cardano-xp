@@ -27,6 +27,9 @@ export function CombinedProvider({ children }: { children: ReactNode }) {
         Mesh: meshMod.MeshProvider,
         Auth: authMod.AndamioAuthProvider,
       });
+    }).catch((err) => {
+      console.error("[CombinedProvider] Failed to load providers:", err);
+      // Children render without providers — same graceful degradation as before
     });
   }, []);
 

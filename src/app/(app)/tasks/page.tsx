@@ -18,17 +18,23 @@ export default async function TasksPage() {
   const projectId = CARDANO_XP.projectId;
   const queryClient = getQueryClient();
 
-  // Prefetch public data in parallel — these don't require authentication
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: projectKeys.detail(projectId),
-      queryFn: () => fetchProjectDetail(projectId),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: projectKeys.tasks(projectId),
-      queryFn: () => fetchProjectTasks(projectId),
-    }),
-  ]);
+  // Prefetch public data in parallel — these don't require authentication.
+  // Wrapped in try/catch so Gateway failures fall back to client-side fetching
+  // rather than breaking the page entirely.
+  try {
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: projectKeys.detail(projectId),
+        queryFn: () => fetchProjectDetail(projectId),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: projectKeys.tasks(projectId),
+        queryFn: () => fetchProjectTasks(projectId),
+      }),
+    ]);
+  } catch (err) {
+    console.error("[TasksPage] Server prefetch failed, falling back to client:", err);
+  }
 
   return (
     <HydrateClient>

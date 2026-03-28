@@ -26,17 +26,22 @@ export default async function LearnPage({
   const courseId = CARDANO_XP.courseId;
   const queryClient = getQueryClient();
 
-  // Prefetch public data in parallel
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: courseKeys.detail(courseId),
-      queryFn: () => fetchCourseDetail(courseId),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: courseModuleKeys.list(courseId),
-      queryFn: () => fetchCourseModules(courseId),
-    }),
-  ]);
+  // Prefetch public data in parallel.
+  // Wrapped in try/catch so Gateway failures fall back to client-side fetching.
+  try {
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: courseKeys.detail(courseId),
+        queryFn: () => fetchCourseDetail(courseId),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: courseModuleKeys.list(courseId),
+        queryFn: () => fetchCourseModules(courseId),
+      }),
+    ]);
+  } catch (err) {
+    console.error("[LearnPage] Server prefetch failed, falling back to client:", err);
+  }
 
   return (
     <HydrateClient>

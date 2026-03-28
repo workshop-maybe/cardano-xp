@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   AndamioPageLoading,
   AndamioNotFoundCard,
@@ -25,8 +24,7 @@ import { CARDANO_XP } from "~/config/cardano-xp";
  */
 export function LearnContent({ preview }: { preview: boolean }) {
   const courseId = CARDANO_XP.courseId;
-  const searchParams = useSearchParams();
-  const isTeacherPreview = preview || searchParams.get("preview") === "teacher";
+  const isTeacherPreview = preview;
 
   const {
     data: course,

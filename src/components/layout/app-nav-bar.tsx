@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useWallet } from "@meshsdk/react";
 import { APP_NAVIGATION, isNavItemActive } from "~/config";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { useOwnerProjects, useManagerProjects } from "~/hooks/api";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
 import {
@@ -28,6 +29,9 @@ export function AppNavBar() {
     user,
     logout,
   } = useAndamioAuth();
+  const { data: ownedProjects } = useOwnerProjects();
+  const { data: managedProjects } = useManagerProjects();
+  const isAdmin = (ownedProjects?.length ?? 0) > 0 || (managedProjects?.length ?? 0) > 0;
 
   const handleLogout = useCallback(() => {
     logout();
@@ -62,6 +66,19 @@ export function AppNavBar() {
               {item.name}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href={ADMIN_ROUTES.hub}
+              className={cn(
+                "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
+                isNavItemActive(pathname, "/admin")
+                  ? "bg-primary/15 text-primary"
+                  : "text-primary/70 hover:bg-primary/10 hover:text-primary"
+              )}
+            >
+              Admin
+            </Link>
+          )}
         </div>
 
         {/* Right: Status + controls */}

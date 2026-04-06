@@ -27,6 +27,11 @@ export const PUBLIC_ROUTES = {
   /** XP leaderboard */
   leaderboard: "/xp/leaderboard",
 
+  /** Sponsor pitch + donation */
+  sponsors: "/sponsors",
+  /** Public treasury transparency */
+  transparency: "/transparency",
+
   /** Utility routes */
   sitemap: "/sitemap",
   components: "/components",

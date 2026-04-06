@@ -126,13 +126,15 @@ export default function SponsorsPage() {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
-            {sponsorList.map((sponsor) => (
+            {sponsorList.map((sponsor, index) => (
               <div
-                key={sponsor.name}
+                key={`${index}-${sponsor.name}`}
                 className="border border-border rounded-lg p-5 space-y-2"
               >
                 <p className="font-medium text-foreground">
-                  {sponsor.url ? (
+                  {sponsor.url &&
+                  (sponsor.url.startsWith("https://") ||
+                    sponsor.url.startsWith("http://")) ? (
                     <a
                       href={sponsor.url}
                       target="_blank"

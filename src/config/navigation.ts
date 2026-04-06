@@ -17,6 +17,8 @@ export const APP_NAVIGATION = [
   { name: "Tokenomics", href: "/xp" },
   { name: "My XP", href: AUTH_ROUTES.credentials },
   { name: "Wallet", href: "/wallet" },
+  { name: "Sponsors", href: PUBLIC_ROUTES.sponsors },
+  { name: "Transparency", href: PUBLIC_ROUTES.transparency },
 ] as const;
 
 /**

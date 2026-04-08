@@ -22,18 +22,10 @@ import { useTransaction } from "~/hooks/tx/use-transaction";
 import { useTxStream } from "~/hooks/tx/use-tx-stream";
 import { TransactionButton } from "./transaction-button";
 import { TransactionStatus } from "./transaction-status";
-import {
-  AndamioCard,
-  AndamioCardContent,
-  AndamioCardDescription,
-  AndamioCardHeader,
-  AndamioCardTitle,
-} from "~/components/andamio/andamio-card";
-import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { ConfirmDialog } from "~/components/ui/confirm-dialog";
-import { TaskIcon, TransactionIcon, AlertIcon, SuccessIcon, ContributorIcon, LoadingIcon } from "~/components/icons";
+import { AlertIcon, SuccessIcon, LoadingIcon } from "~/components/icons";
 import { toast } from "sonner";
 import { parseTxErrorMessage } from "~/lib/tx-error-messages";
 import { TRANSACTION_UI } from "~/config/transaction-ui";
@@ -241,199 +233,98 @@ export function TaskCommit({
   const isTaskPublished = taskStatus === undefined || taskStatus === "ON_CHAIN";
   const canCommit = hasAccessToken && hasEvidence && hasValidTaskHash && isTaskPublished;
 
-  // Dynamic title, description, and button text based on context
-  const cardTitle = isFirstCommit ? "Join & Commit" : ui.title;
-
-  let cardDescription: string;
+  // Dynamic button and success text based on context
   let buttonText: string;
-
   let successTitle: string;
-  let successSubtitle: string;
 
   if (isFirstCommit) {
-    cardDescription = projectTitle
-      ? `Join ${projectTitle} and commit to your first task`
-      : "Join this project and commit to your first task";
-    buttonText = "Join & Commit";
+    buttonText = "Join & Submit";
     successTitle = "Welcome to the Project!";
-    successSubtitle = `You've joined ${projectTitle ?? "this project"}`;
   } else if (willClaimRewards) {
-    cardDescription = "Continue contributing and claim your rewards";
-    buttonText = "Commit & Claim Rewards";
-    successTitle = "Committed & Rewards Claimed!";
-    successSubtitle = `Committed to ${taskTitle ?? taskCode} and claimed rewards`;
+    buttonText = "Submit & Claim Rewards";
+    successTitle = "Submitted & Rewards Claimed!";
   } else {
-    cardDescription = projectTitle
-      ? `Take on a new task in ${projectTitle}`
-      : "Commit to your next task";
     buttonText = ui.buttonText;
-    successTitle = "Task Commitment Recorded!";
-    successSubtitle = `You've committed to ${taskTitle ?? taskCode}`;
+    successTitle = "Feedback Submitted!";
   }
 
   return (
-    <AndamioCard>
-      <AndamioCardHeader className="pb-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-            {isFirstCommit ? (
-              <ContributorIcon className="h-5 w-5 text-primary" />
-            ) : (
-              <TaskIcon className="h-5 w-5 text-primary" />
-            )}
-          </div>
-          <div className="flex-1">
-            <AndamioCardTitle>{cardTitle}</AndamioCardTitle>
-            <AndamioCardDescription>{cardDescription}</AndamioCardDescription>
-          </div>
-        </div>
-      </AndamioCardHeader>
-      <AndamioCardContent className="space-y-4">
-        {/* Task Info */}
-        <div className="flex flex-wrap items-center gap-2">
-          <AndamioBadge variant="secondary" className="text-xs">
-            <TaskIcon className="h-3 w-3 mr-1" />
-            {taskTitle ?? taskCode}
-          </AndamioBadge>
-          {willClaimRewards && (
-            <AndamioBadge variant="default" className="text-xs bg-primary text-primary-foreground">
-              <SuccessIcon className="h-3 w-3 mr-1" />
-              + Claim Rewards
-            </AndamioBadge>
-          )}
-        </div>
+    <div className="space-y-3">
+      {/* Transaction Status - Only show during processing */}
+      {state !== "idle" && !txConfirmed && !(state === "success" && result?.requiresDBUpdate) && (
+        <TransactionStatus
+          state={state}
+          result={result}
+          error={parseTxErrorMessage(error?.message)}
+          onRetry={() => reset()}
+          messages={{
+            success: "Transaction submitted! Waiting for confirmation...",
+          }}
+        />
+      )}
 
-        {/* What Happens */}
-        <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
-          <AndamioText className="font-medium">What happens:</AndamioText>
-          {isFirstCommit ? (
-            <AndamioText variant="small" className="text-xs">
-              A contributor state token is minted to your wallet, adding you to the project.
-              Your task commitment is recorded on-chain.
-            </AndamioText>
-          ) : willClaimRewards ? (
-            <AndamioText variant="small" className="text-xs">
-              Your rewards from the previous approved task are claimed, and your new task
-              commitment is recorded on-chain.
-            </AndamioText>
-          ) : (
-            <AndamioText variant="small" className="text-xs">
-              Your task commitment is recorded on-chain. Complete your task and submit for review.
-            </AndamioText>
-          )}
-          {computedHash && (
-            <div className="flex items-center gap-2 pt-2 border-t text-xs text-muted-foreground">
-              <TransactionIcon className="h-3 w-3 shrink-0" />
-              <code className="font-mono text-primary">{computedHash.slice(0, 24)}...</code>
-            </div>
-          )}
-        </div>
-
-        {/* Warning */}
-        <div className="flex items-start gap-2 rounded-md border border-muted-foreground/30 bg-muted/10 p-3">
-          <AlertIcon className="h-4 w-4 shrink-0 mt-0.5 text-muted-foreground" />
-          <AndamioText variant="small" className="text-xs text-muted-foreground">
-            {isFirstCommit
-              ? "This transaction adds you as a project contributor. Make sure your submission is ready."
-              : "Task commitments are recorded on-chain. Ensure your submission is ready before committing."}
+      {/* Gateway Confirmation Status */}
+      {state === "success" && result?.requiresDBUpdate && !txConfirmed && !txFailed && (
+        <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
+          <LoadingIcon className="h-4 w-4 animate-spin text-secondary shrink-0" />
+          <AndamioText variant="small">
+            {txStatus?.state === "pending" && "Waiting for block confirmation…"}
+            {txStatus?.state === "confirmed" && "Processing database updates…"}
+            {!txStatus && "Registering transaction…"}
           </AndamioText>
         </div>
+      )}
 
-        {/* Transaction Status - Only show during processing, not when showing gateway confirmation */}
-        {state !== "idle" && !txConfirmed && !(state === "success" && result?.requiresDBUpdate) && (
-          <TransactionStatus
-            state={state}
-            result={result}
-            error={parseTxErrorMessage(error?.message)}
-            onRetry={() => reset()}
-            messages={{
-              success: "Transaction submitted! Waiting for confirmation...",
-            }}
-          />
-        )}
+      {/* Success */}
+      {txConfirmed && (
+        <div className="flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3">
+          <SuccessIcon className="h-4 w-4 text-primary shrink-0" />
+          <AndamioText variant="small" className="text-primary font-medium">
+            {successTitle}
+          </AndamioText>
+        </div>
+      )}
 
-        {/* Gateway Confirmation Status */}
-        {state === "success" && result?.requiresDBUpdate && !txConfirmed && !txFailed && (
-          <div className="rounded-lg border bg-muted/30 p-4">
-            <div className="flex items-center gap-3">
-              <LoadingIcon className="h-5 w-5 animate-spin text-secondary" />
-              <div className="flex-1">
-                <AndamioText className="font-medium">Confirming on blockchain...</AndamioText>
-                <AndamioText variant="small" className="text-xs">
-                  {txStatus?.state === "pending" && "Waiting for block confirmation"}
-                  {txStatus?.state === "confirmed" && "Processing database updates"}
-                  {!txStatus && "Registering transaction..."}
-                </AndamioText>
-                <AndamioText variant="small" className="text-xs text-muted-foreground">
-                  This usually takes 20–60 seconds.
-                </AndamioText>
-              </div>
-            </div>
-          </div>
-        )}
+      {/* Validation Warning */}
+      {(!hasValidTaskHash || !isTaskPublished) && (
+        <div className="flex items-center gap-2 text-xs text-destructive">
+          <AlertIcon className="h-3.5 w-3.5 shrink-0" />
+          <span>
+            {!hasValidTaskHash
+              ? "Invalid task hash."
+              : "Task not yet published on-chain."}
+          </span>
+        </div>
+      )}
 
-        {/* Success */}
-        {txConfirmed && (
-          <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
-            <div className="flex items-center gap-3">
-              <SuccessIcon className="h-5 w-5 text-primary" />
-              <div className="flex-1">
-                <AndamioText className="font-medium text-primary">
-                  {successTitle}
-                </AndamioText>
-                <AndamioText variant="small" className="text-xs">
-                  {successSubtitle}
-                </AndamioText>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Validation Warning */}
-        {(!hasValidTaskHash || !isTaskPublished) && (
-          <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3">
-            <AlertIcon className="h-4 w-4 shrink-0 mt-0.5 text-destructive" />
-            <AndamioText variant="small" className="text-xs text-destructive">
-              {!hasValidTaskHash
-                ? "Invalid task hash. Tasks must have a valid 64-character hash."
-                : "This task is not yet published on-chain. Tasks must be published before contributors can commit."}
-            </AndamioText>
-          </div>
-        )}
-
-        {/* Commit Button — idle state shows confirmation dialog */}
-        {showAction && state === "idle" && (
-          <ConfirmDialog
-            trigger={
-              <AndamioButton className="w-full" disabled={!canCommit}>
-                {buttonText}
-              </AndamioButton>
-            }
-            title={isFirstCommit ? "Join This Project?" : "Submit Your Work?"}
-            description={
-              isFirstCommit
-                ? "This enrolls you in the project and records your commitment on-chain. This action cannot be undone."
-                : "This records your work submission on-chain. Your project manager will review it."
-            }
-            confirmText={buttonText}
-            onConfirm={handleCommit}
-          />
-        )}
-        {showAction && state !== "idle" && (
-          <TransactionButton
-            txState={state}
-            onClick={handleCommit}
-            disabled={!canCommit}
-            stateText={{
-              idle: buttonText,
-              fetching: "Preparing Transaction...",
-              signing: "Sign in Wallet",
-              submitting: isFirstCommit ? "Joining..." : "Recording on Blockchain...",
-            }}
-            className="w-full"
-          />
-        )}
-      </AndamioCardContent>
-    </AndamioCard>
+      {/* Commit Button */}
+      {showAction && state === "idle" && (
+        <ConfirmDialog
+          trigger={
+            <AndamioButton className="w-full" disabled={!canCommit}>
+              {buttonText}
+            </AndamioButton>
+          }
+          title={isFirstCommit ? "Join This Project?" : "Submit Your Feedback?"}
+          description="This records your submission on-chain. Your project manager will review it."
+          confirmText={buttonText}
+          onConfirm={handleCommit}
+        />
+      )}
+      {showAction && state !== "idle" && (
+        <TransactionButton
+          txState={state}
+          onClick={handleCommit}
+          disabled={!canCommit}
+          stateText={{
+            idle: buttonText,
+            fetching: "Preparing…",
+            signing: "Sign in Wallet",
+            submitting: "Recording on-chain…",
+          }}
+          className="w-full"
+        />
+      )}
+    </div>
   );
 }

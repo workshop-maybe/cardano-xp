@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import type { JSONContent } from "@tiptap/core";
 import { CloseIcon, LessonIcon } from "~/components/icons";
@@ -326,9 +327,9 @@ export function ContentEditor({
     );
   }
 
-  // Fullscreen mode - immersive writing experience
+  // Fullscreen mode - portal to body so overflow:hidden ancestors can't clip it
   if (isFullscreen) {
-    return (
+    return createPortal(
       <div className="fixed inset-0 z-50 flex flex-col bg-background">
         {/* Fullscreen header - clean and minimal */}
         <div className="flex items-center justify-between border-b border-border/50 bg-background/95 backdrop-blur-sm px-6 py-4">
@@ -391,7 +392,8 @@ export function ContentEditor({
             </div>
           </div>
         )}
-      </div>
+      </div>,
+      document.body,
     );
   }
 

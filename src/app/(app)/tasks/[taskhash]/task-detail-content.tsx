@@ -13,17 +13,20 @@ import {
   AndamioCardDescription,
   AndamioCardHeader,
   AndamioCardTitle,
-  AndamioDashboardStat,
   AndamioBackButton,
   AndamioErrorAlert,
   AndamioPageHeader,
   AndamioPageLoading,
   AndamioSeparator,
   AndamioText,
+  AndamioTooltip,
+  AndamioTooltipContent,
+  AndamioTooltipProvider,
+  AndamioTooltipTrigger,
 } from "~/components/andamio";
 import { ContentDisplay } from "~/components/content-display";
-import { ContentEditor, ContentViewer } from "~/components/editor";
-import { PendingIcon, TokenIcon, TeacherIcon, EditIcon, SuccessIcon, ContributorIcon, CredentialIcon, AlertIcon, OnChainIcon, RefreshIcon, CourseIcon } from "~/components/icons";
+import { ContentEditor, ContentViewer, ContentViewerCompact } from "~/components/editor";
+import { EditIcon, SuccessIcon, ContributorIcon, CredentialIcon, AlertIcon, OnChainIcon, RefreshIcon, CourseIcon } from "~/components/icons";
 import type { JSONContent } from "@tiptap/core";
 import { formatLovelace, formatXP } from "~/lib/cardano-utils";
 import { CARDANO_XP } from "~/config/cardano-xp";
@@ -53,6 +56,16 @@ function formatPosixTimestamp(timestamp: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+/** Strip a leading heading node from tiptap JSON so the title isn't duplicated. */
+function stripLeadingHeading(json: JSONContent): JSONContent {
+  if (!json?.content?.length) return json;
+  const first = json.content[0];
+  if (first?.type === "heading" && first.attrs?.level === 1) {
+    return { ...json, content: json.content.slice(1) };
+  }
+  return json;
 }
 
 function truncateAlias(alias: string | undefined, maxLength = 12): string {
@@ -206,6 +219,14 @@ export function TaskDetailContent() {
   const activeCommitment = commitment ?? deniedFallback;
   const commitmentStatus = activeCommitment?.commitmentStatus ?? null;
 
+  // Check if user has an active commitment on a different task
+  const activeElsewhere = allMyCommitments.find(
+    (c) =>
+      c.taskHash !== taskHash &&
+      ["PENDING_TX_COMMIT", "COMMITTED", "REFUSED"].includes(c.commitmentStatus ?? "")
+  );
+  const hasActiveCommitmentElsewhere = !!activeElsewhere;
+
   // Expiration check
   const isExpired = task.expirationTime
     ? parseInt(task.expirationTime) > 0 && new Date(parseInt(task.expirationTime)) < new Date()
@@ -226,7 +247,7 @@ export function TaskDetailContent() {
   } else if (isCommitmentLoading) {
     commitmentCardDescription = "Loading commitment status\u2026";
   } else if (!activeCommitment) {
-    commitmentCardDescription = "Commit to this task to get started";
+    commitmentCardDescription = "";
   } else if (commitmentStatus === "ACCEPTED") {
     commitmentCardDescription = "Your work has been accepted";
   } else {
@@ -239,12 +260,18 @@ export function TaskDetailContent() {
       <div className="flex items-center justify-between">
         <AndamioBackButton href={PUBLIC_ROUTES.projects} label="Back to Tasks" />
         <div className="flex items-center gap-2">
-          <AndamioBadge variant="outline" className="font-mono text-xs">
-            #{task.index}
-          </AndamioBadge>
-          <AndamioBadge variant="default">
-            {formatTaskStatus(task.taskStatus ?? "")}
-          </AndamioBadge>
+          <AndamioTooltipProvider>
+            <AndamioTooltip>
+              <AndamioTooltipTrigger asChild>
+                <AndamioBadge variant="default" className="font-mono text-xs cursor-help">
+                  {task.taskHash || taskHash}
+                </AndamioBadge>
+              </AndamioTooltipTrigger>
+              <AndamioTooltipContent side="bottom">
+                <p className="text-xs">This task hash is the on-chain anchor for this task.</p>
+              </AndamioTooltipContent>
+            </AndamioTooltip>
+          </AndamioTooltipProvider>
         </div>
       </div>
 
@@ -254,62 +281,41 @@ export function TaskDetailContent() {
         description={task.description || undefined}
       />
 
-      {/* Task Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-        <AndamioDashboardStat
-          icon={TokenIcon}
-          label="ADA Reward"
-          value={formatLovelace(task.lovelaceAmount ?? "0")}
-          iconColor="success"
-        />
-        <AndamioDashboardStat
-          icon={TokenIcon}
-          label="XP Reward"
-          value={formatXP(
-            task.tokens?.find((t) => t.policyId === CARDANO_XP.xpToken.policyId)?.quantity ?? 0
-          )}
-          iconColor="warning"
-        />
-        <AndamioDashboardStat
-          icon={PendingIcon}
-          label="Expires"
-          value={formatPosixTimestamp(task.expirationTime ?? "0")}
-        />
-        <AndamioDashboardStat
-          icon={TeacherIcon}
-          label="Created By"
-          value={createdBy}
-          iconColor="info"
-        />
-      </div>
-
-      {/* Technical Details (collapsed) */}
-      <details className="text-sm">
-        <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
-          Technical Details
-        </summary>
-        <div className="mt-2 p-3 bg-muted rounded-lg">
-          <AndamioText variant="small" className="text-xs mb-1">Task Hash</AndamioText>
-          <code className="font-mono text-xs break-all text-muted-foreground">
-            {task.taskHash || taskHash}
-          </code>
+      {/* Task Metadata — compact control pad */}
+      <div className="rounded-lg border bg-card px-4 py-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2">
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">ADA Reward</div>
+            <div className="text-sm font-semibold text-primary">{formatLovelace(task.lovelaceAmount ?? "0")}</div>
+          </div>
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">XP Reward</div>
+            <div className="text-sm font-semibold text-yellow-400">{formatXP(
+              task.tokens?.find((t) => t.policyId === CARDANO_XP.xpToken.policyId)?.quantity ?? 0
+            )}</div>
+          </div>
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Expires</div>
+            <div className="text-sm font-semibold text-secondary">{formatPosixTimestamp(task.expirationTime ?? "0")}</div>
+          </div>
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Created By</div>
+            <div className="text-sm font-semibold">{createdBy}</div>
+          </div>
         </div>
-      </details>
+      </div>
 
       {/* Task Content */}
       {!!task.contentJson && (
-        <AndamioCard>
-          <AndamioCardHeader>
-            <AndamioCardTitle>Task Details</AndamioCardTitle>
-            <AndamioCardDescription>Full task instructions and requirements</AndamioCardDescription>
-          </AndamioCardHeader>
-          <AndamioCardContent>
+        <>
+          <AndamioText className="text-lg font-semibold">Feedback Requested</AndamioText>
+          <div className="rounded-lg border bg-card px-4 py-3">
             <div className="relative">
               <div
                 ref={taskContentRef}
                 className={needsDescriptionCollapse && isDescriptionCollapsed ? "max-h-[200px] overflow-hidden" : ""}
               >
-                <ContentDisplay content={task.contentJson as JSONContent} />
+                <ContentViewerCompact content={stripLeadingHeading(task.contentJson as JSONContent)} />
               </div>
               {needsDescriptionCollapse && isDescriptionCollapsed && (
                 <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card to-transparent" />
@@ -324,19 +330,16 @@ export function TaskDetailContent() {
                 {isDescriptionCollapsed ? "Show full description" : "Show less"}
               </button>
             )}
-          </AndamioCardContent>
-        </AndamioCard>
+          </div>
+        </>
       )}
 
       {/* ── Commitment Status Card ─────────────────────────────────────── */}
-      <AndamioCard ref={commitmentCardRef}>
-        <AndamioCardHeader>
-          <AndamioCardTitle>Your Commitment</AndamioCardTitle>
-          <AndamioCardDescription>
-            {commitmentCardDescription}
-          </AndamioCardDescription>
-        </AndamioCardHeader>
-        <AndamioCardContent>
+      <div>
+        <AndamioText className="text-lg font-semibold">Your Feedback</AndamioText>
+        {commitmentCardDescription && <AndamioText variant="small" className="text-muted-foreground">{commitmentCardDescription}</AndamioText>}
+      </div>
+      <div ref={commitmentCardRef} className="rounded-lg border bg-card px-4 py-3">
           {!isAuthenticated ? (
             <div className="text-center py-6">
               <AndamioText variant="muted" className="mb-4">Connect your wallet to commit to this task</AndamioText>
@@ -804,28 +807,36 @@ export function TaskDetailContent() {
                 </AndamioButton>
               </Link>
             </div>
+          ) : hasActiveCommitmentElsewhere ? (
+            <div className="text-center py-6 space-y-2">
+              <AlertIcon className="h-6 w-6 text-muted-foreground mx-auto" />
+              <AndamioText className="font-medium">
+                You have an active commitment on another task
+              </AndamioText>
+              <AndamioText variant="small" className="text-muted-foreground">
+                Complete or leave your current task before committing to a new one.
+              </AndamioText>
+              <Link href={`/tasks/${activeElsewhere!.taskHash}`}>
+                <AndamioButton
+                  variant="outline"
+                  size="sm"
+                  className="cursor-pointer mt-2"
+                >
+                  Go to active task
+                </AndamioButton>
+              </Link>
+            </div>
           ) : (
             <div className="py-6">
               {isEditingEvidence ? (
                 <div className="space-y-4">
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <EditIcon className="h-4 w-4 text-muted-foreground" />
-                      <AndamioText className="font-medium">
-                        Your Submission
-                      </AndamioText>
-                    </div>
-                    <AndamioText variant="small" className="text-muted-foreground">
-                      Describe your plan or provide your work so far
-                    </AndamioText>
-                    <div className="border rounded-lg">
-                      <ContentEditor
-                        content={evidence}
-                        onContentChange={setEvidence}
-                        showWordCount
-                        minHeight="150px"
-                      />
-                    </div>
+                    <ContentEditor
+                      content={evidence}
+                      onContentChange={setEvidence}
+                      showWordCount
+                      minHeight="150px"
+                    />
                     {!hasValidEvidence && evidence && (
                       <AndamioText variant="small" className="text-muted-foreground">
                         Please provide evidence describing your work on this task.
@@ -888,32 +899,44 @@ export function TaskDetailContent() {
                   </div>
                 </div>
               ) : (
-                <div className="text-center">
-                  <AndamioText variant="muted" className="mb-4">
-                    You haven&apos;t committed to this task yet
-                  </AndamioText>
-                  <AndamioButton
-                    variant="outline"
-                    onClick={() => {
-                      flushSync(() => {
-                        setIsEditingEvidence(true);
-                      });
-                      commitmentCardRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <EditIcon className="h-4 w-4 mr-2" />
-                    Commit to This Task
-                  </AndamioButton>
+                <div className="space-y-4">
+                  <div className="text-center space-y-2">
+                    <AndamioButton
+                      variant="outline"
+                      onClick={() => {
+                        flushSync(() => {
+                          setIsEditingEvidence(true);
+                        });
+                        commitmentCardRef.current?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        });
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <EditIcon className="h-4 w-4 mr-2" />
+                      Share Your Feedback
+                    </AndamioButton>
+
+                  </div>
+
+                  <details className="text-sm group">
+                    <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors text-center">
+                      How does this work?
+                    </summary>
+                    <div className="mt-3 rounded-lg border bg-muted/20 p-4 text-muted-foreground space-y-2 text-left">
+                      <ol className="list-decimal list-inside space-y-1.5 text-sm">
+                        <li><strong className="text-foreground">Read</strong> — review the task description above</li>
+                        <li><strong className="text-foreground">Write</strong> — compose your feedback or response to the task</li>
+                        <li><strong className="text-foreground">Submit</strong> — submit your evidence for review</li>
+                      </ol>
+                    </div>
+                  </details>
                 </div>
               )}
             </div>
           )}
-        </AndamioCardContent>
-      </AndamioCard>
+      </div>
 
     </div>
   );

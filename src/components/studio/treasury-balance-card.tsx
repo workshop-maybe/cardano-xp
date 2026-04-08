@@ -44,31 +44,18 @@ export function TreasuryBalanceCard({
         </AndamioCardTitle>
       </AndamioCardHeader>
       <AndamioCardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <AndamioText variant="small" className="text-muted-foreground">
-              XP Balance
-            </AndamioText>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-bold text-secondary">
-                {xpBalance.toLocaleString()}
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">XP</span>
-            </div>
-          </div>
-          <div>
-            <AndamioText variant="small" className="text-muted-foreground">
-              ADA Balance
-            </AndamioText>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-bold text-primary">
-                {adaBalance.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">ADA</span>
-            </div>
+        <div>
+          <AndamioText variant="small" className="text-muted-foreground">
+            ADA Balance
+          </AndamioText>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-3xl font-bold text-primary">
+              {adaBalance.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
+            <span className="text-sm font-medium text-muted-foreground">ADA</span>
           </div>
         </div>
 

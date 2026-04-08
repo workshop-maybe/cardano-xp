@@ -162,7 +162,7 @@ export default function SponsorsPage() {
       <section className="pb-12">
         <div className="border-l-4 border-secondary bg-card border border-border shadow-lg p-4 sm:p-8">
           <p className="text-foreground leading-relaxed">
-            Every ADA is tracked. Every token is verified.{" "}
+            We track all spending and token activity on-chain.{" "}
             <Link
               href={PUBLIC_ROUTES.transparency}
               className="text-secondary hover:underline"

@@ -39,8 +39,7 @@ export default function WalletPage() {
           </div>
         </div>
         <p className="text-lg text-muted-foreground leading-relaxed">
-          Every ADA spent on this project and every donation from the
-          community is recorded. This is the wallet.
+          This is the project wallet. All spending and community donations are recorded here.
         </p>
       </div>
 

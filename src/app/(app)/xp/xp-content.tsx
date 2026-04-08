@@ -41,12 +41,6 @@ export function XPContent() {
           A token you can only earn by{" "}
           <span className="text-secondary">doing real work.</span>
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          Not DeFi yield. Not learn-to-earn. XP is proof you showed up and
-          did something useful — recorded, composable, permanent.
-          While everyone else is trading tokens, we built one that means
-          something because it&apos;s backed by contribution, not speculation.
-        </p>
       </div>
 
       {/* The mechanism — framed as a feedback journey */}
@@ -122,18 +116,7 @@ export function XPContent() {
               Treasury
             </h2>
           </div>
-          <div className="grid gap-px sm:grid-cols-2 bg-border">
-            <div className="bg-card p-6 space-y-2">
-              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-                XP in Treasury
-              </p>
-              <p className="flex items-baseline gap-1.5">
-                <span className="text-3xl font-display font-bold text-secondary">
-                  {xpBalance.toLocaleString()}
-                </span>
-                <span className="text-sm font-mono text-muted-foreground">XP</span>
-              </p>
-            </div>
+          <div className="grid gap-px sm:grid-cols-1 bg-border">
             <div className="bg-card p-6 space-y-2">
               <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
                 ADA in Treasury
@@ -188,12 +171,13 @@ export function XPContent() {
             Developers have git commits. Designers have portfolios. But
             community reviewers, educators, product testers, facilitators —
             you post threads. You hope people remember. Five and a half years
-            of Catalyst. Thousands of contributors. Almost nothing to show
-            for any of it.
+            of Catalyst. Thousands of anonymous reviewers. We&apos;re trying to
+            build community because we believe it&apos;s better than faceless
+            bureaucracy.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            As long as we&apos;re on Twitter, we&apos;ve changed nothing.
-            XP is the commit graph for non-code contributions. Devs
+            With Cardano XP, we&apos;re trying to build the commit graph
+            for non-code contributions. Devs
             recognize the model immediately. Everyone else gets access to
             what made open source culture work — without needing to learn git.
           </p>
@@ -248,10 +232,6 @@ export function XPContent() {
             that makes people want to <em>do things</em>. XP gives the
             ecosystem something to point to: this is what Cardano is
             actually for.
-          </p>
-          <p className="text-foreground font-medium">
-            XP replaces &ldquo;take my word for it&rdquo; with &ldquo;check
-            the ledger.&rdquo;
           </p>
         </div>
       </section>

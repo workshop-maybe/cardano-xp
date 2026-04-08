@@ -26,9 +26,9 @@ export default function AboutPage() {
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             problem
           </p>
-          <h2 className="font-display font-bold text-2xl text-foreground">
-            People who build need feedback. People who care
-            need a way to help.
+          <h2 className="font-display font-bold text-2xl text-foreground flex flex-col gap-2">
+            <span>People who build need feedback.</span>
+            <span>People who care need a way to help.</span>
           </h2>
         </div>
 
@@ -39,21 +39,22 @@ export default function AboutPage() {
               Builders can&apos;t improve alone
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Everyone can create now. Tools are faster than ever. But speed
-              without feedback is just noise. We know that not everything we build needs
-              to exist, but what if we're not sure?
+              It&apos;s 2026. What can you build now? Tools are faster than ever. Anyone can ship something in a day. But building fast doesn&apos;t mean building well.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Without honest feedback, you&apos;re guessing. You don&apos;t know if what you made is useful, confusing, or broken — until someone tells you.
             </p>
           </div>
           <div className="bg-card p-4 sm:p-8 space-y-3">
             <span className="font-mono text-3xl font-bold text-primary/30">02</span>
             <h3 className="font-display font-bold text-lg text-foreground">
-              Cardano has passionate people with nowhere to contribute
+              What do you use Cardano for?
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Five years of Catalyst. Thousands of people who care
-              deeply about this ecosystem. Where are the receipts? If you don&apos;t write code,
-              your options are: trade tokens, post on Twitter, sit on
-              committees, or be an anonymous reviewer. Are you really using the blockchain you showed up to use?
+              Thousands of people care deeply about this ecosystem. But if you don&apos;t write code, your options are narrow: trade tokens, post on Twitter, sit on committees, or review proposals you can&apos;t verify.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              That&apos;s not contribution — it&apos;s spectatorship. The people who showed up to build something real deserve a way to actually do it.
             </p>
           </div>
         </div>
@@ -222,10 +223,6 @@ export default function AboutPage() {
             total still stands. Every token on this ledger is backed by work
             someone actually did. Not speculation. Not governance theater.
             Contribution.
-          </p>
-          <p className="text-foreground font-medium">
-            XP replaces &ldquo;take my word for it&rdquo; with &ldquo;check
-            the ledger.&rdquo;
           </p>
         </div>
       </section>

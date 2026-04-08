@@ -1,22 +1,18 @@
 /**
  * Mint 100,000 XP tokens using Mesh SDK
- *
- * Usage:
- *   BLOCKFROST_KEY=preprodXXX MNEMONIC="word1 word2 ..." npx tsx scripts/mint-xp-tokens/mint-xp-mesh.ts
- *
- * Optional env vars:
- *   DEST_ADDR    — recipient address (defaults to minting wallet)
- *   NETWORK_ID   — 0 for testnet (default), 1 for mainnet
- *   LOCK_AFTER_SLOT — slot after which minting is impossible (time-lock)
  */
+
+import "dotenv/config";
 
 import {
   BlockfrostProvider,
-  ForgeScript,
   MeshTxBuilder,
-  resolveScriptHash,
+  resolveNativeScriptHash,
+  resolvePaymentKeyHash,
+  serializeNativeScript,
   stringToHex,
 } from "@meshsdk/core";
+import type { NativeScript } from "@meshsdk/common";
 import { MeshWallet } from "@meshsdk/core";
 
 // ---------------------------------------------------------------------------
@@ -24,17 +20,19 @@ import { MeshWallet } from "@meshsdk/core";
 // ---------------------------------------------------------------------------
 
 const BLOCKFROST_KEY = process.env.BLOCKFROST_KEY;
-const MNEMONIC = process.env.MNEMONIC;
+const SKEY = process.env.WALLET_SKEY; // optional (if not using MNEMONIC)
+const STAKE_KEY = process.env.WALLET_STAKE_SKEY; // optional (if not using MNEMONIC)
 const NETWORK_ID = Number(process.env.NETWORK_ID ?? "0"); // 0 = preprod, 1 = mainnet
 const DEST_ADDR = process.env.DEST_ADDR; // optional override
 const LOCK_AFTER_SLOT = process.env.LOCK_AFTER_SLOT; // optional time-lock
+const DRY_RUN = process.argv.includes("--dry-run");
 
 if (!BLOCKFROST_KEY) {
   console.error("Error: BLOCKFROST_KEY env var is required");
   process.exit(1);
 }
-if (!MNEMONIC) {
-  console.error("Error: MNEMONIC env var is required (space-separated 24 words)");
+if (!SKEY) {
+  console.error("Error: WALLET_SKEY env var is required");
   process.exit(1);
 }
 
@@ -54,27 +52,50 @@ async function main() {
   console.log("Initializing Blockfrost provider...");
   const provider = new BlockfrostProvider(BLOCKFROST_KEY!);
 
-  console.log("Creating wallet from mnemonic...");
+  console.log("Creating wallet from skey...");
   const wallet = new MeshWallet({
     networkId: NETWORK_ID as 0 | 1,
     fetcher: provider,
     submitter: provider,
     key: {
-      type: "mnemonic",
-      words: MNEMONIC!.split(" "),
+      type: "cli",
+      payment: SKEY as string,
+      stake: STAKE_KEY as string
     },
   });
+  await wallet.init();
+
+  // @ts-ignore                                                                                                                                                                                                                                
+  console.log("Mesh stake pubkey:", wallet._wallet.getAccount().stakeKeyHex);  
 
   const walletAddress = await wallet.getChangeAddress();
   const destAddr = DEST_ADDR ?? walletAddress;
   console.log("Wallet address:", walletAddress);
   console.log("Destination:   ", destAddr);
 
-  // Build forging script
-  const forgingScript = ForgeScript.withOneSignature(walletAddress);
-  const policyId = resolveScriptHash(forgingScript);
+  // Build native script — if LOCK_AFTER_SLOT is set, bake it into the policy
+  // so the policy is permanently locked after that slot (no future mints possible)
+  const keyHash = resolvePaymentKeyHash(walletAddress);
+  const nativeScript: NativeScript = LOCK_AFTER_SLOT
+    ? {
+        type: "all",
+        scripts: [
+          { type: "sig", keyHash },
+          { type: "before", slot: LOCK_AFTER_SLOT },
+        ],
+      }
+    : { type: "sig", keyHash };
+
+  const { scriptCbor: scriptCborRaw } = serializeNativeScript(nativeScript);
+  const scriptCbor = scriptCborRaw!;
+  const policyId = resolveNativeScriptHash(nativeScript);
   console.log("Policy ID:     ", policyId);
   console.log("Asset:          " + policyId + "." + ASSET_NAME_HEX);
+  if (LOCK_AFTER_SLOT) {
+    console.log("Policy locked:  after slot", LOCK_AFTER_SLOT);
+  } else {
+    console.log("WARNING:        no time-lock — policy can mint again");
+  }
 
   // Fetch UTxOs
   const utxos = await wallet.getUtxos();
@@ -118,7 +139,7 @@ async function main() {
   // Mint + send to destination
   txBuilder
     .mint(SUPPLY, policyId, ASSET_NAME_HEX)
-    .mintingScript(forgingScript)
+    .mintingScript(scriptCbor)
     .txOut(destAddr, [
       { unit: policyId + ASSET_NAME_HEX, quantity: SUPPLY },
     ])
@@ -126,13 +147,22 @@ async function main() {
     .changeAddress(walletAddress)
     .selectUtxosFrom(utxos);
 
-  // Optional time-lock
+  // Transaction must be submitted before the policy lock slot
   if (LOCK_AFTER_SLOT) {
     txBuilder.invalidHereafter(Number(LOCK_AFTER_SLOT));
-    console.log("Time-lock:      before slot", LOCK_AFTER_SLOT);
   }
 
   const unsignedTx = await txBuilder.complete();
+
+  if (DRY_RUN) {
+    console.log("\n=== Dry Run ===");
+    console.log("Policy ID: ", policyId);
+    console.log("Asset:      XP (hex: 5850)");
+    console.log("Supply:    ", SUPPLY);
+    console.log("Dest:      ", destAddr);
+    console.log("TX built successfully — not signed or submitted.");
+    return;
+  }
 
   console.log("Signing...");
   const signedTx = await wallet.signTx(unsignedTx);

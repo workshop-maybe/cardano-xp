@@ -322,7 +322,6 @@ export const txSchemas = {
     contributor_state_id: policyIdSchema,
     task_hash: hashSchema,
     task_info: shortTextSchema,
-    fee_tier: z.string().optional(),
     initiator_data: walletDataSchema,
   }),
 
@@ -345,7 +344,6 @@ export const txSchemas = {
     alias: aliasSchema,
     project_id: policyIdSchema,
     contributor_state_id: policyIdSchema,
-    fee_tier: z.string().optional(),
     initiator_data: walletDataSchema,
   }),
 

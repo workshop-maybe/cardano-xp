@@ -152,12 +152,20 @@ export interface APIUsageMetric {
 }
 
 export interface AddFundsTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
+  /** List of (asset class, quantity) pairs. An asset class is either "lovelace" or a token with its minting policy and token name delimited by dot (.). */
   deposit_value?: any[][];
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
 }
 
@@ -287,10 +295,18 @@ export interface AnyUserDailyApiUsageResponse {
 }
 
 export interface AssessAssignmentsTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
   assignment_decisions?: AssignmentOutcome[];
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   course_id?: string;
   initiator_data?: WalletData;
 }
@@ -305,11 +321,19 @@ export interface Asset {
 }
 
 export interface AssignmentActionTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** A text string with a maximum length of 140 characters */
+  /** A text string with a maximum length of 140 characters. */
   assignment_info?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   course_id?: string;
   initiator_data?: WalletData;
 }
@@ -338,9 +362,13 @@ export interface AssignmentCommitmentContent {
 }
 
 export interface AssignmentOutcome {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @example "JohnDoe"
+   */
   alias?: string;
-  outcome?: string;
+  /** enum: accept,refuse */
+  outcome?: "accept" | "refuse";
 }
 
 export interface AssignmentSubmissionInput {
@@ -396,7 +424,7 @@ export interface BillingStatusResponseEnvelope {
 
 export interface CheckoutRequest {
   /** @example "api" */
-  product: "api" | "platform";
+  product: "api";
   /** @example "developer" */
   tier: string;
 }
@@ -412,9 +440,17 @@ export interface CheckoutResponseEnvelope {
 }
 
 export interface ClaimCourseCredentialsTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   course_id?: string;
   initiator_data?: WalletData;
 }
@@ -426,46 +462,82 @@ export interface ClaimCredentialV2Request {
 }
 
 export interface ClaimProjectCredentialsTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   contributor_state_id?: string;
-  fee_tier?: string;
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
 }
 
 export interface ClaimV2AccessTokenTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @example "JohnDoe"
+   */
   alias?: string;
-  initiator_data?: SponsoredInitiatorData;
 }
 
 export interface CommitAssignmentTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** A text string with a maximum length of 140 characters */
+  /** A text string with a maximum length of 140 characters. */
   assignment_info?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   course_id?: string;
   initiator_data?: WalletData;
-  /** Hex encoded hash of slts (exactly 64 characters) */
+  /**
+   * Hex-encoded hash of the task SLT (exactly 64 characters).
+   * @example "a1b2c3d4e5f6..."
+   */
   slt_hash?: string;
 }
 
 export interface CommitTaskTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   contributor_state_id?: string;
-  fee_tier?: string;
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
-  /** Hex encoded hash of slts (exactly 64 characters) */
+  /**
+   * Hex-encoded hash of the task SLT (exactly 64 characters).
+   * @example "a1b2c3d4e5f6..."
+   */
   task_hash?: string;
-  /** A text string with a maximum length of 140 characters */
+  /** A text string with a maximum length of 140 characters. */
   task_info?: string;
 }
 
@@ -652,7 +724,12 @@ export interface CreateCourseRequest {
 }
 
 export interface CreateCourseTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
   initiator_data?: WalletData;
   teachers?: string[];
@@ -669,7 +746,12 @@ export interface CreateProjectRequest {
 }
 
 export interface CreateProjectTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
   course_prereqs?: any[][];
   initiator_data?: WalletData;
@@ -1044,29 +1126,53 @@ export interface LoginSession {
 }
 
 export interface ManageContributorBlacklistTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
   aliases_to_add?: string[];
   aliases_to_remove?: string[];
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
 }
 
 export interface ManageManagersTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
   initiator_data?: WalletData;
   managers_to_add?: string[];
   managers_to_remove?: string[];
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
 }
 
 export interface ManageModulesTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   course_id?: string;
   initiator_data?: WalletData;
   modules_to_add?: MintModuleV2[];
@@ -1075,23 +1181,42 @@ export interface ManageModulesTxRequest {
 }
 
 export interface ManageTasksTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   contributor_state_id?: string;
-  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
+  /** List of (asset class, quantity) pairs. An asset class is either "lovelace" or a token with its minting policy and token name delimited by dot (.). */
   deposit_value?: any[][];
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
   tasks_to_add?: TaskData[];
   tasks_to_remove?: TaskData[];
 }
 
 export interface ManageTeachersTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   course_id?: string;
   initiator_data?: WalletData;
   teachers_to_add?: string[];
@@ -1359,6 +1484,7 @@ export interface MergedProjectDetailResponse {
 }
 
 export interface MergedProjectListItem {
+  available_task_count?: number;
   /** Off-chain content (nested) */
   content?: ProjectContent;
   contributor_state_id?: string;
@@ -1373,6 +1499,8 @@ export interface MergedProjectListItem {
   project_id: string;
   /** Data source indicator */
   source: string;
+  /** Aggregated task reward data (computed from Andamioscan detail) */
+  total_reward_lovelace?: number;
   treasury_address?: string;
 }
 
@@ -1444,9 +1572,13 @@ export interface Meta {
 }
 
 export interface MintAccessTokenTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** An address, serialised as Bech32. */
   initiator_data?: string;
 }
 
@@ -1598,6 +1730,31 @@ export interface PendingTxResponse {
   user_id?: string;
 }
 
+export interface PlanTier {
+  checkout_keys?: Record<string, string>;
+  /** @example 2500 */
+  daily_quota?: number;
+  /** @example "For developers building on the Andamio protocol." */
+  description?: string;
+  /** @example 2 */
+  max_api_keys?: number;
+  /** @example 75000 */
+  monthly_quota?: number;
+  /** @example "starter" */
+  name?: string;
+  /** @example 50 */
+  rate_limit_per_minute?: number;
+}
+
+export interface PlansResponse {
+  plans?: PlanTier[];
+}
+
+/** Standard API response envelope for available plans */
+export interface PlansResponseEnvelope {
+  data: PlansResponse;
+}
+
 export interface PortalResponse {
   /** @example "https://billing.stripe.com/p/session/xxx" */
   url: string;
@@ -1669,9 +1826,13 @@ export interface ProjectCredentialClaimOnChain {
 }
 
 export interface ProjectOutcome {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @example "JohnDoe"
+   */
   alias?: string;
-  outcome?: string;
+  /** enum: accept,refuse,deny */
+  outcome?: "accept" | "refuse" | "deny";
 }
 
 export interface ProjectPrerequisite {
@@ -2002,15 +2163,6 @@ export interface SltV2 {
   slt_text?: string;
 }
 
-export interface SponsoredInitiatorData {
-  /** UTxO reference for collateral (format: txhash#index). */
-  collateral_utxo_ref?: string;
-  /** The sponsor's address that will fund the transaction, serialised as Bech32. */
-  sponsor_address?: string;
-  /** UTxO reference for the static input (format: txhash#index). */
-  static_utxo_ref?: string;
-}
-
 /** Request to start an Access Token ownership verification session. */
 export interface StartVerificationRequest {
   /**
@@ -2167,12 +2319,20 @@ export interface Task {
 }
 
 export interface TaskActionTxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
-  /** A text string with a maximum length of 140 characters */
+  /** A text string with a maximum length of 140 characters. */
   project_info?: string;
 }
 
@@ -2191,7 +2351,7 @@ export interface TaskCommitment {
 export interface TaskCommitmentContent {
   /** Manager who assessed */
   assessed_by?: string;
-  /** DRAFT, SUBMITTED, ACCEPTED, REFUSED, REWARDED, ABANDONED, PENDING_TX_*. Note: COMMITTED is normalized to SUBMITTED at API layer. */
+  /** DRAFT, COMMITTED, ACCEPTED, REFUSED, DENIED, REWARDED, ABANDONED, PENDING_TX_*. */
   commitment_status?: string;
   /** Tiptap JSON document */
   evidence?: any;
@@ -2216,11 +2376,22 @@ export interface TaskContentInput {
 }
 
 export interface TaskData {
+  /**
+   * Unix timestamp (milliseconds) for task expiration
+   * @example 1776421758000
+   */
   expiration_posix?: number;
+  /**
+   * Amount in lovelace
+   * @example 2000000
+   */
   lovelace_amount?: number;
-  /** List of (asset class, quantity) pairs. This is an asset class, i.e. either \"lovelace\" or some other token with its minting policy and token name delimited by dot (.). */
+  /** List of (asset class, quantity) pairs. An asset class is either "lovelace" or a token with its minting policy and token name delimited by dot (.). */
   native_assets?: any[][];
-  /** A text string with a maximum length of 140 characters */
+  /**
+   * Human-readable description of the task requirements
+   * @example "Complete the assigned module and submit proof."
+   */
   project_content?: string;
 }
 
@@ -2230,12 +2401,23 @@ export interface TaskSubmissionInput {
 }
 
 export interface TasksAssessV2TxRequest {
-  /** Plain text alias. Any characters allowed. */
+  /**
+   * Plain text alias. Any characters allowed.
+   * @minLength 1
+   * @maxLength 31
+   * @example "JohnDoe"
+   */
   alias?: string;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   contributor_state_id?: string;
   initiator_data?: WalletData;
-  /** This is the hash of a minting policy script. */
+  /**
+   * Hash of a minting policy script.
+   * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
+   */
   project_id?: string;
   task_decisions?: ProjectOutcome[];
 }
@@ -2405,14 +2587,14 @@ export interface UpdateModuleStatusRequest {
   course_module_code?: string;
   /** Required when status = "APPROVED" */
   slt_hash?: string;
-  /** "APPROVED" or "DRAFT" */
+  /** "DRAFT", "APPROVED", or "PENDING_TX" */
   status?: string;
 }
 
 export interface UpdateModuleV2 {
   allowed_student_state_ids?: string[];
   prereq_slt_hashes?: string[];
-  /** Hex encoded hash of slts (exactly 64 characters) */
+  /** Hex-encoded hash of the SLT (exactly 64 characters). */
   slt_hash?: string;
 }
 
@@ -2698,7 +2880,8 @@ export interface VerifyEmailResponse {
 }
 
 export interface WalletData {
-  /** An address, serialised as Bech32. */
+  /** Bech32-encoded change address */
   change_address?: string;
+  /** Bech32-encoded wallet addresses that have been used in the wallet. */
   used_addresses?: string[];
 }

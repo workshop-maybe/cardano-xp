@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef, useLayoutEffect } from "react";
+import { flushSync } from "react-dom";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
@@ -17,7 +18,6 @@ import {
   AndamioErrorAlert,
   AndamioPageHeader,
   AndamioPageLoading,
-  AndamioSectionHeader,
   AndamioSeparator,
   AndamioText,
 } from "~/components/andamio";
@@ -30,6 +30,7 @@ import { CARDANO_XP } from "~/config/cardano-xp";
 import { formatCommitmentStatus, formatTaskStatus, getCommitmentStatusVariant } from "~/lib/format-status";
 import { TaskCommit, TaskAction, ProjectCredentialClaim } from "~/components/tx";
 import { ConnectWalletPrompt } from "~/components/auth/connect-wallet-prompt";
+import { ConfirmDialog } from "~/components/ui/confirm-dialog";
 import { useProjectTask, useProject, projectKeys } from "~/hooks/api/project/use-project";
 import { useContributorCommitment, useContributorCommitments, projectContributorKeys } from "~/hooks/api/project/use-project-contributor";
 import { useQueryClient } from "@tanstack/react-query";
@@ -102,9 +103,22 @@ export function TaskDetailContent() {
     taskHash
   );
 
+  // Collapsible task description
+  const taskContentRef = useRef<HTMLDivElement>(null);
+  const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
+  const [needsDescriptionCollapse, setNeedsDescriptionCollapse] = useState(false);
+
+  useLayoutEffect(() => {
+    if (taskContentRef.current) {
+      const height = taskContentRef.current.getBoundingClientRect().height;
+      setNeedsDescriptionCollapse(height > 200);
+    }
+  }, [task?.contentJson]);
+
   // Evidence editor state
   const [evidence, setEvidence] = useState<JSONContent | null>(null);
   const [isEditingEvidence, setIsEditingEvidence] = useState(false);
+  const commitmentCardRef = useRef<HTMLDivElement>(null);
 
   // Pending TX hash for task actions
   const [pendingActionTxHash, setPendingActionTxHash] = useState<string | null>(null);
@@ -192,6 +206,11 @@ export function TaskDetailContent() {
   const activeCommitment = commitment ?? deniedFallback;
   const commitmentStatus = activeCommitment?.commitmentStatus ?? null;
 
+  // Expiration check
+  const isExpired = task.expirationTime
+    ? parseInt(task.expirationTime) > 0 && new Date(parseInt(task.expirationTime)) < new Date()
+    : false;
+
   // Pre-assignment gate
   const preAssignedAlias = task?.preAssignedAlias ?? null;
   const isPreAssigned = !!preAssignedAlias;
@@ -236,7 +255,7 @@ export function TaskDetailContent() {
       />
 
       {/* Task Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <AndamioDashboardStat
           icon={TokenIcon}
           label="ADA Reward"
@@ -264,13 +283,18 @@ export function TaskDetailContent() {
         />
       </div>
 
-      {/* Task Hash */}
-      <div className="p-3 bg-muted rounded-lg">
-        <AndamioText variant="small" className="text-xs mb-1">Task ID</AndamioText>
-        <AndamioText className="font-mono text-sm break-all">
-          {task.taskHash || taskHash}
-        </AndamioText>
-      </div>
+      {/* Technical Details (collapsed) */}
+      <details className="text-sm">
+        <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
+          Technical Details
+        </summary>
+        <div className="mt-2 p-3 bg-muted rounded-lg">
+          <AndamioText variant="small" className="text-xs mb-1">Task Hash</AndamioText>
+          <code className="font-mono text-xs break-all text-muted-foreground">
+            {task.taskHash || taskHash}
+          </code>
+        </div>
+      </details>
 
       {/* Task Content */}
       {!!task.contentJson && (
@@ -280,41 +304,32 @@ export function TaskDetailContent() {
             <AndamioCardDescription>Full task instructions and requirements</AndamioCardDescription>
           </AndamioCardHeader>
           <AndamioCardContent>
-            <ContentDisplay content={task.contentJson as JSONContent} />
-          </AndamioCardContent>
-        </AndamioCard>
-      )}
-
-      {/* XP Reward */}
-      {task.tokens && task.tokens.length > 0 && (
-        <AndamioCard>
-          <AndamioCardHeader>
-            <AndamioCardTitle>XP Reward</AndamioCardTitle>
-            <AndamioCardDescription>Reputation tokens earned on completion</AndamioCardDescription>
-          </AndamioCardHeader>
-          <AndamioCardContent>
-            <div className="space-y-2">
-              {task.tokens.map((token, idx) => {
-                const isXp = token.policyId === CARDANO_XP.xpToken.policyId;
-                const displayName = isXp ? "XP" : (token.assetName || token.policyId?.slice(0, 16) || `Token ${idx + 1}`);
-                return (
-                  <div key={token.policyId || idx} className="flex items-center justify-between p-3 border bg-card">
-                    <AndamioText className="font-display font-semibold">
-                      {displayName}
-                    </AndamioText>
-                    <AndamioBadge variant={isXp ? "secondary" : "outline"}>
-                      {isXp ? formatXP(token.quantity) : token.quantity}
-                    </AndamioBadge>
-                  </div>
-                );
-              })}
+            <div className="relative">
+              <div
+                ref={taskContentRef}
+                className={needsDescriptionCollapse && isDescriptionCollapsed ? "max-h-[200px] overflow-hidden" : ""}
+              >
+                <ContentDisplay content={task.contentJson as JSONContent} />
+              </div>
+              {needsDescriptionCollapse && isDescriptionCollapsed && (
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card to-transparent" />
+              )}
             </div>
+            {needsDescriptionCollapse && (
+              <button
+                type="button"
+                onClick={() => setIsDescriptionCollapsed(!isDescriptionCollapsed)}
+                className="mt-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              >
+                {isDescriptionCollapsed ? "Show full description" : "Show less"}
+              </button>
+            )}
           </AndamioCardContent>
         </AndamioCard>
       )}
 
       {/* ── Commitment Status Card ─────────────────────────────────────── */}
-      <AndamioCard>
+      <AndamioCard ref={commitmentCardRef}>
         <AndamioCardHeader>
           <AndamioCardTitle>Your Commitment</AndamioCardTitle>
           <AndamioCardDescription>
@@ -574,10 +589,11 @@ export function TaskDetailContent() {
                     Resubmit Your Evidence
                   </AndamioText>
                 </div>
-                <div className="min-h-[200px] border rounded-lg">
+                <div className="border rounded-lg">
                   <ContentEditor
                     content={evidence ?? (activeCommitment?.evidence as JSONContent | null)}
                     onContentChange={setEvidence}
+                    minHeight="150px"
                   />
                 </div>
                 {!hasValidEvidence && (
@@ -769,85 +785,136 @@ export function TaskDetailContent() {
                 </AndamioButton>
               </Link>
             </div>
+          ) : isExpired ? (
+            <div className="text-center py-6 space-y-2">
+              <AlertIcon className="h-6 w-6 text-destructive mx-auto" />
+              <AndamioText className="font-medium text-destructive">
+                This task has expired
+              </AndamioText>
+              <AndamioText variant="small" className="text-muted-foreground">
+                The deadline for this task has passed.
+              </AndamioText>
+              <Link href={PUBLIC_ROUTES.projects}>
+                <AndamioButton
+                  variant="outline"
+                  size="sm"
+                  className="cursor-pointer mt-2"
+                >
+                  Browse other tasks
+                </AndamioButton>
+              </Link>
+            </div>
           ) : (
-            <div className="text-center py-6">
+            <div className="py-6">
               {isEditingEvidence ? (
-                <AndamioText variant="muted">
-                  Complete your submission below
-                </AndamioText>
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <EditIcon className="h-4 w-4 text-muted-foreground" />
+                      <AndamioText className="font-medium">
+                        Your Submission
+                      </AndamioText>
+                    </div>
+                    <AndamioText variant="small" className="text-muted-foreground">
+                      Describe your plan or provide your work so far
+                    </AndamioText>
+                    <div className="border rounded-lg">
+                      <ContentEditor
+                        content={evidence}
+                        onContentChange={setEvidence}
+                        showWordCount
+                        minHeight="150px"
+                      />
+                    </div>
+                    {!hasValidEvidence && evidence && (
+                      <AndamioText variant="small" className="text-muted-foreground">
+                        Please provide evidence describing your work on this task.
+                      </AndamioText>
+                    )}
+                    {hasValidEvidence && (
+                      <AndamioText variant="small" className="text-primary flex items-center gap-1">
+                        <SuccessIcon className="h-4 w-4" />
+                        Evidence ready for submission
+                      </AndamioText>
+                    )}
+                  </div>
+
+                  {hasValidEvidence && (
+                    <TaskCommit
+                      projectNftPolicyId={projectId}
+                      contributorStateId={contributorStateId}
+                      taskHash={taskHash}
+                      taskCode={`TASK_${task.index}`}
+                      taskTitle={task.title ?? undefined}
+                      taskEvidence={evidence}
+                      isFirstCommit={isFirstCommit}
+                      taskStatus={task.taskStatus as "DRAFT" | "PENDING_TX" | "ON_CHAIN" | undefined}
+                      onSuccess={async () => {
+                        setIsEditingEvidence(false);
+                        await refreshData();
+                      }}
+                    />
+                  )}
+
+                  <div className="flex justify-end">
+                    {hasValidEvidence ? (
+                      <ConfirmDialog
+                        trigger={
+                          <AndamioButton variant="ghost" className="cursor-pointer">
+                            Cancel
+                          </AndamioButton>
+                        }
+                        title="Discard your work?"
+                        description="Your evidence submission will be lost."
+                        confirmText="Discard"
+                        variant="destructive"
+                        onConfirm={() => {
+                          setIsEditingEvidence(false);
+                          setEvidence(null);
+                        }}
+                      />
+                    ) : (
+                      <AndamioButton
+                        variant="ghost"
+                        onClick={() => {
+                          setIsEditingEvidence(false);
+                          setEvidence(null);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        Cancel
+                      </AndamioButton>
+                    )}
+                  </div>
+                </div>
               ) : (
-                <>
+                <div className="text-center">
                   <AndamioText variant="muted" className="mb-4">
                     You haven&apos;t committed to this task yet
                   </AndamioText>
                   <AndamioButton
                     variant="outline"
-                    onClick={() => setIsEditingEvidence(true)}
+                    onClick={() => {
+                      flushSync(() => {
+                        setIsEditingEvidence(true);
+                      });
+                      commitmentCardRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
                     className="cursor-pointer"
                   >
                     <EditIcon className="h-4 w-4 mr-2" />
                     Commit to This Task
                   </AndamioButton>
-                </>
+                </div>
               )}
             </div>
           )}
         </AndamioCardContent>
       </AndamioCard>
 
-      {/* ── Evidence Editor and Transaction (new commitment) ────────── */}
-      {isAuthenticated && !activeCommitment && eligibility?.eligible !== false && !isBlockedByPreAssignment && isEditingEvidence && (
-        <div className="space-y-6">
-          <AndamioSectionHeader
-            title="Your Work"
-            icon={<EditIcon className="h-5 w-5" />}
-          />
-
-          <AndamioCard>
-            <AndamioCardHeader>
-              <AndamioCardTitle>Your Submission</AndamioCardTitle>
-              <AndamioCardDescription>
-                Describe your plan or provide your work so far
-              </AndamioCardDescription>
-            </AndamioCardHeader>
-            <AndamioCardContent>
-              <ContentEditor
-                content={evidence}
-                onContentChange={setEvidence}
-                showWordCount
-              />
-            </AndamioCardContent>
-          </AndamioCard>
-
-          {evidence && Object.keys(evidence).length > 0 && (
-            <TaskCommit
-              projectNftPolicyId={projectId}
-              contributorStateId={contributorStateId}
-              taskHash={taskHash}
-              taskCode={`TASK_${task.index}`}
-              taskTitle={task.title ?? undefined}
-              taskEvidence={evidence}
-              isFirstCommit={isFirstCommit}
-              onSuccess={async () => {
-                setIsEditingEvidence(false);
-                await refreshData();
-              }}
-            />
-          )}
-
-          <div className="flex justify-end">
-            <AndamioButton
-              variant="ghost"
-              onClick={() => {
-                setIsEditingEvidence(false);
-                setEvidence(null);
-              }}
-            >
-              Cancel
-            </AndamioButton>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

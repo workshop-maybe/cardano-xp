@@ -16,6 +16,7 @@ import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { useTransaction } from "~/hooks/tx/use-transaction";
 import { useTxStream } from "~/hooks/tx/use-tx-stream";
 import { TransactionButton } from "./transaction-button";
+import { AndamioButton } from "~/components/andamio/andamio-button";
 import { TransactionStatus } from "./transaction-status";
 import {
   AndamioCard,
@@ -27,6 +28,7 @@ import {
 import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { TaskIcon, TransactionIcon, AlertIcon, LoadingIcon, SuccessIcon } from "~/components/icons";
+import { ConfirmDialog } from "~/components/ui/confirm-dialog";
 import { toast } from "sonner";
 import { parseTxErrorMessage } from "~/lib/tx-error-messages";
 import { TRANSACTION_UI } from "~/config/transaction-ui";
@@ -282,8 +284,21 @@ export function TaskAction({
           </div>
         )}
 
-        {/* Action Button */}
-        {state !== "success" && !txConfirmed && (
+        {/* Action Button — idle state shows confirmation dialog */}
+        {state !== "success" && !txConfirmed && state === "idle" && (
+          <ConfirmDialog
+            trigger={
+              <AndamioButton className="w-full" disabled={!hasAccessToken}>
+                {ui.buttonText}
+              </AndamioButton>
+            }
+            title="Resubmit Your Work?"
+            description="This records your updated evidence on-chain. Your project manager will review it."
+            confirmText={ui.buttonText}
+            onConfirm={handleAction}
+          />
+        )}
+        {state !== "success" && !txConfirmed && state !== "idle" && (
           <TransactionButton
             txState={state}
             onClick={handleAction}

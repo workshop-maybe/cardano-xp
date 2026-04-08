@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useWallet } from "@meshsdk/react";
 import { Menu } from "lucide-react";
-import { APP_NAVIGATION, isNavItemActive } from "~/config";
+import { NAV_GROUPS, isNavItemActive, isGroupActive } from "~/config";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
 import { useOwnerProjects, useManagerProjects } from "~/hooks/api";
 import { AndamioButton } from "~/components/andamio/andamio-button";
@@ -13,6 +13,14 @@ import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
 import {
   LogOutIcon,
 } from "~/components/icons";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from "~/components/ui/navigation-menu";
 import {
   Sheet,
   SheetTrigger,
@@ -69,35 +77,44 @@ export function AppNavBar() {
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-1 px-2">
-                {APP_NAVIGATION.map((item) => (
-                  <SheetClose key={item.name} asChild>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
-                        isNavItemActive(pathname, item.href)
-                          ? "bg-foreground/10 text-foreground"
-                          : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  </SheetClose>
+                {NAV_GROUPS.map((group, groupIndex) => (
+                  <div key={group.label} className={cn(groupIndex > 0 && "mt-4")}>
+                    <span className="px-4 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                      {group.label}
+                    </span>
+                    {group.items.map((item) => (
+                      <SheetClose key={item.href} asChild>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
+                            isNavItemActive(pathname, item.href)
+                              ? "bg-foreground/10 text-foreground"
+                              : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                  </div>
                 ))}
                 {isAdmin && (
-                  <SheetClose asChild>
-                    <Link
-                      href={ADMIN_ROUTES.hub}
-                      className={cn(
-                        "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
-                        isNavItemActive(pathname, "/admin")
-                          ? "bg-primary/15 text-primary"
-                          : "text-primary/70 hover:bg-primary/10 hover:text-primary"
-                      )}
-                    >
-                      Admin
-                    </Link>
-                  </SheetClose>
+                  <div className="mt-4">
+                    <SheetClose asChild>
+                      <Link
+                        href={ADMIN_ROUTES.hub}
+                        className={cn(
+                          "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
+                          isNavItemActive(pathname, "/admin")
+                            ? "bg-primary/15 text-primary"
+                            : "text-primary/70 hover:bg-primary/10 hover:text-primary"
+                        )}
+                      >
+                        Admin
+                      </Link>
+                    </SheetClose>
+                  </div>
                 )}
               </div>
 
@@ -142,36 +159,61 @@ export function AppNavBar() {
             </span>
           </Link>
 
-          {/* Desktop nav links — hidden on mobile */}
-          <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-            {APP_NAVIGATION.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
-                  isNavItemActive(pathname, item.href)
-                    ? "bg-foreground/10 text-foreground"
-                    : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-                )}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {isAdmin && (
-              <Link
-                href={ADMIN_ROUTES.hub}
-                className={cn(
-                  "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
-                  isNavItemActive(pathname, "/admin")
-                    ? "bg-primary/15 text-primary"
-                    : "text-primary/70 hover:bg-primary/10 hover:text-primary"
-                )}
-              >
-                Admin
-              </Link>
-            )}
-          </div>
+          {/* Desktop nav — dropdown menus, hidden on mobile */}
+          <NavigationMenu className="hidden sm:flex" viewport={false}>
+            <NavigationMenuList className="gap-0.5">
+              {NAV_GROUPS.map((group) => (
+                <NavigationMenuItem key={group.label}>
+                  <NavigationMenuTrigger
+                    className={cn(
+                      "h-auto rounded-sm bg-transparent px-2.5 py-1.5 text-xs font-medium shadow-none hover:bg-foreground/5 hover:text-foreground focus:bg-foreground/5 data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground",
+                      isGroupActive(pathname, group)
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {group.label}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="xp-glass border border-border/30 rounded-md shadow-lg min-w-[160px]">
+                    <ul className="flex flex-col gap-0.5 p-1.5">
+                      {group.items.map((item) => (
+                        <li key={item.href}>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href={item.href}
+                              className={cn(
+                                "block rounded-sm px-3 py-2 text-xs font-medium transition-colors",
+                                isNavItemActive(pathname, item.href)
+                                  ? "bg-foreground/10 text-foreground"
+                                  : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+                              )}
+                            >
+                              {item.name}
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          {/* Admin link — standalone, conditional */}
+          {isAdmin && (
+            <Link
+              href={ADMIN_ROUTES.hub}
+              className={cn(
+                "hidden sm:inline-flex rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
+                isNavItemActive(pathname, "/admin")
+                  ? "bg-primary/15 text-primary"
+                  : "text-primary/70 hover:bg-primary/10 hover:text-primary"
+              )}
+            >
+              Admin
+            </Link>
+          )}
         </div>
 
         {/* Right: Status + controls */}

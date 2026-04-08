@@ -75,6 +75,7 @@ import { registerTransaction, getGatewayTxType } from "~/hooks/tx/use-tx-watcher
 import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
 import { PROXY_BASE } from "~/lib/gateway";
 import { txWatcherStore } from "~/stores/tx-watcher-store";
+import { pendingTxRegistrations } from "~/lib/pending-tx-registrations";
 
 /** Spinner icon for dismissible loading toasts (toast.loading doesn't support closeButton) */
 const loadingSpinner = React.createElement(LoadingIcon, { className: "size-4 animate-spin" });
@@ -260,13 +261,14 @@ export function useTransaction() {
         // This allows access token mint to be registered before the user has a JWT.
         const shouldRegister = ui.requiresDBUpdate || ui.requiresOnChainConfirmation;
         if (shouldRegister) {
+          const gatewayTxType = getGatewayTxType(txType);
           try {
-            const gatewayTxType = getGatewayTxType(txType);
             await registerTransaction(txHash, gatewayTxType, jwt, metadata);
             console.log(`[${txType}] Transaction registered with gateway`);
           } catch (regError) {
-            // Registration failure is non-critical - gateway may still pick it up
-            console.warn(`[${txType}] Failed to register TX:`, regError);
+            // Registration failed after retries — persist for recovery on next load
+            console.warn(`[${txType}] Failed to register TX, saving for recovery:`, regError);
+            pendingTxRegistrations.add({ txHash, txType: gatewayTxType, metadata });
           }
 
           // Step 5b: Register with global TX watcher store for persistent monitoring.

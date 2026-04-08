@@ -87,6 +87,20 @@ export interface TaskCommitProps {
   taskStatus?: "DRAFT" | "PENDING_TX" | "ON_CHAIN";
 
   /**
+   * Hash of a previously ACCEPTED task in this project.
+   * When provided, passed in TX registration metadata so the gateway
+   * transitions the previous commitment from ACCEPTED → REWARDED.
+   */
+  previousTaskHash?: string;
+
+  /**
+   * Evidence hash from the contributor's previous submission.
+   * When provided, compared against the current computed hash to
+   * prevent resubmission of identical evidence.
+   */
+  previousEvidenceHash?: string;
+
+  /**
    * Callback fired when commitment is successful
    */
   onSuccess?: () => void | Promise<void>;
@@ -133,6 +147,8 @@ export function TaskCommit({
   isFirstCommit = false,
   willClaimRewards = false,
   taskStatus,
+  previousTaskHash,
+  previousEvidenceHash,
   onSuccess,
 }: TaskCommitProps) {
   const { user, isAuthenticated } = useAndamioAuth();
@@ -200,6 +216,25 @@ export function TaskCommit({
       return;
     }
 
+    // Block resubmission of identical evidence
+    if (previousEvidenceHash && computedHash === previousEvidenceHash) {
+      toast.error("Evidence unchanged", {
+        description: "Update your submission before resubmitting.",
+      });
+      return;
+    }
+
+    const metadata: Record<string, string> = {
+      task_hash: taskHash,
+      evidence: JSON.stringify(taskEvidence),
+      evidence_hash: computedHash,
+    };
+
+    // Pass previous task hash so gateway transitions ACCEPTED → REWARDED
+    if (previousTaskHash) {
+      metadata.previous_task_hash = previousTaskHash;
+    }
+
     await execute({
       txType: "PROJECT_CONTRIBUTOR_TASK_COMMIT",
       params: {
@@ -209,11 +244,7 @@ export function TaskCommit({
         task_hash: taskHash,
         task_info: computedHash,
       },
-      metadata: {
-        task_hash: taskHash,
-        evidence: JSON.stringify(taskEvidence),
-        evidence_hash: computedHash,
-      },
+      metadata,
       onSuccess: async (txResult) => {
         console.log("[TaskCommit] TX submitted:", txResult.txHash);
       },

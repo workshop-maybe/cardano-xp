@@ -60,14 +60,32 @@ export interface TxRegisterRequest {
 // Registration Helper
 // =============================================================================
 
+/** Wrap a fetch promise with a timeout */
+function withTimeout(
+  promise: Promise<Response>,
+  ms: number,
+): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Request timed out after ${ms}ms`)), ms);
+    promise.then(resolve, reject).finally(() => clearTimeout(timer));
+  });
+}
+
 /**
- * Register a transaction with the gateway after wallet submission
+ * Register a transaction with the gateway after wallet submission.
+ *
+ * Retries up to 3 times with exponential backoff (2s/4s/8s) for transient
+ * failures (5xx, timeout). 4xx errors are permanent and not retried.
  *
  * @param txHash - Transaction hash from wallet.submitTx()
  * @param txType - Transaction type (e.g., "access_token_mint")
  * @param jwt - Authentication JWT
  * @param metadata - Optional off-chain metadata (e.g., course title)
  */
+const REGISTER_TIMEOUT_MS = 15_000;
+const REGISTER_MAX_RETRIES = 3;
+const RETRYABLE_STATUSES = new Set([500, 502, 503, 504]);
+
 export async function registerTransaction(
   txHash: string,
   txType: string,
@@ -81,19 +99,45 @@ export async function registerTransaction(
     headers.Authorization = `Bearer ${jwt}`;
   }
 
-  const response = await fetch(`${GATEWAY_API_BASE}/tx/register`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      tx_hash: txHash,
-      tx_type: txType,
-      metadata,
-    } satisfies TxRegisterRequest),
-  });
+  const body = JSON.stringify({
+    tx_hash: txHash,
+    tx_type: txType,
+    metadata,
+  } satisfies TxRegisterRequest);
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Failed to register TX: ${response.status} - ${errorText}`);
+  for (let attempt = 0; attempt <= REGISTER_MAX_RETRIES; attempt++) {
+    try {
+      const response = await withTimeout(
+        fetch(`${GATEWAY_API_BASE}/tx/register`, { method: "POST", headers, body }),
+        REGISTER_TIMEOUT_MS,
+      );
+
+      if (response.ok) return;
+
+      // 4xx = permanent failure, don't retry
+      if (!RETRYABLE_STATUSES.has(response.status)) {
+        const errorText = await response.text();
+        throw new Error(`Failed to register TX: ${response.status} - ${errorText}`);
+      }
+
+      // 5xx on last attempt = give up
+      if (attempt === REGISTER_MAX_RETRIES) {
+        const errorText = await response.text();
+        throw new Error(`Failed to register TX: ${response.status} - ${errorText}`);
+      }
+
+      // 5xx = transient, retry with backoff
+      console.warn(`[tx-register] Retry ${attempt + 1}/${REGISTER_MAX_RETRIES} after ${response.status}`);
+    } catch (error) {
+      // Timeout or network error on last attempt — give up
+      if (attempt === REGISTER_MAX_RETRIES) throw error;
+      console.warn(`[tx-register] Retry ${attempt + 1}/${REGISTER_MAX_RETRIES} after error:`, error);
+    }
+
+    // Exponential backoff with jitter: ~2s, ~4s, ~8s
+    const delay = 2000 * Math.pow(2, attempt);
+    const jitter = Math.random() * delay * 0.2;
+    await new Promise((r) => setTimeout(r, delay + jitter));
   }
 }
 

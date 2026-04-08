@@ -174,26 +174,68 @@ export function AppNavBar() {
                   >
                     {group.label}
                   </NavigationMenuTrigger>
-                  <NavigationMenuContent className="xp-glass border border-border/30 rounded-md shadow-lg min-w-[160px]">
-                    <ul className="flex flex-col gap-0.5 p-1.5">
-                      {group.items.map((item) => (
-                        <li key={item.href}>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href={item.href}
-                              className={cn(
-                                "block rounded-sm px-3 py-2 text-xs font-medium transition-colors",
-                                isNavItemActive(pathname, item.href)
-                                  ? "bg-foreground/10 text-foreground"
-                                  : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-                              )}
-                            >
-                              {item.name}
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
+                  <NavigationMenuContent className="bg-popover border border-foreground/25 shadow-lg rounded-[4px]">
+                    <div className="w-[340px] p-2 sm:w-[440px]">
+                      <ul className="grid gap-1 sm:grid-cols-2">
+                        {group.items.slice(0, 2).map((item) => (
+                          <li key={item.href}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={item.href}
+                                className={cn(
+                                  "block select-none rounded-sm p-3 leading-none no-underline outline-none transition-colors",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "bg-foreground/10"
+                                    : "hover:bg-foreground/5"
+                                )}
+                              >
+                                <div className={cn(
+                                  "text-xs font-medium leading-none",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "text-foreground"
+                                    : "text-foreground/90"
+                                )}>
+                                  {item.name}
+                                </div>
+                                <p className="mt-1.5 line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+                                  {item.description}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                      <hr className="my-1 border-foreground/25" />
+                      <ul className="grid gap-1 sm:grid-cols-2">
+                        {group.items.slice(2).map((item) => (
+                          <li key={item.href}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={item.href}
+                                className={cn(
+                                  "block select-none rounded-sm p-3 leading-none no-underline outline-none transition-colors",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "bg-foreground/10"
+                                    : "hover:bg-foreground/5"
+                                )}
+                              >
+                                <div className={cn(
+                                  "text-xs font-medium leading-none",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "text-foreground"
+                                    : "text-foreground/90"
+                                )}>
+                                  {item.name}
+                                </div>
+                                <p className="mt-1.5 line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+                                  {item.description}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               ))}

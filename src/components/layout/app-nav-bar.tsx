@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useWallet } from "@meshsdk/react";
 import { Menu } from "lucide-react";
-import { APP_NAVIGATION, isNavItemActive } from "~/config";
+import { NAV_GROUPS, isNavItemActive, isGroupActive } from "~/config";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
 import { useOwnerProjects, useManagerProjects } from "~/hooks/api";
 import { AndamioButton } from "~/components/andamio/andamio-button";
@@ -13,6 +13,14 @@ import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
 import {
   LogOutIcon,
 } from "~/components/icons";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from "~/components/ui/navigation-menu";
 import {
   Sheet,
   SheetTrigger,
@@ -69,35 +77,44 @@ export function AppNavBar() {
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-1 px-2">
-                {APP_NAVIGATION.map((item) => (
-                  <SheetClose key={item.name} asChild>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
-                        isNavItemActive(pathname, item.href)
-                          ? "bg-foreground/10 text-foreground"
-                          : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  </SheetClose>
+                {NAV_GROUPS.map((group, groupIndex) => (
+                  <div key={group.label} className={cn(groupIndex > 0 && "mt-4")}>
+                    <span className="px-4 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                      {group.label}
+                    </span>
+                    {group.items.map((item) => (
+                      <SheetClose key={item.href} asChild>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
+                            isNavItemActive(pathname, item.href)
+                              ? "bg-foreground/10 text-foreground"
+                              : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                  </div>
                 ))}
                 {isAdmin && (
-                  <SheetClose asChild>
-                    <Link
-                      href={ADMIN_ROUTES.hub}
-                      className={cn(
-                        "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
-                        isNavItemActive(pathname, "/admin")
-                          ? "bg-primary/15 text-primary"
-                          : "text-primary/70 hover:bg-primary/10 hover:text-primary"
-                      )}
-                    >
-                      Admin
-                    </Link>
-                  </SheetClose>
+                  <div className="mt-4">
+                    <SheetClose asChild>
+                      <Link
+                        href={ADMIN_ROUTES.hub}
+                        className={cn(
+                          "min-h-[44px] flex items-center rounded-sm py-3 px-4 text-sm font-medium transition-colors",
+                          isNavItemActive(pathname, "/admin")
+                            ? "bg-primary/15 text-primary"
+                            : "text-primary/70 hover:bg-primary/10 hover:text-primary"
+                        )}
+                      >
+                        Admin
+                      </Link>
+                    </SheetClose>
+                  </div>
                 )}
               </div>
 
@@ -142,36 +159,103 @@ export function AppNavBar() {
             </span>
           </Link>
 
-          {/* Desktop nav links — hidden on mobile */}
-          <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-            {APP_NAVIGATION.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
-                  isNavItemActive(pathname, item.href)
-                    ? "bg-foreground/10 text-foreground"
-                    : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-                )}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {isAdmin && (
-              <Link
-                href={ADMIN_ROUTES.hub}
-                className={cn(
-                  "rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
-                  isNavItemActive(pathname, "/admin")
-                    ? "bg-primary/15 text-primary"
-                    : "text-primary/70 hover:bg-primary/10 hover:text-primary"
-                )}
-              >
-                Admin
-              </Link>
-            )}
-          </div>
+          {/* Desktop nav — dropdown menus, hidden on mobile */}
+          <NavigationMenu className="hidden sm:flex" viewport={false}>
+            <NavigationMenuList className="gap-0.5">
+              {NAV_GROUPS.map((group) => (
+                <NavigationMenuItem key={group.label}>
+                  <NavigationMenuTrigger
+                    className={cn(
+                      "h-auto rounded-sm bg-transparent px-2.5 py-1.5 text-xs font-medium shadow-none hover:bg-foreground/5 hover:text-foreground focus:bg-foreground/5 data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground",
+                      isGroupActive(pathname, group)
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {group.label}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="bg-popover border border-foreground/25 shadow-lg rounded-[4px]">
+                    <div className="w-[340px] p-2 sm:w-[440px]">
+                      <ul className="grid gap-1 sm:grid-cols-2">
+                        {group.items.slice(0, 2).map((item) => (
+                          <li key={item.href}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={item.href}
+                                className={cn(
+                                  "block select-none rounded-sm p-3 leading-none no-underline outline-none transition-colors",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "bg-foreground/10"
+                                    : "hover:bg-foreground/5"
+                                )}
+                              >
+                                <div className={cn(
+                                  "text-xs font-medium leading-none",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "text-foreground"
+                                    : "text-foreground/90"
+                                )}>
+                                  {item.name}
+                                </div>
+                                <p className="mt-1.5 line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+                                  {item.description}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                      <hr className="my-1 border-foreground/25" />
+                      <ul className="grid gap-1 sm:grid-cols-2">
+                        {group.items.slice(2).map((item) => (
+                          <li key={item.href}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={item.href}
+                                className={cn(
+                                  "block select-none rounded-sm p-3 leading-none no-underline outline-none transition-colors",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "bg-foreground/10"
+                                    : "hover:bg-foreground/5"
+                                )}
+                              >
+                                <div className={cn(
+                                  "text-xs font-medium leading-none",
+                                  isNavItemActive(pathname, item.href)
+                                    ? "text-foreground"
+                                    : "text-foreground/90"
+                                )}>
+                                  {item.name}
+                                </div>
+                                <p className="mt-1.5 line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+                                  {item.description}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          {/* Admin link — standalone, conditional */}
+          {isAdmin && (
+            <Link
+              href={ADMIN_ROUTES.hub}
+              className={cn(
+                "hidden sm:inline-flex rounded-sm px-2.5 py-1.5 text-xs font-medium transition-colors",
+                isNavItemActive(pathname, "/admin")
+                  ? "bg-primary/15 text-primary"
+                  : "text-primary/70 hover:bg-primary/10 hover:text-primary"
+              )}
+            >
+              Admin
+            </Link>
+          )}
         </div>
 
         {/* Right: Status + controls */}

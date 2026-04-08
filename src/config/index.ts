@@ -19,7 +19,8 @@ export {
 } from "./features";
 
 // Navigation configuration
-export { APP_NAVIGATION, isNavItemActive } from "./navigation";
+export { NAV_GROUPS, isNavItemActive, isGroupActive } from "./navigation";
+export type { NavItem, NavGroup } from "./navigation";
 
 // Route definitions
 export {

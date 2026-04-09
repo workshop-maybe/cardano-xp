@@ -16,6 +16,8 @@ export const env = createEnv({
     WEB3_SDK_PRIVATE_KEY: z.string().optional(),
     // UTXOS Sponsorship ID — for gasless access token migration
     UTXOS_SPONSORSHIP_ID: z.string().optional(),
+    // Resend API key — for sending sponsor inquiry emails
+    RESEND_API_KEY: z.string().min(1).optional(),
   },
 
   /**
@@ -58,6 +60,7 @@ export const env = createEnv({
     WEB3_SDK_API_KEY: process.env.WEB3_SDK_API_KEY,
     WEB3_SDK_PRIVATE_KEY: process.env.WEB3_SDK_PRIVATE_KEY,
     UTXOS_SPONSORSHIP_ID: process.env.UTXOS_SPONSORSHIP_ID,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_COURSE_ID: process.env.NEXT_PUBLIC_COURSE_ID,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
     NEXT_PUBLIC_XP_POLICY_ID: process.env.NEXT_PUBLIC_XP_POLICY_ID,

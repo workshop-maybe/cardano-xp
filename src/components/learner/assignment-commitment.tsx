@@ -512,7 +512,7 @@ export function AssignmentCommitment({
                 <UpdateTxStatusSection
                   txState={updateTx.state}
                   txResult={updateTx.result}
-                  txError={updateTx.error?.message ?? null}
+                  txError={parseTxErrorMessage(updateTx.error?.message)}
                   txStatus={updateTxStatus}
                   txConfirmed={updateTxConfirmed}
                   txFailed={updateTxFailed}
@@ -570,7 +570,7 @@ export function AssignmentCommitment({
                   <UpdateTxStatusSection
                     txState={commitTx.state}
                     txResult={commitTx.result}
-                    txError={commitTx.error?.message ?? null}
+                    txError={parseTxErrorMessage(commitTx.error?.message)}
                     txStatus={commitTxStatus}
                     txConfirmed={commitTxConfirmed}
                     txFailed={commitTxFailed}

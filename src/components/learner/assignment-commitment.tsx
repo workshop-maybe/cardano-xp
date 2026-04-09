@@ -348,6 +348,28 @@ export function AssignmentCommitment({
     );
   }
 
+  if (!user?.accessTokenAlias) {
+    return (
+      <AndamioCard>
+        <AndamioCardHeader>
+          <AndamioCardTitle>Your Feedback</AndamioCardTitle>
+          <AndamioCardDescription>You need an Access Token to submit feedback</AndamioCardDescription>
+        </AndamioCardHeader>
+        <AndamioCardContent>
+          <AndamioAlert>
+            <AlertIcon className="h-4 w-4" />
+            <AndamioAlertDescription>
+              Mint your Access Token first, then come back to submit feedback.
+            </AndamioAlertDescription>
+          </AndamioAlert>
+          <AndamioButton asChild className="mt-4 w-full">
+            <a href="/andamio-access-token">Get Access Token</a>
+          </AndamioButton>
+        </AndamioCardContent>
+      </AndamioCard>
+    );
+  }
+
   if (!sltHash) {
     return (
       <AndamioCard>

@@ -4,9 +4,9 @@ import { projectKeys } from "~/hooks/api/project/use-project";
 import { fetchProjectDetail } from "~/lib/gateway-server";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { AndamioPageLoading } from "~/components/andamio";
-import { TransparencyContent } from "./transparency-content";
+import { ProjectWalletContent } from "./project-wallet-content";
 
-export default async function TransparencyPage() {
+export default async function ProjectWalletPage() {
   const projectId = CARDANO_XP.projectId;
   const queryClient = getQueryClient();
 
@@ -16,13 +16,13 @@ export default async function TransparencyPage() {
       queryFn: () => fetchProjectDetail(projectId),
     });
   } catch (err) {
-    console.error("[TransparencyPage] Server prefetch failed:", err);
+    console.error("[ProjectWalletPage] Server prefetch failed:", err);
   }
 
   return (
     <HydrateClient>
       <Suspense fallback={<AndamioPageLoading variant="detail" />}>
-        <TransparencyContent />
+        <ProjectWalletContent />
       </Suspense>
     </HydrateClient>
   );

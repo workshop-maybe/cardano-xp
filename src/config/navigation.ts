@@ -41,8 +41,8 @@ export const NAV_GROUPS: readonly NavGroup[] = [
         description: "Support the project and see who backs it.",
       },
       {
-        name: "Transparency",
-        href: PUBLIC_ROUTES.transparency,
+        name: "Project Wallet",
+        href: PUBLIC_ROUTES.projectWallet,
         description: "Treasury activity and on-chain spending.",
       },
     ],

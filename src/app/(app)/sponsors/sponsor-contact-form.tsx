@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 
 export function SponsorContactForm() {
@@ -8,23 +9,44 @@ export function SponsorContactForm() {
   const listingNameRef = useRef<HTMLInputElement>(null);
   const urlRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setIsLoading(true);
 
-    const name = nameRef.current?.value ?? "";
-    const listingName = listingNameRef.current?.value ?? "";
-    const url = urlRef.current?.value ?? "";
-    const message = messageRef.current?.value ?? "";
+    try {
+      const res = await fetch("/api/sponsor-contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nameRef.current?.value ?? "",
+          listingName: listingNameRef.current?.value ?? "",
+          url: urlRef.current?.value ?? "",
+          message: messageRef.current?.value ?? "",
+        }),
+      });
 
-    const subject = encodeURIComponent("Cardano XP Sponsor Interest");
-    const bodyParts = [`Name: ${name}`];
-    if (listingName) bodyParts.push(`Listing name: ${listingName}`);
-    if (url) bodyParts.push(`URL: ${url}`);
-    if (message) bodyParts.push(`\nMessage:\n${message}`);
-    const body = encodeURIComponent(bodyParts.join("\n"));
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error ?? "Failed to send message");
+      }
 
-    window.location.href = `mailto:james@andamio.io?subject=${subject}&body=${body}`;
+      toast.success("Message sent! We'll be in touch.");
+
+      if (nameRef.current) nameRef.current.value = "";
+      if (listingNameRef.current) listingNameRef.current.value = "";
+      if (urlRef.current) urlRef.current.value = "";
+      if (messageRef.current) messageRef.current.value = "";
+    } catch (error) {
+      if (error instanceof TypeError) {
+        toast.error("Unable to send message. Please check your connection and try again.");
+      } else {
+        toast.error(error instanceof Error ? error.message : "Failed to send message");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const inputClassName =
@@ -85,7 +107,9 @@ export function SponsorContactForm() {
         />
       </div>
 
-      <AndamioButton type="submit">Send via email</AndamioButton>
+      <AndamioButton type="submit" isLoading={isLoading}>
+        Send message
+      </AndamioButton>
     </form>
   );
 }

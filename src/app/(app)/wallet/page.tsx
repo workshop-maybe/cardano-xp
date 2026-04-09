@@ -34,7 +34,7 @@ export default function WalletPage() {
             </p>
             <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
               Project{" "}
-              <span className="text-secondary">transparency.</span>
+              <span className="text-secondary">wallet.</span>
             </h1>
           </div>
         </div>

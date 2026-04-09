@@ -82,7 +82,7 @@ export default function SponsorsPage() {
           />
           <p className="text-sm text-muted-foreground">
             <Link
-              href={PUBLIC_ROUTES.transparency}
+              href={PUBLIC_ROUTES.projectWallet}
               className="text-secondary hover:underline"
             >
               See where funds go &rarr;
@@ -164,7 +164,7 @@ export default function SponsorsPage() {
           <p className="text-foreground leading-relaxed">
             We track all spending and token activity on-chain.{" "}
             <Link
-              href={PUBLIC_ROUTES.transparency}
+              href={PUBLIC_ROUTES.projectWallet}
               className="text-secondary hover:underline"
             >
               See how funds are used &rarr;

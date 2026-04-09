@@ -29,8 +29,8 @@ export const PUBLIC_ROUTES = {
 
   /** Sponsor pitch + donation */
   sponsors: "/sponsors",
-  /** Public treasury transparency */
-  transparency: "/transparency",
+  /** Public project wallet */
+  projectWallet: "/project-wallet",
 
   /** Utility routes */
   sitemap: "/sitemap",

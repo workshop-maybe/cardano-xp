@@ -33,6 +33,7 @@ import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { SendIcon, EditIcon, ShieldIcon, TransactionIcon, LoadingIcon, SuccessIcon } from "~/components/icons";
 import { toast } from "sonner";
+import { parseTxErrorMessage } from "~/lib/tx-error-messages";
 import { TRANSACTION_UI } from "~/config/transaction-ui";
 import type { JSONContent } from "@tiptap/core";
 
@@ -69,6 +70,13 @@ export interface AssignmentUpdateProps {
   evidence: JSONContent;
 
   /**
+   * Evidence hash from a previous submission.
+   * When provided, compared against the current computed hash to
+   * prevent resubmission of identical evidence.
+   */
+  previousEvidenceHash?: string;
+
+  /**
    * Callback fired when submission is successful
    */
   onSuccess?: () => void | Promise<void>;
@@ -99,6 +107,7 @@ export function AssignmentUpdate({
   isNewCommitment = false,
   sltHash,
   evidence,
+  previousEvidenceHash,
   onSuccess,
 }: AssignmentUpdateProps) {
   const { user, isAuthenticated } = useAndamioAuth();
@@ -111,19 +120,25 @@ export function AssignmentUpdate({
     result?.requiresDBUpdate ? result.txHash : null,
     {
       onComplete: (status) => {
-        // "updated" means Gateway has confirmed TX AND updated DB
-        if (status.state === "updated") {
+        const isStalled = status.state === "confirmed" && !!status.last_error;
+
+        if (status.state === "updated" || isStalled) {
           console.log("[AssignmentUpdate] TX confirmed and DB updated by gateway");
 
           const actionText = isNewCommitment ? "committed" : "updated";
-          toast.success("Submission Recorded!", {
-            description: `Your evidence has been ${actionText} on-chain`,
-          });
+          toast.success(
+            isStalled ? "Confirmed On-Chain!" : "Submission Recorded!",
+            {
+              description: isStalled
+                ? "Confirmed on-chain. Gateway sync pending — your data will update shortly."
+                : `Your evidence has been ${actionText} on-chain`,
+            },
+          );
 
           void onSuccess?.();
         } else if (status.state === "failed" || status.state === "expired") {
           toast.error("Submission Failed", {
-            description: status.last_error ?? "Please try again or contact support.",
+            description: parseTxErrorMessage(status.last_error ?? "Please try again or contact support."),
           });
         }
       },
@@ -145,6 +160,14 @@ export function AssignmentUpdate({
 
   const handleSubmit = async () => {
     if (!user?.accessTokenAlias || !evidence) {
+      return;
+    }
+
+    // Block resubmission of identical evidence
+    if (previousEvidenceHash && computedHash === previousEvidenceHash) {
+      toast.error("Evidence unchanged", {
+        description: "Update your submission before resubmitting.",
+      });
       return;
     }
 
@@ -293,7 +316,7 @@ export function AssignmentUpdate({
           <TransactionStatus
             state={state}
             result={result}
-            error={error?.message ?? null}
+            error={parseTxErrorMessage(error?.message)}
             onRetry={() => reset()}
             messages={{
               success: "Transaction submitted! Waiting for confirmation...",

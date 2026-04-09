@@ -22,6 +22,7 @@ import { AndamioText } from "~/components/andamio/andamio-text";
 import { ContentDisplay } from "~/components/content-display";
 import { CredentialClaim } from "~/components/tx/credential-claim";
 import { computeAssignmentInfoHash } from "@andamio/core/hashing";
+import { parseTxErrorMessage } from "~/lib/tx-error-messages";
 import type { JSONContent } from "@tiptap/core";
 import {
   AlertIcon,
@@ -116,44 +117,56 @@ export function AssignmentCommitment({
   const [txError, setTxError] = useState<string | null>(null);
 
   // Watch for gateway confirmation after commit TX
-  const { status: commitTxStatus, isSuccess: commitTxConfirmed } = useTxStream(
+  const { status: commitTxStatus, isSuccess: commitTxConfirmed, isFailed: commitTxFailed } = useTxStream(
     commitTx.result?.requiresDBUpdate ? commitTx.result.txHash : null,
     {
       onComplete: (status) => {
-        if (status.state === "updated") {
+        const isStalled = status.state === "confirmed" && !!status.last_error;
+
+        if (status.state === "updated" || isStalled) {
           // Show enrollment toast for first-time enrollment
           if (!wasEnrolledBeforeTx) {
             toast.success("You're enrolled!", {
               description: "You are now enrolled in this course.",
             });
           }
-          triggerSuccess("Assignment committed to blockchain!");
+          triggerSuccess(
+            isStalled
+              ? "Confirmed on-chain. Gateway sync pending — your data will update shortly."
+              : "Assignment committed to blockchain!"
+          );
           void refetchCommitment();
           // Invalidate student courses and commitments so sidebar badges refresh
           void queryClient.invalidateQueries({
             queryKey: courseStudentKeys.all,
           });
         } else if (status.state === "failed" || status.state === "expired") {
-          setTxError(status.last_error ?? "Transaction failed. Please try again.");
+          setTxError(parseTxErrorMessage(status.last_error ?? "Transaction failed. Please try again."));
         }
       },
     }
   );
 
   // Watch for gateway confirmation after update TX
-  const { status: updateTxStatus, isSuccess: updateTxConfirmed } = useTxStream(
+  const { status: updateTxStatus, isSuccess: updateTxConfirmed, isFailed: updateTxFailed } = useTxStream(
     updateTx.result?.requiresDBUpdate ? updateTx.result.txHash : null,
     {
       onComplete: (status) => {
-        if (status.state === "updated") {
-          triggerSuccess("Assignment updated on blockchain!");
+        const isStalled = status.state === "confirmed" && !!status.last_error;
+
+        if (status.state === "updated" || isStalled) {
+          triggerSuccess(
+            isStalled
+              ? "Confirmed on-chain. Gateway sync pending — your data will update shortly."
+              : "Assignment updated on blockchain!"
+          );
           void refetchCommitment();
           // Invalidate student commitments list so sidebar badges refresh
           void queryClient.invalidateQueries({
             queryKey: courseStudentKeys.commitments(),
           });
         } else if (status.state === "failed" || status.state === "expired") {
-          setTxError(status.last_error ?? "Transaction failed. Please try again.");
+          setTxError(parseTxErrorMessage(status.last_error ?? "Transaction failed. Please try again."));
         }
       },
     }
@@ -250,6 +263,14 @@ export function AssignmentCommitment({
     if (!localEvidenceContent || !sltHash) return;
     const hash = computeAssignmentInfoHash(localEvidenceContent);
 
+    // Block resubmission of identical evidence (compare against on-chain hash)
+    if (commitment?.networkEvidenceHash && hash === commitment.networkEvidenceHash) {
+      toast.error("Evidence unchanged", {
+        description: "Update your submission before resubmitting.",
+      });
+      return;
+    }
+
     // Check if there's an existing DB record
     // If networkEvidence exists or source is not "chain_only", we have a DB record
     const hasDbRecord = !!(commitment?.networkEvidence) || commitment?.source !== "chain_only";
@@ -305,7 +326,7 @@ export function AssignmentCommitment({
       onSuccess: () => {
         setHasUnsavedChanges(false);
       },
-      onError: (err) => setTxError(err.message),
+      onError: (err) => setTxError(parseTxErrorMessage(err.message)),
     });
   };
 
@@ -491,9 +512,10 @@ export function AssignmentCommitment({
                 <UpdateTxStatusSection
                   txState={updateTx.state}
                   txResult={updateTx.result}
-                  txError={updateTx.error?.message ?? null}
+                  txError={parseTxErrorMessage(updateTx.error?.message)}
                   txStatus={updateTxStatus}
                   txConfirmed={updateTxConfirmed}
+                  txFailed={updateTxFailed}
                   onRetry={() => updateTx.reset()}
                   successMessage="Revised work submitted successfully!"
                 />
@@ -548,9 +570,10 @@ export function AssignmentCommitment({
                   <UpdateTxStatusSection
                     txState={commitTx.state}
                     txResult={commitTx.result}
-                    txError={commitTx.error?.message ?? null}
+                    txError={parseTxErrorMessage(commitTx.error?.message)}
                     txStatus={commitTxStatus}
                     txConfirmed={commitTxConfirmed}
+                    txFailed={commitTxFailed}
                     onRetry={() => commitTx.reset()}
                     successMessage="Feedback submitted!"
                   />
@@ -584,7 +607,7 @@ export function AssignmentCommitment({
                               onSuccess: () => {
                                 setHasUnsavedChanges(false);
                               },
-                              onError: (err) => setTxError(err.message),
+                              onError: (err) => setTxError(parseTxErrorMessage(err.message)),
                             });
                           }}
                           submitLabel="Submit Feedback"

@@ -194,6 +194,7 @@ interface UpdateTxStatusSectionProps {
   txError: string | null;
   txStatus: TxStatus | null;
   txConfirmed: boolean;
+  txFailed?: boolean;
   onRetry: () => void;
   successMessage: string;
 }
@@ -208,6 +209,7 @@ export function UpdateTxStatusSection({
   txError,
   txStatus,
   txConfirmed,
+  txFailed,
   onRetry,
   successMessage,
 }: UpdateTxStatusSectionProps) {
@@ -223,7 +225,7 @@ export function UpdateTxStatusSection({
         />
       )}
 
-      {txState === "success" && txResult?.requiresDBUpdate && !txConfirmed && (
+      {txState === "success" && txResult?.requiresDBUpdate && !txConfirmed && !txFailed && (
         <TxConfirmationProgress txStatus={txStatus} />
       )}
 

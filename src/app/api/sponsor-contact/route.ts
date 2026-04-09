@@ -5,6 +5,7 @@ import { env } from "~/env";
 
 const sponsorContactSchema = z.object({
   name: z.string().min(1).max(200),
+  email: z.string().email().max(200),
   listingName: z.string().max(200).optional().default(""),
   url: z.string().max(200).optional().default(""),
   message: z.string().max(2000).optional().default(""),
@@ -38,9 +39,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, listingName, url, message } = result.data;
+    const { name, email, listingName, url, message } = result.data;
 
-    const bodyParts = [`Name: ${name}`];
+    const bodyParts = [`Name: ${name}`, `Email: ${email}`];
     if (listingName) bodyParts.push(`Listing name: ${listingName}`);
     if (url) bodyParts.push(`URL: ${url}`);
     if (message) bodyParts.push(`\nMessage:\n${message}`);
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
 
     await resend.emails.send({
       from: "Cardano XP <onboarding@resend.dev>",
+      replyTo: email,
       to: "james@andamio.io",
       subject: "Cardano XP Sponsor Interest",
       text: bodyParts.join("\n"),

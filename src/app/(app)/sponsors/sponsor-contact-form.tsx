@@ -6,6 +6,7 @@ import { AndamioButton } from "~/components/andamio/andamio-button";
 
 export function SponsorContactForm() {
   const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const listingNameRef = useRef<HTMLInputElement>(null);
   const urlRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -21,6 +22,7 @@ export function SponsorContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: nameRef.current?.value ?? "",
+          email: emailRef.current?.value ?? "",
           listingName: listingNameRef.current?.value ?? "",
           url: urlRef.current?.value ?? "",
           message: messageRef.current?.value ?? "",
@@ -35,6 +37,7 @@ export function SponsorContactForm() {
       toast.success("Message sent! We'll be in touch.");
 
       if (nameRef.current) nameRef.current.value = "";
+      if (emailRef.current) emailRef.current.value = "";
       if (listingNameRef.current) listingNameRef.current.value = "";
       if (urlRef.current) urlRef.current.value = "";
       if (messageRef.current) messageRef.current.value = "";
@@ -64,6 +67,20 @@ export function SponsorContactForm() {
           type="text"
           required
           placeholder="Your name"
+          className={inputClassName}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="sponsor-email" className="text-sm font-medium text-foreground">
+          Email <span className="text-muted-foreground">*</span>
+        </label>
+        <input
+          ref={emailRef}
+          id="sponsor-email"
+          type="email"
+          required
+          placeholder="you@example.com"
           className={inputClassName}
         />
       </div>

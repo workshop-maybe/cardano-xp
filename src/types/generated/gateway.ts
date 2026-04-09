@@ -1537,6 +1537,8 @@ export interface MergedSltsResponseWrapper {
 export interface MergedTaskListItem {
   /** Native assets */
   assets?: Asset[];
+  /** Number of active (non-terminal) commitments on this task */
+  commitment_count?: number;
   /** Off-chain content (nested) */
   content?: TaskContent;
   contributor_state_id?: string;

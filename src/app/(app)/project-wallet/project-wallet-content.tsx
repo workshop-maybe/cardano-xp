@@ -98,14 +98,46 @@ export function ProjectWalletContent() {
           </div>
         ) : (
           <div className="border border-border rounded-lg overflow-hidden">
-            <div className="overflow-x-auto">
+            {/* Mobile: stacked card list */}
+            <ul className="divide-y divide-border sm:hidden">
+              {wallet.transactions.map((tx) => {
+                const { label, color } = DIRECTION_LABELS[tx.direction];
+                return (
+                  <li key={tx.txHash} className="p-3 space-y-1">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className={`font-medium ${color}`}>{label}</span>
+                      <span className="font-mono text-foreground whitespace-nowrap">
+                        {tx.adaAmount >= 0 ? "+" : ""}
+                        {formatAda(Math.abs(tx.adaAmount))}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3 text-xs">
+                      <span className="text-muted-foreground">
+                        {tx.timestamp.toLocaleDateString()}
+                      </span>
+                      <a
+                        href={tx.explorerUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-secondary hover:underline"
+                      >
+                        {tx.txHash.slice(0, 8)}...
+                      </a>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {/* Desktop/tablet: table */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-muted-foreground font-mono text-xs uppercase tracking-wider">
-                    <th className="hidden sm:table-cell p-2 sm:p-4">Date</th>
-                    <th className="p-2 sm:p-4">Type</th>
-                    <th className="p-2 sm:p-4 text-right">Amount</th>
-                    <th className="p-2 sm:p-4 text-right">Tx</th>
+                    <th className="p-4">Date</th>
+                    <th className="p-4">Type</th>
+                    <th className="p-4 text-right">Amount</th>
+                    <th className="p-4 text-right">Tx</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -116,17 +148,17 @@ export function ProjectWalletContent() {
                         key={tx.txHash}
                         className="border-b border-border last:border-0"
                       >
-                        <td className="hidden sm:table-cell p-2 sm:p-4 text-muted-foreground">
+                        <td className="p-4 text-muted-foreground">
                           {tx.timestamp.toLocaleDateString()}
                         </td>
-                        <td className={`p-2 sm:p-4 font-medium ${color}`}>
+                        <td className={`p-4 font-medium ${color}`}>
                           {label}
                         </td>
-                        <td className="p-2 sm:p-4 text-right font-mono text-foreground whitespace-nowrap">
+                        <td className="p-4 text-right font-mono text-foreground whitespace-nowrap">
                           {tx.adaAmount >= 0 ? "+" : ""}
                           {formatAda(Math.abs(tx.adaAmount))}
                         </td>
-                        <td className="p-2 sm:p-4 text-right">
+                        <td className="p-4 text-right">
                           <a
                             href={tx.explorerUrl}
                             target="_blank"

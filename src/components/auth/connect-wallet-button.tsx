@@ -234,7 +234,7 @@ export function ConnectWalletButton({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-4 sm:grid-cols-5 place-items-center gap-4 gap-y-6 py-4">
+            <div className="grid grid-cols-4 sm:grid-cols-5 place-items-center gap-3 gap-y-5 sm:gap-4 sm:gap-y-6 py-4">
               {wallets.map((wallet) => (
                 <WalletIconButton
                   key={wallet.id}

@@ -79,7 +79,7 @@ export function AppNavBar() {
               <div className="flex flex-col gap-1 px-2">
                 {NAV_GROUPS.map((group, groupIndex) => (
                   <div key={group.label} className={cn(groupIndex > 0 && "mt-4")}>
-                    <span className="px-4 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                    <span className="px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
                       {group.label}
                     </span>
                     {group.items.map((item) => (
@@ -175,7 +175,7 @@ export function AppNavBar() {
                     {group.label}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="bg-popover border border-foreground/25 shadow-lg rounded-[4px]">
-                    <div className="w-[340px] p-2 sm:w-[440px]">
+                    <div className="w-[340px] max-w-[calc(100vw-1rem)] p-2 sm:w-[440px]">
                       <ul className="grid gap-1 sm:grid-cols-2">
                         {group.items.slice(0, 2).map((item) => (
                           <li key={item.href}>

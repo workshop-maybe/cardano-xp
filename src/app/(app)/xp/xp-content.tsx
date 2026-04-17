@@ -90,7 +90,7 @@ export function XPContent() {
             key={stat.label}
             className="bg-card p-6 space-y-2"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+            <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
               {stat.label}
             </p>
             <p className="flex items-baseline gap-1.5">
@@ -118,7 +118,7 @@ export function XPContent() {
           </div>
           <div className="grid gap-px sm:grid-cols-1 bg-border">
             <div className="bg-card p-6 space-y-2">
-              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+              <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
                 ADA in Treasury
               </p>
               <p className="flex items-baseline gap-1.5">

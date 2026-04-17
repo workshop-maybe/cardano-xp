@@ -11,7 +11,7 @@ export function AppFooter() {
 
   return (
     <footer className="relative z-10 py-3 px-4 sm:px-6 border-t border-muted-foreground/30">
-      <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-12 gap-y-1 text-[11px] text-muted-foreground/80 font-mono tracking-wide">
+      <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-12 gap-y-1 text-xs sm:text-[11px] text-muted-foreground/80 font-mono tracking-wide">
         <span className="flex items-center gap-1.5">
           <span className="text-muted-foreground/70">network</span>
           <span className="text-secondary/80">{network}</span>

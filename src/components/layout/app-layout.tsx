@@ -13,7 +13,7 @@ interface AppLayoutProps {
  */
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="relative flex h-screen w-full flex-col overflow-hidden overscroll-none bg-background">
+    <div className="relative flex h-screen h-dvh w-full flex-col overflow-hidden overscroll-none bg-background">
       <div className="pointer-events-none fixed inset-0 xp-grid" aria-hidden />
       <div className="pointer-events-none fixed inset-0 xp-mesh-bg" aria-hidden />
       <AppNavBar />

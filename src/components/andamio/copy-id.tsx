@@ -45,7 +45,7 @@ export function CopyId({ id, label, className }: CopyIdProps) {
       title={id}
       aria-label={label ? `Copy ${label}: ${id}` : `Copy ${id}`}
       className={cn(
-        "group inline-flex items-center gap-1 font-mono text-[10px]",
+        "group inline-flex items-center gap-1 font-mono text-[11px] sm:text-[10px]",
         "hover:text-primary transition-colors cursor-pointer",
         "focus:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded",
         className

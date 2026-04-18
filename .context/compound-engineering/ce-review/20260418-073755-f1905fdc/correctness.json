@@ -1,0 +1,63 @@
+{
+  "reviewer": "correctness",
+  "findings": [
+    {
+      "id": "COR-001",
+      "severity": "high",
+      "confidence": 0.97,
+      "title": "Fix commit a5e109e is not in origin/main — the plan's core factual claim is wrong",
+      "description": "The plan states that commit a5e109e (2026-03-20) 'already rewrote every Andamio-Platform/cardano-xp URL to workshop-maybe/cardano-xp across src/config/branding.ts, src/app/(app)/about/page.tsx, and src/app/(app)/andamio-access-token/page.tsx' and that this is why current main is clean. This is false. a5e109e is not an ancestor of origin/main (confirmed via `git merge-base --is-ancestor a5e109e origin/main`). It exists only on a parallel, never-merged development branch. The correct explanation for why main is clean is simpler: the initial commit (2fe19db, 2026-03-06) on main already contained workshop-maybe URLs throughout — the Andamio-Platform URLs never existed in main's history at all. The plan's stale-deploy hypothesis may still be correct, but the causal chain it gives (reporter hit stale build of pre-a5e109e code) is wrong because a5e109e was never deployed from main.",
+      "location": "docs/plans/2026-04-18-001-fix-external-link-audit-plan.md, Overview section and Sources & References section",
+      "evidence": "git merge-base --is-ancestor a5e109e origin/main returns non-zero. git log origin/main --oneline shows the commit lineage starting at 2fe19db (initial commit) which already had workshop-maybe URLs in src/config/branding.ts and src/app/(app)/about/page.tsx.",
+      "fix": "The Overview, Requirements Trace (R2), Implementation Unit 3, and Sources sections all reference a5e109e as the fix commit to cite in the issue comment. That reference needs to be replaced with an accurate description: the correct URLs have been present since the initial commit on main (2fe19db). The stale-deploy diagnosis may still apply but would need to explain a different mechanism (e.g., prod was deployed from a non-main branch that had the old URLs)."
+    },
+    {
+      "id": "COR-002",
+      "severity": "high",
+      "confidence": 0.95,
+      "title": "Follow-up commit 845bbfc is also not a direct commit in origin/main",
+      "description": "The plan lists 845bbfc as a standalone 'follow-up commit' in main that points GitHub issue links to /issues instead of /issues/new. The commit exists but is not a direct ancestor of origin/main. Its change is present in main only because it was squash-merged into PR #33 (commit 1085609, 2026-04-09). If the issue comment (Unit 3) cites 845bbfc as a standalone commit SHA, readers will find it in the repo graph but not on a simple `git log main` traversal, which is confusing. The correct commit to cite for the /issues vs /issues/new change on main is 1085609.",
+      "location": "docs/plans/2026-04-18-001-fix-external-link-audit-plan.md, Institutional Learnings section and Sources & References section",
+      "evidence": "git merge-base --is-ancestor 845bbfc origin/main returns non-zero. git log origin/main --oneline -- src/app/\\(app\\)/about/page.tsx shows 1085609 as the commit that brought the /issues fix into main.",
+      "fix": "Replace the 845bbfc citation with 1085609, noting it was a squash merge of PR #33 that included the /issues fix."
+    },
+    {
+      "id": "COR-003",
+      "severity": "medium",
+      "confidence": 0.92,
+      "title": "About page file inventory is inaccurate for current main",
+      "description": "The plan's Context & Research section describes src/app/(app)/about/page.tsx as having 'two inline GitHub links (/issues/new, /tree/main/journal, workshop-maybe/cardano-xp)' — listing three items for 'two links', and including /tree/main/journal. In current origin/main the about page has exactly two GitHub links: /workshop-maybe/cardano-xp/issues (line 192) and /workshop-maybe/cardano-xp (line 271). There is no /tree/main/journal link. That link was added by a5e109e on the parallel branch and never landed in main. The /tree/main/journal target also does not exist — there is no journal/ directory in the repo.",
+      "location": "docs/plans/2026-04-18-001-fix-external-link-audit-plan.md, Context & Research > Relevant Code and Patterns, about/page.tsx entry",
+      "evidence": "grep -n 'github.com' src/app/(app)/about/page.tsx on origin/main returns two lines (192, 271), neither containing tree/main/journal. ls of repo root confirms no journal/ directory.",
+      "fix": "Remove /tree/main/journal from the about page inventory. The two correct inline links are /issues and the bare repo URL."
+    },
+    {
+      "id": "COR-004",
+      "severity": "medium",
+      "confidence": 0.92,
+      "title": "Footer description is inaccurate — app-footer.tsx does not read BRANDING.links.github",
+      "description": "The plan states 'src/components/layout/app-footer.tsx — reads BRANDING.links.github'. In current origin/main, app-footer.tsx does not read BRANDING.links.github at all. The footer contains only a hardcoded andamio.io link and status text. BRANDING.links.github was added to the footer by a5e109e on the parallel branch, then removed by commit 29fef0c on that same branch — it never existed in main's footer. This means the plan's assertion that BRANDING.links.github is consumed by the footer is wrong for current main.",
+      "location": "docs/plans/2026-04-18-001-fix-external-link-audit-plan.md, Context & Research > Relevant Code and Patterns, app-footer.tsx entry",
+      "evidence": "cat src/components/layout/app-footer.tsx on origin/main shows no reference to BRANDING. The file contains a single external link: hardcoded https://andamio.io.",
+      "fix": "Remove the BRANDING.links.github consumer claim for app-footer.tsx. The correct footer description is: contains one hardcoded external link (andamio.io); no BRANDING reference."
+    }
+  ],
+  "residual_risks": [
+    {
+      "id": "RR-001",
+      "description": "If the issue comment (Unit 3) is posted citing a5e109e as the fix commit without correction, the community will receive a misleading explanation. The commit exists in the repo graph so it looks plausible, but pointing at a non-main commit as 'the fix' could confuse anyone who later audits main's commit history looking for that SHA.",
+      "severity": "medium"
+    },
+    {
+      "id": "RR-002",
+      "description": "The plan's stale-deploy hypothesis (reporter hit a pre-fix build) may still be correct, but the mechanism is now unexplained. If a5e109e was never on main, the question becomes: why was prod serving old Andamio-Platform URLs? A plausible answer is that prod was deployed from a non-main branch at some point, but the plan does not address this.",
+      "severity": "low"
+    }
+  ],
+  "testing_gaps": [
+    {
+      "id": "TG-001",
+      "description": "The audit command in Unit 1 (rg + curl HEAD-check) is sound methodology, but the exclusion list should add the /tree/main/journal URL since that path does not exist as a directory in the repo yet is referenced from the a5e109e branch. If the plan is corrected, this exclusion is unnecessary — but if it survives, the URL would show as a 404 and confuse the audit output."
+    }
+  ]
+}

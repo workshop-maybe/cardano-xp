@@ -64,6 +64,7 @@ import { getTransactionExplorerUrl } from "~/lib/constants";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { env } from "~/env";
+import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/validation/alias";
 
 export interface MintAccessTokenProps {
   /**
@@ -95,13 +96,6 @@ type CeremonyState =
   | "reconnecting"      // Session cleared, waiting for wallet reconnect
   | "authenticating"    // Wallet connected, authenticating
   | "welcome";          // Re-authenticated with new token, welcome message
-
-// Alias must contain only alphanumeric characters and underscores
-const ALIAS_PATTERN = /^[a-zA-Z0-9_]+$/;
-
-function isValidAlias(alias: string): boolean {
-  return alias.length > 0 && ALIAS_PATTERN.test(alias);
-}
 
 /**
  * MintAccessToken - Mint an Andamio Access Token NFT
@@ -291,9 +285,7 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
   const ui = TRANSACTION_UI.GLOBAL_GENERAL_ACCESS_TOKEN_MINT;
 
   const aliasError =
-    alias.trim() && !isValidAlias(alias.trim())
-      ? "Alias can only contain letters, numbers, and underscores"
-      : null;
+    alias.trim() && !isValidAlias(alias.trim()) ? ALIAS_ERROR_MESSAGE : null;
 
   const handleMint = async () => {
     if (!walletAddress || !alias.trim()) {

@@ -4,8 +4,9 @@ import React from "react";
 import Image from "next/image";
 import { useWallet, useWalletList } from "@meshsdk/react";
 import type { Wallet } from "@meshsdk/common";
-import { WalletIcon, LoadingIcon } from "~/components/icons";
+import { WalletIcon, LoadingIcon, SecurityAlertIcon } from "~/components/icons";
 import { AndamioButton } from "~/components/andamio/andamio-button";
+import { useAndamioAuth } from "~/contexts/andamio-auth-context";
 import {
   Dialog,
   DialogContent,
@@ -105,12 +106,19 @@ function ConnectedDropdown() {
   const { address, name, disconnect } = useWallet();
   const wallets = useWalletList();
   const connectedWallet = wallets.find((w) => w.id === name);
+  const { networkMismatch } = useAndamioAuth();
+  const hasMismatch = networkMismatch !== null && !networkMismatch.match;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <AndamioButton variant="outline" size="sm">
-          {connectedWallet?.icon ? (
+        <AndamioButton
+          variant={hasMismatch ? "destructive" : "outline"}
+          size="sm"
+        >
+          {hasMismatch ? (
+            <SecurityAlertIcon className="h-4 w-4" />
+          ) : connectedWallet?.icon ? (
             <Image
               src={connectedWallet.icon}
               alt={connectedWallet.name}
@@ -122,12 +130,24 @@ function ConnectedDropdown() {
             <WalletIcon className="h-4 w-4" />
           )}
           <span>
-            {address.slice(0, 6)}...{address.slice(-6)}
+            {hasMismatch
+              ? "Wrong network"
+              : `${address.slice(0, 6)}...${address.slice(-6)}`}
           </span>
         </AndamioButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Wallet</DropdownMenuLabel>
+        {hasMismatch && networkMismatch ? (
+          <div className="px-2 py-1.5 text-xs text-muted-foreground max-w-[260px]">
+            Expected <strong>{networkMismatch.expected}</strong>, wallet on{" "}
+            <strong>
+              {networkMismatch.actualIsTestnet ? "a testnet" : "mainnet"}
+            </strong>
+            . Switch your wallet network and reconnect.
+          </div>
+        ) : null}
+        {hasMismatch ? <DropdownMenuSeparator /> : null}
         <DropdownMenuItem
           onClick={() => void navigator.clipboard.writeText(address)}
         >

@@ -9,23 +9,25 @@ date: 2026-04-18
 
 ## Overview
 
-Issue #41 reports a 404 on the GitHub repo link on the "Looking for a bug" / "Report a bug" page at `cardano-xp.io`. Git history shows commit `a5e109e` (2026-03-20) already rewrote every `Andamio-Platform/cardano-xp` URL to `workshop-maybe/cardano-xp` across `src/config/branding.ts`, `src/app/(app)/about/page.tsx`, and `src/app/(app)/andamio-access-token/page.tsx`. The repo is public at the new URL. So the reporter's 404 almost certainly came from a stale prod deploy, not current `main`.
+Issue #41 reports a 404 on the GitHub repo link on the "Looking for a bug" / "Report a bug" page at `cardano-xp.io`. Checking git history on `origin/main`: the repo URLs in `src/config/branding.ts`, `src/app/(app)/about/page.tsx`, and `src/app/(app)/andamio-access-token/page.tsx` have pointed at `workshop-maybe/cardano-xp` since the initial commit (`2fe19db`, 2026-03-06). The `Andamio-Platform/cardano-xp` URL the reporter saw has never existed in main's history. The repo is public at the current URL.
 
-This plan treats the issue as an **audit + communication task**, not new code. We verify every external link in current `main` still resolves, reference the fix commit in the issue comment, confirm prod has the corrected build, and close.
+So the reporter's 404 cannot have come from a current-`main` build. The most plausible explanations are: (a) a stale browser cache or CDN edge from a pre-fork preview that served Andamio template URLs, (b) a prod deploy from a pre-`2fe19db` state that no longer exists in git, or (c) reporter confusion. We cannot reproduce the 404 from anything in the current source tree.
+
+This plan treats the issue as an **audit + communication task**, not new code. We verify every external link in current `main` still resolves, explain the history honestly in the issue comment, confirm prod is serving current `main`, and close.
 
 ## Problem Frame
 
-Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from the bug-report page. James wants:
+Reporter (njuguna) hit a broken GitHub link from the bug-report page. James wants:
 
 1. Confirmation that every external link in current `main` resolves (not just the one reported).
-2. If the fix already landed, link the commit in the issue so the community report shows the correction already happened.
+2. An honest explanation in the issue comment — if the URLs in `main` have always been correct, say that; don't invent a fix commit that doesn't exist on `main`.
 3. A dedicated branch + PR only if the audit surfaces real regressions.
 
 ## Requirements Trace
 
 - **R1.** Every external URL in `src/`, `docs/`, `config/`, and root-level markdown resolves (200 OK) or is a documented placeholder (`WHITE_LABEL_GUIDE.md` template strings).
-- **R2.** Issue #41 receives a comment referencing the fix commit (`a5e109e`) and explaining the stale-deploy hypothesis.
-- **R3.** If prod (`cardano-xp.io`) is still serving the old URL, prod gets redeployed off current `main`.
+- **R2.** Issue #41 receives a comment explaining that the URLs in `main` have been correct since the initial commit, and that the reporter's 404 likely came from browser cache or a non-`main` prod build.
+- **R3.** If prod (`cardano-xp.io`) is still serving old `Andamio-Platform` URLs, prod gets redeployed off current `main`.
 - **R4.** If audit finds any genuinely broken link, it lands in a branch + PR with no Claude Code attribution in commit or PR body.
 
 ## Scope Boundaries
@@ -33,7 +35,7 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 - Not introducing a centralized `lib/links.ts` — `BRANDING.links` in `src/config/branding.ts` already serves that role for the three most-referenced URLs; do not refactor further.
 - Not rewriting documentation URLs in `src/types/generated/gateway.ts` (generated file, upstream owns).
 - Not touching `docs/WHITE_LABEL_GUIDE.md` placeholder URLs like `https://github.com/your-org` — those are intentional examples.
-- Not rewriting the `feat/Andamio-Platform/andamio-app-v2/issues/323` references in `src/lib/*-error-messages.ts` — those point to a legitimate upstream issue, not this repo.
+- Not rewriting the `andamio-platform/andamio-app-v2/issues/323` references in `src/lib/*-error-messages.ts` — those point to a legitimate upstream issue, not this repo.
 
 ### Deferred to Separate Tasks
 
@@ -44,23 +46,26 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 
 ### Relevant Code and Patterns
 
-- `src/config/branding.ts` — `BRANDING.links.github`, `.docs`. Single source for the three most-referenced external URLs. Consumed by footer, nav, and error help copy.
-- `src/app/(app)/about/page.tsx` — two inline GitHub links (`/issues/new`, `/tree/main/journal`, `workshop-maybe/cardano-xp`).
-- `src/app/(app)/andamio-access-token/page.tsx` — one inline GitHub `/issues` link.
-- `src/components/layout/app-footer.tsx` — reads `BRANDING.links.github`.
-- `src/components/landing/landing-hero.tsx` — may include external links added in `a5e109e`.
-- `src/lib/tx-error-messages.ts`, `src/lib/auth-error-messages.ts`, `src/lib/api-error-messages.ts` — reference `andamio-app-v2/issues/323` (upstream, not this repo; leave as-is).
+- `src/config/branding.ts` — `BRANDING.links.github`, `.docs`, `.website`. Config source of truth for external URLs.
+- `src/app/(app)/about/page.tsx` — two inline GitHub links on current `main`: `/issues` at line 192 and the bare repo URL at line 271.
+- `src/app/(app)/andamio-access-token/page.tsx` — one inline GitHub `/issues` link at line 197.
+- `src/components/layout/app-footer.tsx` — one hardcoded `https://andamio.io` external link; does not read from `BRANDING.links`.
+- `src/config/marketing.ts` — marketing copy links to `https://andamio.io`.
+- `src/components/courses/create-course-dialog.tsx` — **dead component** (never imported) containing `https://app.andamio.io/courses/andamio-101` which 404s.
+- `src/lib/tx-error-messages.ts`, `src/lib/auth-error-messages.ts`, `src/lib/api-error-messages.ts` — reference `andamio-app-v2/issues/323` (upstream tracking issue, not this repo; leave as-is).
 
 ### Institutional Learnings
 
-- Commit `a5e109e` (2026-03-20) is the correction. It bundled tone-setting copy ("vibe-coded experiment") with the URL fix, so a reader scanning the log would see the copy change first.
-- Commit `845bbfc` is a follow-up that pointed GitHub issue links at `/issues` instead of `/issues/new` (surface the existing issue list rather than push everyone to file new).
+- Dual-pattern grep discipline from `docs/solutions/integration-issues/route-path-mismatch-forked-template-migration.md`: sweep both quoted strings (`"https://..."`) and backtick template literals (`` `https://...` ``) — single-pattern sweeps miss URLs built by string interpolation. This audit ran the dual sweep.
+- `docs/solutions/project-setup/template-to-standalone-product-identity.md` documents the branding pass that replaced Andamio-origin URLs with Cardano XP URLs. The initial commit on this repo's `main` already reflects that pass — there was no later "rewrite" event on `main`.
+- Commit `a5e109e` exists in the repo graph but is **not** an ancestor of `origin/main`; it lives on an unmerged parallel branch. Do not cite it as a fix.
+- Commit `1085609` (squash-merge of PR #33, 2026-04-09) changed `/issues/new` to `/issues` for bug-report buttons on the about and access-token pages. This is the only meaningful URL-text change on `main` since initial commit.
 
 ## Key Technical Decisions
 
 - **Audit with a script, not a manual scan.** Use `rg` to enumerate every `http(s)://` URL in tracked files, dedupe, filter out placeholders and in-repo refs, then HEAD-check each one. Keeps the audit reproducible.
 - **No link-centralization refactor.** `BRANDING.links` already covers the repeat offenders; adding a fourth abstraction layer would be the definition of premature generalization. If the audit finds stragglers, inline-fix them.
-- **Issue comment over new code.** If current `main` passes audit, the PR-worthy artifact is the issue comment, not a code change. Close #41 by pointing at `a5e109e` and noting the prod rebuild.
+- **Issue comment over new code.** If current `main` passes audit, the PR-worthy artifact is the issue comment, not a code change. Close #41 by explaining the history honestly (URLs correct since initial commit) and noting the prod rebuild.
 
 ## Open Questions
 
@@ -68,11 +73,12 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 
 - *Is the "Looking for a bug" page the about page or the access-token page?* Both have a bug-reporter link. Audit confirms both point at `workshop-maybe/cardano-xp`.
 - *Is the repo actually public?* Yes — `gh repo view` confirms `visibility: PUBLIC`.
+- *Was there ever a fix commit on `main` that rewrote `Andamio-Platform` → `workshop-maybe`?* No. The initial commit `2fe19db` already had the correct URLs. `a5e109e` lives on an unmerged branch.
 
 ### Deferred to Implementation
 
 - Whether any non-GitHub external link (docs.andamio.io, wallet sites, CIP spec links in markdown) returns a 404 or redirect — audit will tell.
-- Whether prod is running the pre-`a5e109e` build — check at audit time via `curl -s https://cardano-xp.io/about | grep -oE 'github.com/[^"]+'`.
+- Whether prod is serving current `main` — check with `curl -s https://cardano-xp.io/about | grep -oE 'github\.com/[^"]+'`; any `Andamio-Platform` match means prod is not on current `main`.
 
 ## Implementation Units
 
@@ -122,7 +128,7 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 - Commit message and PR body must NOT include Claude Code attribution (per repo feedback memory).
 
 **Patterns to follow:**
-- Reference commit `a5e109e` for the pattern of rewriting `Andamio-Platform/cardano-xp` → `workshop-maybe/cardano-xp`.
+- Single-source fixes in `src/config/branding.ts` when the URL is already centralized there; inline-edit the specific `href` when it's a one-off.
 
 **Test scenarios:**
 - Happy path: the fixed link resolves to 2xx in a fresh `curl -I` check after the patch.
@@ -145,7 +151,9 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 - None in-repo. Output is a GitHub comment via `gh issue comment 41`.
 
 **Approach:**
-- Comment body references commit `a5e109e` as the fix, explains it landed on 2026-03-20 (~1 month before the report), notes the reporter likely hit a stale prod build, and links the Unit 1 audit results.
+- Comment body explains that the URLs in `main` have been correct since the initial commit (`2fe19db`, 2026-03-06) — there was no "fix commit" to point at. The `Andamio-Platform/cardano-xp` URL the reporter saw has never existed in `main`'s history.
+- Offer the plausible explanations honestly: browser cache, a CDN edge serving a pre-fork state, or a prod deploy from a non-`main` branch. We can't reproduce the 404 from current source.
+- Link the Unit 1 audit table as proof that all user-facing external links resolve today.
 - If prod was rebuilt as part of resolving this, state that explicitly so the reporter can re-verify.
 - If Unit 2 produced a follow-up PR, link it.
 - Close the issue once prod is confirmed correct.
@@ -163,10 +171,6 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 ## System-Wide Impact
 
 - **Interaction graph:** None. This is a copy/config audit; no runtime behavior changes.
-- **Error propagation:** N/A.
-- **State lifecycle risks:** None.
-- **API surface parity:** `BRANDING.links.github` is the single source the footer and help copy read from; no parity concern.
-- **Integration coverage:** N/A — no behavior under test.
 - **Unchanged invariants:** `BRANDING.links` shape, external link positions in the about and access-token pages.
 
 ## Risks & Dependencies
@@ -174,17 +178,16 @@ Reporter (njuguna, plus the xss-probe reporter) hit a broken GitHub link from th
 | Risk | Mitigation |
 |------|------------|
 | Reporter hits the same 404 again because prod wasn't redeployed | Unit 3 includes explicit prod-verification step before closing |
-| Audit misses a link because it's constructed via template literal | `rg` pattern catches `https?://` at the start; template-literal-assembled URLs are rare in this repo (spot-check `BRANDING` consumers) |
+| Audit misses a link because it's constructed via template literal | Use dual-pattern grep (quoted strings and backticks) per `docs/solutions/integration-issues/route-path-mismatch-forked-template-migration.md` |
 | A documentation link (e.g., to a CIP spec) has rotted since last touched | Flag in audit output; fix scope may expand — document expansion in the issue comment rather than silently broadening the PR |
 
 ## Documentation / Operational Notes
 
 - Prod deploy platform: Vercel (per repo convention). If prod is stale, a redeploy from `main` is the operational fix.
-- PR body template: brief summary, link to issue #41, link to fix commit `a5e109e`, audit output pasted inline.
 
 ## Sources & References
 
 - **Origin issue:** [#41 — Broken GitHub repo link on "Looking for a bug" page](https://github.com/workshop-maybe/cardano-xp/issues/41)
-- **Fix commit (already in `main`):** `a5e109e` — "Surface the vibe-coded experiment story and fix GitHub URLs" (2026-03-20)
-- **Follow-up commit:** `845bbfc` — "fix: point GitHub issue links to /issues instead of /issues/new"
+- **Initial commit on `main` (URLs already correct):** `2fe19db` — "initial commit" (2026-03-06)
+- **`/issues/new` → `/issues` on `main` (via PR #33 squash):** `1085609` — "feat(sponsors): send sponsor inquiry emails via Resend (#33)" (2026-04-09)
 - Related files: `src/config/branding.ts`, `src/app/(app)/about/page.tsx`, `src/app/(app)/andamio-access-token/page.tsx`

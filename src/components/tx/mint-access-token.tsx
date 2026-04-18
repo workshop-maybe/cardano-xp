@@ -62,9 +62,9 @@ import { TRANSACTION_UI } from "~/config/transaction-ui";
 import { useUpdateAccessTokenAlias } from "~/hooks/api/use-user";
 import { getTransactionExplorerUrl } from "~/lib/constants";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
+import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/validation/alias";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { env } from "~/env";
-import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/validation/alias";
 
 export interface MintAccessTokenProps {
   /**

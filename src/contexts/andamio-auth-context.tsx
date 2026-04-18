@@ -170,6 +170,10 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
   const [networkMismatch, setNetworkMismatch] = useState<WalletNetworkResult | null>(null);
   // Track if JWT validation is in progress
   const isValidatingJWTRef = useRef(false);
+  // Track whether the wallet-network check for the current connection is still in flight.
+  // Auto-auth waits for this to settle so it doesn't call authenticate() before the
+  // mismatch state is known.
+  const isCheckingNetworkRef = useRef(false);
 
   // Helper to update ref
   const setValidatingJWT = useCallback((value: boolean) => {
@@ -300,16 +304,23 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     }
   }, [connected, isAuthenticated]);
 
-  // Detect wallet/app network mismatch at connect time.
-  // Runs before auto-auth, so a mismatch short-circuits before signData() is ever called.
+  // Detect wallet/app network mismatch at connect time. Auto-auth waits on
+  // isCheckingNetworkRef so it doesn't call authenticate() before this resolves.
+  // NOTE: `wallet` is intentionally excluded from deps — it changes reference on
+  // every render; we only re-check when `connected` flips. Matches the pattern
+  // on the validateJWT effect above.
   useEffect(() => {
     if (!connected || !wallet) {
       return;
     }
 
+    let cancelled = false;
+    isCheckingNetworkRef.current = true;
+
     const runCheck = async () => {
       try {
         const result = await checkWalletNetwork(wallet, env.NEXT_PUBLIC_CARDANO_NETWORK);
+        if (cancelled) return;
         if (!result.match) {
           authLogger.warn("Wallet network mismatch detected", {
             expected: result.expected,
@@ -318,15 +329,25 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
         }
         setNetworkMismatch(result.match ? null : result);
       } catch (error) {
+        if (cancelled) return;
         // Treat network-check failures as transient rather than a hard mismatch.
-        // The wallet may be mid-initialization; the auto-auth effect will retry
-        // the flow and a real failure will surface via signData() error paths.
+        // The wallet may be mid-initialization; authenticate()'s belt-and-braces
+        // check runs again before signData() and will surface a real failure.
         authLogger.warn("Failed to read wallet network ID:", error);
         setNetworkMismatch(null);
+      } finally {
+        if (!cancelled) {
+          isCheckingNetworkRef.current = false;
+        }
       }
     };
 
     void runCheck();
+
+    return () => {
+      cancelled = true;
+      isCheckingNetworkRef.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connected]);
 
@@ -361,6 +382,15 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     // in that case. UI surfaces networkMismatch separately; user must switch and reconnect.
     if (networkMismatch && !networkMismatch.match) {
       authLogger.info("[Effect: autoAuth] Skipping auto-auth due to network mismatch");
+      return;
+    }
+
+    // Skip while the network check is still in flight. Both effects fire on the
+    // same `connected` transition; without this gate, auto-auth reads the stale
+    // initial `networkMismatch=null` and calls authenticate() before the check
+    // has decided. authenticate() has its own belt-and-braces check, but gating
+    // here avoids the wasted gateway nonce round-trip.
+    if (isCheckingNetworkRef.current) {
       return;
     }
 
@@ -401,6 +431,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
       if (!networkResult.match) {
         setNetworkMismatch(networkResult);
         setAuthError(null);
+        setPopupBlocked(false);
         return;
       }
       setNetworkMismatch(null);
@@ -438,16 +469,21 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
           // Note: address comes FIRST, payload second (swapped from v1)
           // Race against a timeout so a silently-hung wallet extension surfaces
           // as a real error instead of leaving isAuthenticating=true forever.
-          const signature = await Promise.race([
-            wallet.signData(bech32Address, nonce),
-            new Promise<never>((_, reject) =>
-              setTimeout(
-                () => reject(new Error(SIGN_TIMEOUT_MESSAGE)),
-                SIGN_TIMEOUT_MS,
-              ),
-            ),
-          ]);
-          return signature;
+          let timeoutId: ReturnType<typeof setTimeout> | undefined;
+          try {
+            const signature = await Promise.race([
+              wallet.signData(bech32Address, nonce),
+              new Promise<never>((_, reject) => {
+                timeoutId = setTimeout(
+                  () => reject(new Error(SIGN_TIMEOUT_MESSAGE)),
+                  SIGN_TIMEOUT_MS,
+                );
+              }),
+            ]);
+            return signature;
+          } finally {
+            if (timeoutId !== undefined) clearTimeout(timeoutId);
+          }
         },
         address: bech32Address, // Always send bech32 to the API
         walletName: walletName ?? undefined,

@@ -17,7 +17,7 @@ export type WalletNetworkResult =
   | { match: true }
   | { match: false; expected: AppNetwork; actualIsTestnet: boolean };
 
-interface NetworkCapableWallet {
+export interface NetworkCapableWallet {
   getNetworkId: () => Promise<number>;
 }
 

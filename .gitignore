@@ -63,3 +63,6 @@ packages/*/package-lock.json
 specs/
 
 wallets/
+
+# compound-engineering review artifacts — generated per-run, not source
+/.context/

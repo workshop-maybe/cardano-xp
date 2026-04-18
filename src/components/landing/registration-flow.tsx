@@ -23,13 +23,7 @@ import {
   ShieldIcon,
 } from "~/components/icons";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
-
-// Alias must contain only alphanumeric characters and underscores
-const ALIAS_PATTERN = /^[a-zA-Z0-9_]+$/;
-
-function isValidAlias(alias: string): boolean {
-  return alias.length > 0 && ALIAS_PATTERN.test(alias);
-}
+import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/alias-validation";
 
 interface RegistrationFlowProps {
   /** Called when mint transaction is submitted */
@@ -99,9 +93,7 @@ export function RegistrationFlow({ onMinted, onBack }: RegistrationFlowProps) {
   }, [connected, wallet]);
 
   const aliasError =
-    alias.trim() && !isValidAlias(alias.trim())
-      ? "Alias can only contain letters, numbers, and underscores"
-      : null;
+    alias.trim() && !isValidAlias(alias.trim()) ? ALIAS_ERROR_MESSAGE : null;
 
   const handleMint = async () => {
     if (!walletAddress || !alias.trim() || aliasError) return;

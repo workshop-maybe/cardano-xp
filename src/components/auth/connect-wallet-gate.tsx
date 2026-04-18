@@ -1,10 +1,12 @@
 "use client";
 
+import { useWallet } from "@meshsdk/react";
 import { OnChainIcon, LoadingIcon, SecurityAlertIcon, SignatureIcon } from "~/components/icons";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { ConnectWalletPrompt } from "~/components/auth/connect-wallet-prompt";
-import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { formatNetworkMismatchMessage } from "~/lib/wallet-network";
 
 interface ConnectWalletGateProps {
   /** Title displayed below the icon */
@@ -27,8 +29,26 @@ export function ConnectWalletGate({
   title = "Connect your wallet",
   description = "Sign in to continue",
 }: ConnectWalletGateProps) {
-  const { isWalletConnected, isAuthenticating, authError, popupBlocked, authenticate } =
+  const { isWalletConnected, isAuthenticating, authError, popupBlocked, authenticate, networkCheck } =
     useAndamioAuth();
+  const { disconnect } = useWallet();
+
+  // Wallet connected but on wrong network — surface before any sign prompt
+  if (isWalletConnected && !networkCheck.match) {
+    const { long } = formatNetworkMismatchMessage(networkCheck);
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <SecurityAlertIcon className="h-12 w-12 text-destructive/50 mb-4" />
+        <AndamioText className="text-lg font-medium">Wrong Network</AndamioText>
+        <AndamioText variant="small" className="mt-1 mb-6 max-w-md">
+          {long}
+        </AndamioText>
+        <AndamioButton variant="destructive" onClick={() => disconnect()}>
+          Disconnect Wallet
+        </AndamioButton>
+      </div>
+    );
+  }
 
   // Wallet connected but signing window didn't open — prompt user to authorize
   if (isWalletConnected && popupBlocked) {

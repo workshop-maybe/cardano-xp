@@ -7,6 +7,7 @@ import type { Wallet } from "@meshsdk/common";
 import { WalletIcon, LoadingIcon, SecurityAlertIcon } from "~/components/icons";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { formatNetworkMismatchMessage } from "~/lib/wallet-network";
 import {
   Dialog,
   DialogContent,
@@ -106,17 +107,17 @@ function ConnectedDropdown() {
   const { address, name, disconnect } = useWallet();
   const wallets = useWalletList();
   const connectedWallet = wallets.find((w) => w.id === name);
-  const { networkMismatch } = useAndamioAuth();
-  const hasMismatch = networkMismatch !== null && !networkMismatch.match;
+  const { networkCheck } = useAndamioAuth();
+  const mismatch = !networkCheck.match ? networkCheck : null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <AndamioButton
-          variant={hasMismatch ? "destructive" : "outline"}
+          variant={mismatch ? "destructive" : "outline"}
           size="sm"
         >
-          {hasMismatch ? (
+          {mismatch ? (
             <SecurityAlertIcon className="h-4 w-4" />
           ) : connectedWallet?.icon ? (
             <Image
@@ -130,7 +131,7 @@ function ConnectedDropdown() {
             <WalletIcon className="h-4 w-4" />
           )}
           <span>
-            {hasMismatch
+            {mismatch
               ? "Wrong network"
               : `${address.slice(0, 6)}...${address.slice(-6)}`}
           </span>
@@ -138,16 +139,14 @@ function ConnectedDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Wallet</DropdownMenuLabel>
-        {hasMismatch && networkMismatch ? (
-          <div className="px-2 py-1.5 text-xs text-muted-foreground max-w-[260px]">
-            Expected <strong>{networkMismatch.expected}</strong>, wallet on{" "}
-            <strong>
-              {networkMismatch.actualIsTestnet ? "a testnet" : "mainnet"}
-            </strong>
-            . Switch your wallet network and reconnect.
-          </div>
+        {mismatch ? (
+          <>
+            <div className="px-2 py-1.5 text-xs text-muted-foreground max-w-[260px]">
+              {formatNetworkMismatchMessage(mismatch).short}
+            </div>
+            <DropdownMenuSeparator />
+          </>
         ) : null}
-        {hasMismatch ? <DropdownMenuSeparator /> : null}
         <DropdownMenuItem
           onClick={() => void navigator.clipboard.writeText(address)}
         >

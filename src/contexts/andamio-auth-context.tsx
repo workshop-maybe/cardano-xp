@@ -133,7 +133,7 @@ interface AndamioAuthContextType {
   authError: string | null;
   isWalletConnected: boolean;
   popupBlocked: boolean;
-  networkMismatch: WalletNetworkResult | null;
+  networkCheck: WalletNetworkResult;
 
   // Actions
   authenticate: () => Promise<void>;
@@ -167,7 +167,10 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
-  const [networkMismatch, setNetworkMismatch] = useState<WalletNetworkResult | null>(null);
+  // Default to "match" — we treat "not yet checked" and "checked and fine" the same
+  // way for UI purposes. The real gate against calling authenticate() on an
+  // unchecked wallet is `isCheckingNetworkRef`.
+  const [networkCheck, setNetworkCheck] = useState<WalletNetworkResult>({ match: true });
   // Track if JWT validation is in progress
   const isValidatingJWTRef = useRef(false);
   // Track whether the wallet-network check for the current connection is still in flight.
@@ -293,7 +296,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     if (!connected) {
       setPopupBlocked(false);
       setAuthError(null); // Clear any previous auth errors so reconnecting starts fresh
-      setNetworkMismatch(null); // Fresh connect gets a fresh network check
+      setNetworkCheck({ match: true }); // Fresh connect gets a fresh network check
       // Clear auth state but keep JWT for reconnection validation
       if (isAuthenticated) {
         authLogger.info("Wallet disconnected, clearing authenticated state (JWT kept for reconnection)");
@@ -327,14 +330,14 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
             actualIsTestnet: result.actualIsTestnet,
           });
         }
-        setNetworkMismatch(result.match ? null : result);
+        setNetworkCheck(result);
       } catch (error) {
         if (cancelled) return;
         // Treat network-check failures as transient rather than a hard mismatch.
         // The wallet may be mid-initialization; authenticate()'s belt-and-braces
         // check runs again before signData() and will surface a real failure.
         authLogger.warn("Failed to read wallet network ID:", error);
-        setNetworkMismatch(null);
+        setNetworkCheck({ match: true });
       } finally {
         if (!cancelled) {
           isCheckingNetworkRef.current = false;
@@ -379,15 +382,15 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     }
 
     // Skip if wallet is on the wrong network — signData() would hang or reject silently
-    // in that case. UI surfaces networkMismatch separately; user must switch and reconnect.
-    if (networkMismatch && !networkMismatch.match) {
+    // in that case. UI surfaces networkCheck separately; user must switch and reconnect.
+    if (!networkCheck.match) {
       authLogger.info("[Effect: autoAuth] Skipping auto-auth due to network mismatch");
       return;
     }
 
     // Skip while the network check is still in flight. Both effects fire on the
     // same `connected` transition; without this gate, auto-auth reads the stale
-    // initial `networkMismatch=null` and calls authenticate() before the check
+    // initial `networkCheck=null` and calls authenticate() before the check
     // has decided. authenticate() has its own belt-and-braces check, but gating
     // here avoids the wasted gateway nonce round-trip.
     if (isCheckingNetworkRef.current) {
@@ -411,7 +414,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     authLogger.info("[Effect: autoAuth] Wallet connected without valid JWT, triggering authentication");
     void authenticate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connected, isAuthenticated, isAuthenticating, authError, popupBlocked, networkMismatch]);
+  }, [connected, isAuthenticated, isAuthenticating, authError, popupBlocked, networkCheck]);
 
   /**
    * Authenticate with connected wallet
@@ -429,12 +432,12 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     try {
       const networkResult = await checkWalletNetwork(wallet, env.NEXT_PUBLIC_CARDANO_NETWORK);
       if (!networkResult.match) {
-        setNetworkMismatch(networkResult);
+        setNetworkCheck(networkResult);
         setAuthError(null);
         setPopupBlocked(false);
         return;
       }
-      setNetworkMismatch(null);
+      setNetworkCheck({ match: true });
     } catch (error) {
       authLogger.warn("Network check failed in authenticate(), proceeding:", error);
       // Fall through — real failure will surface via signData() error paths below.
@@ -674,7 +677,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
         authError,
         isWalletConnected: connected,
         popupBlocked,
-        networkMismatch,
+        networkCheck,
         authenticate,
         logout,
         refreshAuth,
@@ -697,7 +700,7 @@ const defaultContextValue: AndamioAuthContextType = {
   authError: null,
   isWalletConnected: false,
   popupBlocked: false,
-  networkMismatch: null,
+  networkCheck: { match: true },
   authenticate: async () => {
     console.warn("[Auth] Provider not loaded yet");
   },

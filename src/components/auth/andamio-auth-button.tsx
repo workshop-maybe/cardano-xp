@@ -3,7 +3,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
-import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { formatNetworkMismatchMessage } from "~/lib/wallet-network";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioCard, AndamioCardContent, AndamioCardDescription, AndamioCardHeader, AndamioCardTitle } from "~/components/andamio/andamio-card";
 import { AndamioAlert, AndamioAlertDescription } from "~/components/andamio/andamio-alert";
@@ -28,7 +29,7 @@ export function AndamioAuthButton() {
     authError,
     isWalletConnected,
     popupBlocked,
-    networkMismatch,
+    networkCheck,
     authenticate,
     logout,
   } = useAndamioAuth();
@@ -70,24 +71,20 @@ export function AndamioAuthButton() {
   }
 
   // Wallet connected but on wrong network — short-circuit before the sign prompt.
-  if (isWalletConnected && networkMismatch && !networkMismatch.match) {
-    const description = networkMismatch.actualIsTestnet
-      ? networkMismatch.expected === "mainnet"
-        ? "This app runs on Cardano mainnet. Your wallet is connected to a testnet. Switch your wallet's network to mainnet and reconnect."
-        : `This app is running on ${networkMismatch.expected}. Your wallet is connected to a different testnet. Switch to ${networkMismatch.expected} and reconnect.`
-      : `This app is running on ${networkMismatch.expected}. Your wallet is on mainnet. Switch to ${networkMismatch.expected} and reconnect.`;
+  if (isWalletConnected && !networkCheck.match) {
+    const { long } = formatNetworkMismatchMessage(networkCheck);
 
     return (
       <AndamioCard>
         <AndamioCardHeader>
           <AndamioCardTitle>Wrong Network</AndamioCardTitle>
-          <AndamioCardDescription>{description}</AndamioCardDescription>
+          <AndamioCardDescription>{long}</AndamioCardDescription>
         </AndamioCardHeader>
         <AndamioCardContent className="space-y-4">
           <AndamioAlert variant="destructive">
             <AndamioAlertDescription>
-              Expected: <strong>{networkMismatch.expected}</strong>. Detected:{" "}
-              <strong>{networkMismatch.actualIsTestnet ? "testnet" : "mainnet"}</strong>.
+              Expected: <strong>{networkCheck.expected}</strong>. Detected:{" "}
+              <strong>{networkCheck.actualIsTestnet ? "testnet" : "mainnet"}</strong>.
             </AndamioAlertDescription>
           </AndamioAlert>
           <AndamioButton onClick={handleLogout} variant="destructive" className="w-full">

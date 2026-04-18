@@ -15,6 +15,10 @@ import { authLogger } from "~/lib/debug-logger";
 import { env } from "~/env";
 import { GATEWAY_API_BASE } from "~/lib/api-utils";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
+import {
+  checkWalletNetwork,
+  type WalletNetworkResult,
+} from "~/lib/wallet-network";
 
 /**
  * Detect and sync access token from wallet to database
@@ -129,6 +133,7 @@ interface AndamioAuthContextType {
   authError: string | null;
   isWalletConnected: boolean;
   popupBlocked: boolean;
+  networkCheck: WalletNetworkResult;
 
   // Actions
   authenticate: () => Promise<void>;
@@ -138,6 +143,15 @@ interface AndamioAuthContextType {
 }
 
 const AndamioAuthContext = createContext<AndamioAuthContextType | undefined>(undefined);
+
+/**
+ * Sign-message timeout: long enough for slow popup windows, short enough to
+ * fail cleanly if the wallet extension stops responding. Tuned from user
+ * reports (see issue #42) — 45s covers realistic click-through latency on
+ * Web3 popup wallets while still feeling like a real error instead of a hang.
+ */
+const SIGN_TIMEOUT_MS = 45_000;
+const SIGN_TIMEOUT_MESSAGE = "Sign request timed out. Try again, or switch wallets.";
 
 /**
  * AndamioAuthProvider - Global authentication state provider
@@ -153,8 +167,16 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
+  // Default to "match" — we treat "not yet checked" and "checked and fine" the same
+  // way for UI purposes. The real gate against calling authenticate() on an
+  // unchecked wallet is `isCheckingNetworkRef`.
+  const [networkCheck, setNetworkCheck] = useState<WalletNetworkResult>({ match: true });
   // Track if JWT validation is in progress
   const isValidatingJWTRef = useRef(false);
+  // Track whether the wallet-network check for the current connection is still in flight.
+  // Auto-auth waits for this to settle so it doesn't call authenticate() before the
+  // mismatch state is known.
+  const isCheckingNetworkRef = useRef(false);
 
   // Helper to update ref
   const setValidatingJWT = useCallback((value: boolean) => {
@@ -274,6 +296,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     if (!connected) {
       setPopupBlocked(false);
       setAuthError(null); // Clear any previous auth errors so reconnecting starts fresh
+      setNetworkCheck({ match: true }); // Fresh connect gets a fresh network check
       // Clear auth state but keep JWT for reconnection validation
       if (isAuthenticated) {
         authLogger.info("Wallet disconnected, clearing authenticated state (JWT kept for reconnection)");
@@ -283,6 +306,53 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
       }
     }
   }, [connected, isAuthenticated]);
+
+  // Detect wallet/app network mismatch at connect time. Auto-auth waits on
+  // isCheckingNetworkRef so it doesn't call authenticate() before this resolves.
+  // NOTE: `wallet` is intentionally excluded from deps — it changes reference on
+  // every render; we only re-check when `connected` flips. Matches the pattern
+  // on the validateJWT effect above.
+  useEffect(() => {
+    if (!connected || !wallet) {
+      return;
+    }
+
+    let cancelled = false;
+    isCheckingNetworkRef.current = true;
+
+    const runCheck = async () => {
+      try {
+        const result = await checkWalletNetwork(wallet, env.NEXT_PUBLIC_CARDANO_NETWORK);
+        if (cancelled) return;
+        if (!result.match) {
+          authLogger.warn("Wallet network mismatch detected", {
+            expected: result.expected,
+            actualIsTestnet: result.actualIsTestnet,
+          });
+        }
+        setNetworkCheck(result);
+      } catch (error) {
+        if (cancelled) return;
+        // Treat network-check failures as transient rather than a hard mismatch.
+        // The wallet may be mid-initialization; authenticate()'s belt-and-braces
+        // check runs again before signData() and will surface a real failure.
+        authLogger.warn("Failed to read wallet network ID:", error);
+        setNetworkCheck({ match: true });
+      } finally {
+        if (!cancelled) {
+          isCheckingNetworkRef.current = false;
+        }
+      }
+    };
+
+    void runCheck();
+
+    return () => {
+      cancelled = true;
+      isCheckingNetworkRef.current = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected]);
 
   // Auto-authenticate when wallet connects without a valid stored JWT
   // This triggers the sign message flow for new connections
@@ -311,6 +381,22 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
       return;
     }
 
+    // Skip if wallet is on the wrong network — signData() would hang or reject silently
+    // in that case. UI surfaces networkCheck separately; user must switch and reconnect.
+    if (!networkCheck.match) {
+      authLogger.info("[Effect: autoAuth] Skipping auto-auth due to network mismatch");
+      return;
+    }
+
+    // Skip while the network check is still in flight. Both effects fire on the
+    // same `connected` transition; without this gate, auto-auth reads the stale
+    // initial `networkCheck=null` and calls authenticate() before the check
+    // has decided. authenticate() has its own belt-and-braces check, but gating
+    // here avoids the wasted gateway nonce round-trip.
+    if (isCheckingNetworkRef.current) {
+      return;
+    }
+
     // Skip if we're still validating a stored JWT
     if (isValidatingJWTRef.current) {
       return;
@@ -328,7 +414,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     authLogger.info("[Effect: autoAuth] Wallet connected without valid JWT, triggering authentication");
     void authenticate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connected, isAuthenticated, isAuthenticating, authError, popupBlocked]);
+  }, [connected, isAuthenticated, isAuthenticating, authError, popupBlocked, networkCheck]);
 
   /**
    * Authenticate with connected wallet
@@ -339,6 +425,22 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
     if (!connected || !wallet) {
       setAuthError("Please connect your wallet first");
       return;
+    }
+
+    // Belt-and-braces network check: even if the effect above missed a transition,
+    // never call signData() against a wallet on the wrong network.
+    try {
+      const networkResult = await checkWalletNetwork(wallet, env.NEXT_PUBLIC_CARDANO_NETWORK);
+      if (!networkResult.match) {
+        setNetworkCheck(networkResult);
+        setAuthError(null);
+        setPopupBlocked(false);
+        return;
+      }
+      setNetworkCheck({ match: true });
+    } catch (error) {
+      authLogger.warn("Network check failed in authenticate(), proceeding:", error);
+      // Fall through — real failure will surface via signData() error paths below.
     }
 
     setIsAuthenticating(true);
@@ -368,8 +470,23 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
 
           // Mesh SDK v2: signData(address: string, payload: string)
           // Note: address comes FIRST, payload second (swapped from v1)
-          const signature = await wallet.signData(bech32Address, nonce);
-          return signature;
+          // Race against a timeout so a silently-hung wallet extension surfaces
+          // as a real error instead of leaving isAuthenticating=true forever.
+          let timeoutId: ReturnType<typeof setTimeout> | undefined;
+          try {
+            const signature = await Promise.race([
+              wallet.signData(bech32Address, nonce),
+              new Promise<never>((_, reject) => {
+                timeoutId = setTimeout(
+                  () => reject(new Error(SIGN_TIMEOUT_MESSAGE)),
+                  SIGN_TIMEOUT_MS,
+                );
+              }),
+            ]);
+            return signature;
+          } finally {
+            if (timeoutId !== undefined) clearTimeout(timeoutId);
+          }
         },
         address: bech32Address, // Always send bech32 to the API
         walletName: walletName ?? undefined,
@@ -560,6 +677,7 @@ export function AndamioAuthProvider({ children }: { children: React.ReactNode })
         authError,
         isWalletConnected: connected,
         popupBlocked,
+        networkCheck,
         authenticate,
         logout,
         refreshAuth,
@@ -582,6 +700,7 @@ const defaultContextValue: AndamioAuthContextType = {
   authError: null,
   isWalletConnected: false,
   popupBlocked: false,
+  networkCheck: { match: true },
   authenticate: async () => {
     console.warn("[Auth] Provider not loaded yet");
   },

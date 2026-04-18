@@ -3,7 +3,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ConnectWalletButton } from "~/components/auth/connect-wallet-button";
-import { useAndamioAuth } from "~/hooks/auth/use-andamio-auth";
+import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { formatNetworkMismatchMessage } from "~/lib/wallet-network";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioCard, AndamioCardContent, AndamioCardDescription, AndamioCardHeader, AndamioCardTitle } from "~/components/andamio/andamio-card";
 import { AndamioAlert, AndamioAlertDescription } from "~/components/andamio/andamio-alert";
@@ -28,6 +29,7 @@ export function AndamioAuthButton() {
     authError,
     isWalletConnected,
     popupBlocked,
+    networkCheck,
     authenticate,
     logout,
   } = useAndamioAuth();
@@ -62,6 +64,31 @@ export function AndamioAuthButton() {
           </div>
           <AndamioButton onClick={handleLogout} variant="destructive" className="w-full">
             Sign Out
+          </AndamioButton>
+        </AndamioCardContent>
+      </AndamioCard>
+    );
+  }
+
+  // Wallet connected but on wrong network — short-circuit before the sign prompt.
+  if (isWalletConnected && !networkCheck.match) {
+    const { long } = formatNetworkMismatchMessage(networkCheck);
+
+    return (
+      <AndamioCard>
+        <AndamioCardHeader>
+          <AndamioCardTitle>Wrong Network</AndamioCardTitle>
+          <AndamioCardDescription>{long}</AndamioCardDescription>
+        </AndamioCardHeader>
+        <AndamioCardContent className="space-y-4">
+          <AndamioAlert variant="destructive">
+            <AndamioAlertDescription>
+              Expected: <strong>{networkCheck.expected}</strong>. Detected:{" "}
+              <strong>{networkCheck.actualIsTestnet ? "testnet" : "mainnet"}</strong>.
+            </AndamioAlertDescription>
+          </AndamioAlert>
+          <AndamioButton onClick={handleLogout} variant="destructive" className="w-full">
+            Disconnect Wallet
           </AndamioButton>
         </AndamioCardContent>
       </AndamioCard>

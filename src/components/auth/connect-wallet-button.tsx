@@ -4,8 +4,10 @@ import React from "react";
 import Image from "next/image";
 import { useWallet, useWalletList } from "@meshsdk/react";
 import type { Wallet } from "@meshsdk/common";
-import { WalletIcon, LoadingIcon } from "~/components/icons";
+import { WalletIcon, LoadingIcon, SecurityAlertIcon } from "~/components/icons";
 import { AndamioButton } from "~/components/andamio/andamio-button";
+import { useAndamioAuth } from "~/contexts/andamio-auth-context";
+import { formatNetworkMismatchMessage } from "~/lib/wallet-network";
 import {
   Dialog,
   DialogContent,
@@ -105,12 +107,19 @@ function ConnectedDropdown() {
   const { address, name, disconnect } = useWallet();
   const wallets = useWalletList();
   const connectedWallet = wallets.find((w) => w.id === name);
+  const { networkCheck } = useAndamioAuth();
+  const mismatch = !networkCheck.match ? networkCheck : null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <AndamioButton variant="outline" size="sm">
-          {connectedWallet?.icon ? (
+        <AndamioButton
+          variant={mismatch ? "destructive" : "outline"}
+          size="sm"
+        >
+          {mismatch ? (
+            <SecurityAlertIcon className="h-4 w-4" />
+          ) : connectedWallet?.icon ? (
             <Image
               src={connectedWallet.icon}
               alt={connectedWallet.name}
@@ -122,12 +131,22 @@ function ConnectedDropdown() {
             <WalletIcon className="h-4 w-4" />
           )}
           <span>
-            {address.slice(0, 6)}...{address.slice(-6)}
+            {mismatch
+              ? "Wrong network"
+              : `${address.slice(0, 6)}...${address.slice(-6)}`}
           </span>
         </AndamioButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Wallet</DropdownMenuLabel>
+        {mismatch ? (
+          <>
+            <div className="px-2 py-1.5 text-xs text-muted-foreground max-w-[260px]">
+              {formatNetworkMismatchMessage(mismatch).short}
+            </div>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
         <DropdownMenuItem
           onClick={() => void navigator.clipboard.writeText(address)}
         >

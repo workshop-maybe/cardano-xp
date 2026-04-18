@@ -62,7 +62,7 @@ import { TRANSACTION_UI } from "~/config/transaction-ui";
 import { useUpdateAccessTokenAlias } from "~/hooks/api/use-user";
 import { getTransactionExplorerUrl } from "~/lib/constants";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
-import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/validation/alias";
+import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/alias-validation";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { env } from "~/env";
 
@@ -288,8 +288,8 @@ export function MintAccessToken({ onSuccess, onSubmitted, skipCeremony = false }
     alias.trim() && !isValidAlias(alias.trim()) ? ALIAS_ERROR_MESSAGE : null;
 
   const handleMint = async () => {
-    if (!walletAddress || !alias.trim()) {
-      console.log("[MintAccessToken] Cannot mint - walletAddress:", walletAddress, "alias:", alias.trim());
+    if (!walletAddress || !alias.trim() || aliasError) {
+      console.log("[MintAccessToken] Cannot mint - walletAddress:", walletAddress, "alias:", alias.trim(), "aliasError:", aliasError);
       return;
     }
 

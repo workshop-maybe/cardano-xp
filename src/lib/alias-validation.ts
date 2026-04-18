@@ -52,7 +52,7 @@
  * - Issue #44 (origin of this module)
  */
 
-export const ALIAS_PATTERN = /^[a-zA-Z0-9_]+$/;
+const ALIAS_PATTERN = /^[a-zA-Z0-9_]+$/;
 
 export const ALIAS_ERROR_MESSAGE =
   "Alias can only contain letters, numbers, and underscores";

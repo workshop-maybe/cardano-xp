@@ -7,6 +7,7 @@ import { AndamioBadge } from "~/components/andamio/andamio-badge";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { AddIcon, CloseIcon, LoadingIcon, ErrorIcon, SuccessIcon } from "~/components/icons";
+import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/alias-validation";
 
 export interface AliasListInputProps {
   /** Current list of validated aliases */
@@ -60,10 +61,17 @@ export function AliasListInput({
     setValidationError(null);
     setLastVerified(null);
 
-    // Format check: 1-31 chars
+    // Format check: 1-31 chars + allowed character set.
+    // Any alias failing isValidAlias originated from a proxy-bypassed mint;
+    // admin flows refuse to operate on hostile on-chain strings even if the
+    // gateway's existence check confirms they exist.
     if (alias.length === 0) return;
     if (alias.length > 31) {
       setValidationError("Alias must be 31 characters or fewer");
+      return;
+    }
+    if (!isValidAlias(alias)) {
+      setValidationError(ALIAS_ERROR_MESSAGE);
       return;
     }
 

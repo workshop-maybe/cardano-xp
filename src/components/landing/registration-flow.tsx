@@ -23,7 +23,7 @@ import {
   ShieldIcon,
 } from "~/components/icons";
 import { getWalletAddressBech32 } from "~/lib/wallet-address";
-import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/validation/alias";
+import { ALIAS_ERROR_MESSAGE, isValidAlias } from "~/lib/alias-validation";
 
 interface RegistrationFlowProps {
   /** Called when mint transaction is submitted */

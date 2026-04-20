@@ -30,23 +30,8 @@ import {
 } from "~/components/icons";
 import { XpBadge } from "~/components/xp-badge";
 import { ProjectPostingWaitlistForm } from "~/components/xp/project-posting-waitlist-form";
+import { RelativeTime } from "~/components/xp/relative-time";
 import { activityKeys, fetchActivity } from "~/lib/xp-activity-client";
-
-/** Render an ISO-string date as a short relative-or-absolute string. */
-function formatActivityDate(dateString: string | null): string {
-  if (!dateString) return "—";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "—";
-  const diffMs = Date.now() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60_000);
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
 
 export function ActivityContent() {
   const { data, isLoading, error } = useQuery({
@@ -170,7 +155,7 @@ export function ActivityContent() {
                         <XpBadge amount={entry.xpEarned} />
                       </AndamioTableCell>
                       <AndamioTableCell className="text-right text-muted-foreground font-mono text-xs">
-                        {formatActivityDate(entry.date)}
+                        <RelativeTime date={entry.date} />
                       </AndamioTableCell>
                     </AndamioTableRow>
                   ))}

@@ -3,15 +3,21 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { env } from "~/env";
 import { CONTACT } from "~/config/contact";
+import {
+  checkRateLimit,
+  hashEmailForRateLimit,
+} from "~/lib/rate-limiter";
 
 /**
  * Project-posting waitlist endpoint.
  *
  * Email-only signup for "notify me when project posting opens on Cardano XP."
- * Sends two Resend emails on success: an internal notification to the team
- * inbox and a confirmation to the submitter.
+ * Sends one Resend email on success: an internal notification to the team
+ * inbox. The on-page success state is the user's receipt; no branded
+ * confirmation is sent to the submitter (see todo 004 for the rationale).
  *
- * Mirrors /api/sponsor-contact for auth, error handling, and Resend usage.
+ * Rate limiting lives in `src/lib/rate-limiter.ts` (Upstash when env vars
+ * present, in-memory fallback otherwise).
  */
 
 const waitlistSchema = z.object({
@@ -19,35 +25,6 @@ const waitlistSchema = z.object({
   /** Honeypot — populated by bots, empty/omitted by humans. */
   company: z.string().optional().default(""),
 });
-
-
-/**
- * In-memory per-instance rate limiter.
- *
- * Keyed by client IP, holds a rolling 60-second window of submission
- * timestamps. Best-effort — Vercel serverless isolates memory per
- * instance, so this does NOT provide global protection against a
- * distributed bot hitting different instances. Combined with the
- * honeypot field, it stops casual abuse. If sustained abuse surfaces,
- * upgrade to Vercel KV or @upstash/ratelimit (tracked as a deferred
- * follow-up in the v0.0.2 plan).
- */
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 5;
-const submissionTimestamps = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const cutoff = now - RATE_LIMIT_WINDOW_MS;
-  const recent = (submissionTimestamps.get(ip) ?? []).filter((t) => t > cutoff);
-  if (recent.length >= RATE_LIMIT_MAX) {
-    submissionTimestamps.set(ip, recent);
-    return true;
-  }
-  recent.push(now);
-  submissionTimestamps.set(ip, recent);
-  return false;
-}
 
 function getClientIp(request: Request): string {
   const xff = request.headers.get("x-forwarded-for");
@@ -90,9 +67,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Rate limit first — cheaper than body parse
+    // Per-IP rate limit first — cheaper than body parse.
     const ip = getClientIp(request);
-    if (isRateLimited(ip)) {
+    const ipCheck = await checkRateLimit("ip", ip);
+    if (!ipCheck.success) {
       return NextResponse.json(
         { error: "Too many requests. Please try again in a minute." },
         { status: 429 },
@@ -123,6 +101,20 @@ export async function POST(request: Request) {
     // sending email so bots get no signal that their submission was dropped.
     if (company && company.trim().length > 0) {
       return NextResponse.json({ success: true });
+    }
+
+    // Per-email rate limit (Upstash only — no-op when falling back to
+    // in-memory). Blocks the same address from being weaponized even if an
+    // attacker rotates IPs.
+    const emailCheck = await checkRateLimit(
+      "email",
+      hashEmailForRateLimit(email),
+    );
+    if (!emailCheck.success) {
+      return NextResponse.json(
+        { error: "This email was submitted recently. Please try again later." },
+        { status: 429 },
+      );
     }
 
     const resend = new Resend(env.RESEND_API_KEY);

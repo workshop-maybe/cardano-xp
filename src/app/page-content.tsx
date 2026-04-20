@@ -73,9 +73,9 @@ export function HomeContent() {
       <section className="relative z-10 px-6 py-16 border-t border-border/30 bg-background/50 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl space-y-8">
           <div className="space-y-3 text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
+            <AndamioText className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
               Where XP is going
-            </p>
+            </AndamioText>
             <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-foreground leading-tight">
               Earn XP by giving feedback.
               <br />

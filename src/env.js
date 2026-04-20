@@ -18,6 +18,12 @@ export const env = createEnv({
     UTXOS_SPONSORSHIP_ID: z.string().optional(),
     // Resend API key — for sending sponsor inquiry emails
     RESEND_API_KEY: z.string().min(1).optional(),
+    // Upstash Redis — optional backend for the waitlist rate limiter.
+    // Both must be set together. When unset, the waitlist route falls back
+    // to an in-memory, per-instance sliding-window limiter (see
+    // src/lib/rate-limiter.ts).
+    UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
   },
 
   /**
@@ -61,6 +67,8 @@ export const env = createEnv({
     WEB3_SDK_PRIVATE_KEY: process.env.WEB3_SDK_PRIVATE_KEY,
     UTXOS_SPONSORSHIP_ID: process.env.UTXOS_SPONSORSHIP_ID,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     NEXT_PUBLIC_COURSE_ID: process.env.NEXT_PUBLIC_COURSE_ID,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
     NEXT_PUBLIC_XP_POLICY_ID: process.env.NEXT_PUBLIC_XP_POLICY_ID,

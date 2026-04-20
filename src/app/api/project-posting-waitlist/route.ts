@@ -2,15 +2,22 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { env } from "~/env";
+import { CONTACT } from "~/config/contact";
+import {
+  checkRateLimit,
+  hashEmailForRateLimit,
+} from "~/lib/rate-limiter";
 
 /**
  * Project-posting waitlist endpoint.
  *
  * Email-only signup for "notify me when project posting opens on Cardano XP."
- * Sends two Resend emails on success: an internal notification to the team
- * inbox and a confirmation to the submitter.
+ * Sends one Resend email on success: an internal notification to the team
+ * inbox. The on-page success state is the user's receipt; no branded
+ * confirmation is sent to the submitter (see todo 004 for the rationale).
  *
- * Mirrors /api/sponsor-contact for auth, error handling, and Resend usage.
+ * Rate limiting lives in `src/lib/rate-limiter.ts` (Upstash when env vars
+ * present, in-memory fallback otherwise).
  */
 
 const waitlistSchema = z.object({
@@ -19,40 +26,10 @@ const waitlistSchema = z.object({
   company: z.string().optional().default(""),
 });
 
-const INTERNAL_RECIPIENT = "james@andamio.io";
-const FROM_ADDRESS = "Cardano XP <onboarding@resend.dev>";
-
-/**
- * In-memory per-instance rate limiter.
- *
- * Keyed by client IP, holds a rolling 60-second window of submission
- * timestamps. Best-effort — Vercel serverless isolates memory per
- * instance, so this does NOT provide global protection against a
- * distributed bot hitting different instances. Combined with the
- * honeypot field, it stops casual abuse. If sustained abuse surfaces,
- * upgrade to Vercel KV or @upstash/ratelimit (tracked as a deferred
- * follow-up in the v0.0.2 plan).
- */
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 5;
-const submissionTimestamps = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const cutoff = now - RATE_LIMIT_WINDOW_MS;
-  const recent = (submissionTimestamps.get(ip) ?? []).filter((t) => t > cutoff);
-  if (recent.length >= RATE_LIMIT_MAX) {
-    submissionTimestamps.set(ip, recent);
-    return true;
-  }
-  recent.push(now);
-  submissionTimestamps.set(ip, recent);
-  return false;
-}
-
 function getClientIp(request: Request): string {
   const xff = request.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0]!.trim();
+  const first = xff?.split(",")[0]?.trim();
+  if (first) return first;
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
@@ -91,9 +68,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Rate limit first — cheaper than body parse
+    // Per-IP rate limit first — cheaper than body parse.
     const ip = getClientIp(request);
-    if (isRateLimited(ip)) {
+    const ipCheck = await checkRateLimit("ip", ip);
+    if (!ipCheck.success) {
       return NextResponse.json(
         { error: "Too many requests. Please try again in a minute." },
         { status: 429 },
@@ -126,39 +104,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
+    // Per-email rate limit (Upstash only — no-op when falling back to
+    // in-memory). Blocks the same address from being weaponized even if an
+    // attacker rotates IPs.
+    const emailCheck = await checkRateLimit(
+      "email",
+      hashEmailForRateLimit(email),
+    );
+    if (!emailCheck.success) {
+      return NextResponse.json(
+        { error: "This email was submitted recently. Please try again later." },
+        { status: 429 },
+      );
+    }
+
     const resend = new Resend(env.RESEND_API_KEY);
     const submittedAt = new Date().toISOString();
 
+    // Only the internal notification is sent. Sending a branded confirmation
+    // to the attacker-supplied `email` would make this endpoint a reflector
+    // for email-bombing. The on-page success state is the user's receipt.
     // Resend's SDK resolves with `{ data, error }` on application-level
-    // failures (rejected recipient, quota, invalid from). It only rejects on
-    // transport errors. Inspect the error field so we don't report success
-    // when nothing was actually delivered.
-    const [internal, confirmation] = await Promise.all([
-      resend.emails.send({
-        from: FROM_ADDRESS,
-        replyTo: email,
-        to: INTERNAL_RECIPIENT,
-        subject: "Cardano XP — project-posting waitlist",
-        text: `Email: ${email}\nSubmitted: ${submittedAt}`,
-      }),
-      resend.emails.send({
-        from: FROM_ADDRESS,
-        to: email,
-        subject: "You're on the Cardano XP project-posting waitlist",
-        text: [
-          "You're on the list for Cardano XP project posting.",
-          "",
-          "We'll email you when it opens. In the meantime, you can start earning XP by giving feedback to other contributors at https://cardano-xp.io.",
-          "",
-          "— Cardano XP",
-        ].join("\n"),
-      }),
-    ]);
+    // failures; inspect the error field so we don't report success when the
+    // send didn't actually deliver.
+    const internal = await resend.emails.send({
+      from: CONTACT.fromAddress,
+      replyTo: email,
+      to: CONTACT.internalEmail,
+      subject: "Cardano XP — project-posting waitlist",
+      text: `Email: ${email}\nSubmitted: ${submittedAt}`,
+    });
 
-    if (internal.error || confirmation.error) {
+    if (internal.error) {
       console.error("[project-posting-waitlist] Resend send failed:", {
         internal: internal.error,
-        confirmation: confirmation.error,
       });
       return NextResponse.json(
         { error: "Failed to process submission" },

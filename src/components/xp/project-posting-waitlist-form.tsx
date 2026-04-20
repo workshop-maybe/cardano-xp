@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AndamioButton } from "~/components/andamio/andamio-button";
 import { AndamioText } from "~/components/andamio/andamio-text";
 import { SuccessIcon, LoadingIcon, SecurityAlertIcon } from "~/components/icons";
+import { CONTACT } from "~/config/contact";
 
 /**
  * Waitlist signup for the future "post your own project" feature.
@@ -110,8 +111,8 @@ export function ProjectPostingWaitlistForm({
       <div className="rounded-lg border border-success/30 bg-success/5 p-4 flex items-start gap-3">
         <SuccessIcon className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
         <AndamioText variant="small" className="text-foreground">
-          You&apos;re on the list — check your inbox for confirmation. We&apos;ll email
-          you when project posting opens on Cardano XP.
+          You&apos;re on the list. We&apos;ll email you when project posting
+          opens on Cardano XP.
         </AndamioText>
       </div>
     );
@@ -192,8 +193,8 @@ export function ProjectPostingWaitlistForm({
 
       <AndamioText variant="muted" className="text-xs">
         Your email is used only to notify you when project posting launches.
-        Email <span className="font-mono">james@andamio.io</span> to request
-        deletion.
+        Email <span className="font-mono">{CONTACT.internalEmail}</span> to
+        request deletion.
       </AndamioText>
     </form>
   );

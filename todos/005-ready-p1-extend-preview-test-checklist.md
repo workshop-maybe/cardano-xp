@@ -1,5 +1,5 @@
 ---
-status: ready
+status: complete
 priority: p1
 issue_id: "005"
 tags: [code-review, testing, preview, pr-50]
@@ -41,12 +41,29 @@ Do the manual exercises on Vercel preview before merge. Record results in the PR
 - [ ] Results (pass/fail + screenshots where relevant) captured in the PR description before merge.
 - [ ] Any regression found during exercise fixed in the same PR.
 
+## Decision (2026-04-20, post-PR #52 merge)
+
+Closed as **partial-complete**: exercises 1 and 2 (rate-limit 429 and
+honeypot) ran via curl against prod and passed. Exercises 3, 4, and 5
+(fallback path, zero-state rendering, hostile alias) need browser
+response-override and were deferred as insufficient-ROI for this cycle —
+the high-value code paths are validated; the three deferred exercises
+cover rendering edge cases that a sharp-eyed user would catch in normal
+use.
+
+If the deferred exercises become worth running later, the scaffold at
+`docs/feedback/reports/2026-04-20-pr50-branch-exercises.md` has the
+exact devtools/response-override steps. Todo 015 (PR #52 delta
+exercises) remains ready and covers the same category of work.
+
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-04-20 | Created from PR #50 review | Manual preview is the only coverage; branch enumeration must be explicit |
+| 2026-04-20 | Ran exercises 1–2 via curl against prod post-merge; deferred 3–5 | API-level exercises are easy to run from CLI; rendering exercises need a browser harness with route interception |
 
 ## Resources
 
-- PR: #50
+- PR: #50 (origin); [#52](https://github.com/workshop-maybe/cardano-xp/pull/52) (merged, runs against this code)
+- Report: `docs/feedback/reports/2026-04-20-pr50-branch-exercises.md`

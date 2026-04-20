@@ -153,7 +153,7 @@ export function LandingHero({ onMinted }: LandingHeroProps) {
         </p>
 
         <p className="font-mono text-xs text-muted-foreground/60 tracking-wide">
-          vibe-coded experiment &middot; built in public &middot; seeking feedback
+          collecting feedback &middot; active revision
         </p>
       </div>
 

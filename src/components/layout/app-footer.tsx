@@ -18,11 +18,11 @@ export function AppFooter() {
         </span>
         <span className="flex items-center gap-1.5">
           <span className="text-muted-foreground/70">status</span>
-          <span className="text-foreground/70">prototype</span>
+          <span className="text-foreground/70">active revision</span>
         </span>
         <span className="flex items-center gap-1.5">
           <span className="text-muted-foreground/70">v</span>
-          <span className="text-foreground/70">0.0.1</span>
+          <span className="text-foreground/70">0.0.2</span>
         </span>
         <span className="flex items-center gap-1.5">
           <span className="text-muted-foreground/70">agent</span>

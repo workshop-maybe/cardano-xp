@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { env } from "~/env";
+import { withTimeout } from "~/lib/with-timeout";
 
 /**
  * Shared rate limiter for public form endpoints.
@@ -54,12 +55,7 @@ function inMemoryCheckIp(key: string): RateLimitResult {
     return { success: false, remaining: 0 };
   }
   recent.push(now);
-  if (recent.length === 0) {
-    // Shouldn't happen (we just pushed), but guards against future edits.
-    inMemoryIp.delete(key);
-  } else {
-    inMemoryIp.set(key, recent);
-  }
+  inMemoryIp.set(key, recent);
   return { success: true, remaining: IP_MAX - recent.length };
 }
 
@@ -116,21 +112,6 @@ function getUpstashBundle(): UpstashBundle | null {
 
 /** Upstash REST call timeout — bounds a hung Redis endpoint. */
 const UPSTASH_TIMEOUT_MS = 2_000;
-
-function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
-  let timer: NodeJS.Timeout | undefined;
-  return Promise.race([
-    promise.finally(() => {
-      if (timer) clearTimeout(timer);
-    }),
-    new Promise<T>((_, reject) => {
-      timer = setTimeout(
-        () => reject(new Error(`${label} timed out after ${ms}ms`)),
-        ms,
-      );
-    }),
-  ]);
-}
 
 /**
  * Check a rate-limit key. Returns `{ success: false }` when the caller has

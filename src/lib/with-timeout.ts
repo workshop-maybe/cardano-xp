@@ -16,7 +16,10 @@ export function withTimeout<T>(
   ms: number,
   label = "operation",
 ): Promise<T> {
-  let timer: NodeJS.Timeout | undefined;
+  // `ReturnType<typeof setTimeout>` is correct under Node, edge, and DOM types;
+  // `NodeJS.Timeout` would break if this helper is ever imported from an
+  // edge-runtime route.
+  let timer: ReturnType<typeof setTimeout> | undefined;
   return Promise.race([
     promise.finally(() => {
       if (timer) clearTimeout(timer);

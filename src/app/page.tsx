@@ -1,5 +1,5 @@
 import { getQueryClient, HydrateClient } from "~/trpc/server";
-import { activityKeys } from "~/app/(app)/xp/activity/activity-content";
+import { activityKeys } from "~/lib/xp-activity-client";
 import { computeActivityStats } from "~/lib/xp-activity";
 import { HomeContent } from "./page-content";
 

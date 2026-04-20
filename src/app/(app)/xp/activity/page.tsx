@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { getQueryClient, HydrateClient } from "~/trpc/server";
 import { AndamioPageLoading } from "~/components/andamio";
-import { ActivityContent, activityKeys } from "./activity-content";
+import { ActivityContent } from "./activity-content";
+import { activityKeys } from "~/lib/xp-activity-client";
 import { computeActivityStats } from "~/lib/xp-activity";
 
 /**

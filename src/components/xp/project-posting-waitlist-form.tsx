@@ -63,6 +63,11 @@ export function ProjectPostingWaitlistForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // Reentrancy guard: the `disabled={isSubmitting}` button attribute
+    // only takes effect after React commits a re-render, so a rapid
+    // Enter-key double-tap can otherwise fire two POSTs (and two Resend
+    // email pairs) for one user intent.
+    if (state.kind === "submitting") return;
     setState({ kind: "submitting" });
 
     try {

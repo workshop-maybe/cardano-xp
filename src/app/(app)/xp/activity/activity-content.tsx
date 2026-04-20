@@ -29,31 +29,13 @@ import {
 } from "~/components/icons";
 import { XpBadge } from "~/components/xp-badge";
 import { ProjectPostingWaitlistForm } from "~/components/xp/project-posting-waitlist-form";
-import type { ActivityStats } from "~/types/xp-activity";
+import { activityKeys, fetchActivity } from "~/lib/xp-activity-client";
 
-export const activityKeys = {
-  all: ["xp-activity"] as const,
-};
-
-async function fetchActivity(): Promise<ActivityStats> {
-  const response = await fetch("/api/xp-activity");
-
-  if (!response.ok) {
-    const errorData = (await response.json().catch(() => ({}))) as {
-      error?: string;
-      details?: string;
-    };
-    throw new Error(
-      errorData.error ?? `Failed to fetch activity: ${response.statusText}`,
-    );
-  }
-
-  return response.json() as Promise<ActivityStats>;
-}
-
-/** Render a slot-derived date as a short relative-or-absolute string. */
-function formatActivityDate(date: Date | null): string {
-  if (!date) return "—";
+/** Render an ISO-string date as a short relative-or-absolute string. */
+function formatActivityDate(dateString: string | null): string {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "—";
   const diffMs = Date.now() - date.getTime();
   const diffMins = Math.floor(diffMs / 60_000);
   if (diffMins < 1) return "just now";
@@ -182,7 +164,9 @@ export function ActivityContent() {
                 </AndamioTableHeader>
                 <AndamioTableBody>
                   {recent.map((entry) => (
-                    <AndamioTableRow key={`${entry.alias}-${entry.slot}`}>
+                    <AndamioTableRow
+                      key={`${entry.alias}-${entry.slot}-${entry.taskHash}`}
+                    >
                       <AndamioTableCell className="font-mono font-medium">
                         {entry.alias}
                       </AndamioTableCell>

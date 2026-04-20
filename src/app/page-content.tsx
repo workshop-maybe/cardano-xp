@@ -18,20 +18,11 @@ import {
   XPIcon,
 } from "~/components/icons";
 import { ProjectPostingWaitlistForm } from "~/components/xp/project-posting-waitlist-form";
-import { activityKeys } from "~/app/(app)/xp/activity/activity-content";
-import type { ActivityStats } from "~/types/xp-activity";
+import { activityKeys, fetchActivity } from "~/lib/xp-activity-client";
 
 interface MintedInfo {
   alias: string;
   txHash: string;
-}
-
-async function fetchActivity(): Promise<ActivityStats> {
-  const response = await fetch("/api/xp-activity");
-  if (!response.ok) {
-    throw new Error("Failed to fetch activity stats");
-  }
-  return response.json() as Promise<ActivityStats>;
 }
 
 export function HomeContent() {

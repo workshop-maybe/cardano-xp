@@ -11,8 +11,13 @@ export interface RecentAcceptedEntry {
   xpEarned: number;
   /** On-chain slot when the submission was posted. 0 if unavailable. */
   slot: number;
-  /** Human-readable date derived from slot + network. null if slot is 0. */
-  date: Date | null;
+  /** ISO 8601 timestamp derived from slot + network. null if slot is missing/invalid
+   *  or the network isn't supported. Kept as a string so the shape is identical
+   *  whether hydrated via SuperJSON (server prefetch) or parsed from JSON (client refetch). */
+  date: string | null;
+  /** On-chain task hash. Used to keep React keys unique when one alias has
+   *  multiple accepted submissions in the same slot. */
+  taskHash: string;
 }
 
 export interface ActivityStats {

@@ -56,8 +56,34 @@ function getClientIp(request: Request): string {
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
+/**
+ * Reject cross-origin POSTs. Defense-in-depth against CSRF-style abuse where
+ * a third-party page submits on behalf of a visitor. Same-origin fetches from
+ * our own client set `Origin` to match `Host`; requests without `Origin`
+ * (non-browser tooling, some legacy clients) are allowed through so the
+ * endpoint stays scriptable for agent parity.
+ */
+function isSameOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return true;
+  const host = request.headers.get("host");
+  if (!host) return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   try {
+    if (!isSameOrigin(request)) {
+      return NextResponse.json(
+        { error: "Invalid request" },
+        { status: 403 },
+      );
+    }
+
     if (!env.RESEND_API_KEY) {
       return NextResponse.json(
         { error: "Email service is not configured" },
@@ -103,7 +129,11 @@ export async function POST(request: Request) {
     const resend = new Resend(env.RESEND_API_KEY);
     const submittedAt = new Date().toISOString();
 
-    await Promise.all([
+    // Resend's SDK resolves with `{ data, error }` on application-level
+    // failures (rejected recipient, quota, invalid from). It only rejects on
+    // transport errors. Inspect the error field so we don't report success
+    // when nothing was actually delivered.
+    const [internal, confirmation] = await Promise.all([
       resend.emails.send({
         from: FROM_ADDRESS,
         replyTo: email,
@@ -124,6 +154,17 @@ export async function POST(request: Request) {
         ].join("\n"),
       }),
     ]);
+
+    if (internal.error || confirmation.error) {
+      console.error("[project-posting-waitlist] Resend send failed:", {
+        internal: internal.error,
+        confirmation: confirmation.error,
+      });
+      return NextResponse.json(
+        { error: "Failed to process submission" },
+        { status: 500 },
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

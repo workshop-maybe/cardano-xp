@@ -71,6 +71,15 @@ export async function computeActivityStats(): Promise<ActivityStats> {
   const submissions = project.submissions ?? [];
   const assessments = project.assessments ?? [];
 
+  // Build the accepted-task-hash set once; used by both the fallback XP path
+  // and the recent-accepted list below.
+  const acceptedTaskHashes = new Set<string>();
+  for (const a of assessments) {
+    if (a.decision?.toUpperCase().startsWith("ACCEPT")) {
+      acceptedTaskHashes.add(a.task_hash ?? "");
+    }
+  }
+
   // Build taskHash -> XP reward map (match on policy ID; gateway decodes the
   // asset name to "XP" while on-chain uses hex "5850").
   const taskXpMap = new Map<string, number>();
@@ -119,13 +128,6 @@ export async function computeActivityStats(): Promise<ActivityStats> {
   // activity dashboard tolerates the approximation and the primary path is
   // expected to succeed in practice.
   if (!hasOutcomeData) {
-    const acceptedTaskHashes = new Set<string>();
-    for (const a of assessments) {
-      if (a.decision?.toUpperCase().startsWith("ACCEPT")) {
-        acceptedTaskHashes.add(a.task_hash);
-      }
-    }
-
     for (const sub of submissions) {
       const taskHash = sub.task_hash ?? "";
       if (!acceptedTaskHashes.has(taskHash)) continue;
@@ -145,8 +147,16 @@ export async function computeActivityStats(): Promise<ActivityStats> {
     (sum, xp) => sum + xp,
     0,
   );
-  const pendingReviews = assessments.filter(
-    (a) => !a.decision?.toUpperCase().startsWith("ACCEPT"),
+  // Pending reviews = submissions whose task_hash has no matching assessment.
+  // Gateway assessments always carry a terminal decision (ACCEPTED/REFUSED/DENIED),
+  // so "not accepted" is NOT the same as "pending" — we want the submissions
+  // that are genuinely awaiting any decision.
+  const assessedTaskHashes = new Set<string>();
+  for (const a of assessments) {
+    if (a.task_hash) assessedTaskHashes.add(a.task_hash);
+  }
+  const pendingReviews = submissions.filter(
+    (s) => !!s.task_hash && !assessedTaskHashes.has(s.task_hash),
   ).length;
 
   // --- Recent accepted submissions (display-oriented) ---
@@ -154,22 +164,21 @@ export async function computeActivityStats(): Promise<ActivityStats> {
   // one accepted assessment, sort by submission slot descending, take top N.
   // Timestamp = submission slot (when the work happened, not when it was
   // reviewed), which reads more intuitively as "recent activity."
-  const acceptedTaskHashes = new Set<string>();
-  for (const a of assessments) {
-    if (a.decision?.toUpperCase().startsWith("ACCEPT")) {
-      acceptedTaskHashes.add(a.task_hash);
-    }
-  }
-
   const recentAccepted: RecentAcceptedEntry[] = submissions
     .filter((s) => acceptedTaskHashes.has(s.task_hash ?? ""))
     .map((s) => {
-      const slot = s.slot ?? 0;
+      const rawSlot = s.slot;
+      const slot =
+        typeof rawSlot === "number" && Number.isFinite(rawSlot) && rawSlot > 0
+          ? rawSlot
+          : 0;
+      const dateObj = slot > 0 ? slotToDate(slot, NETWORK) : null;
       return {
         alias: s.submitted_by ?? "",
         xpEarned: taskXpMap.get(s.task_hash ?? "") ?? 0,
         slot,
-        date: slot > 0 ? slotToDate(slot, NETWORK) : null,
+        date: dateObj ? dateObj.toISOString() : null,
+        taskHash: s.task_hash ?? "",
       };
     })
     .filter((e) => e.alias)

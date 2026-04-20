@@ -137,8 +137,8 @@ export function XPContent() {
         </section>
       )}
 
-      {/* Leaderboard CTA */}
-      <section>
+      {/* Leaderboard + Activity CTAs */}
+      <section className="grid gap-4 sm:grid-cols-2">
         <Link
           href={PUBLIC_ROUTES.leaderboard}
           className="group flex items-center justify-between rounded-xl border border-secondary/30 bg-secondary/5 p-6 transition-colors hover:bg-secondary/10"
@@ -149,6 +149,22 @@ export function XPContent() {
             </p>
             <p className="text-sm text-muted-foreground">
               See who&apos;s earning XP by completing tasks
+            </p>
+          </div>
+          <span className="text-secondary text-2xl transition-transform group-hover:translate-x-1">
+            &rarr;
+          </span>
+        </Link>
+        <Link
+          href={PUBLIC_ROUTES.activity}
+          className="group flex items-center justify-between rounded-xl border border-secondary/30 bg-secondary/5 p-6 transition-colors hover:bg-secondary/10"
+        >
+          <div className="space-y-1">
+            <p className="font-display font-bold text-lg text-foreground">
+              Activity
+            </p>
+            <p className="text-sm text-muted-foreground">
+              What&apos;s happening on Cardano XP — and where it&apos;s going
             </p>
           </div>
           <span className="text-secondary text-2xl transition-transform group-hover:translate-x-1">

@@ -27,6 +27,9 @@ export const PUBLIC_ROUTES = {
   /** XP leaderboard */
   leaderboard: "/xp/leaderboard",
 
+  /** XP activity dashboard — public-facing stats + project-posting waitlist */
+  activity: "/xp/activity",
+
   /** Sponsor pitch + donation */
   sponsors: "/sponsors",
   /** Public project wallet */

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { env } from "~/env";
+import { CONTACT } from "~/config/contact";
 
 const sponsorContactSchema = z.object({
   name: z.string().min(1).max(200),
@@ -49,9 +50,9 @@ export async function POST(request: Request) {
     const resend = new Resend(env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from: "Cardano XP <onboarding@resend.dev>",
+      from: CONTACT.fromAddress,
       replyTo: email,
-      to: "james@andamio.io",
+      to: CONTACT.internalEmail,
       subject: "Cardano XP Sponsor Interest",
       text: bodyParts.join("\n"),
     });

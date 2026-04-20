@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { env } from "~/env";
+import { CONTACT } from "~/config/contact";
 
 /**
  * Project-posting waitlist endpoint.
@@ -19,8 +20,6 @@ const waitlistSchema = z.object({
   company: z.string().optional().default(""),
 });
 
-const INTERNAL_RECIPIENT = "james@andamio.io";
-const FROM_ADDRESS = "Cardano XP <onboarding@resend.dev>";
 
 /**
  * In-memory per-instance rate limiter.
@@ -135,14 +134,14 @@ export async function POST(request: Request) {
     // when nothing was actually delivered.
     const [internal, confirmation] = await Promise.all([
       resend.emails.send({
-        from: FROM_ADDRESS,
+        from: CONTACT.fromAddress,
         replyTo: email,
-        to: INTERNAL_RECIPIENT,
+        to: CONTACT.internalEmail,
         subject: "Cardano XP — project-posting waitlist",
         text: `Email: ${email}\nSubmitted: ${submittedAt}`,
       }),
       resend.emails.send({
-        from: FROM_ADDRESS,
+        from: CONTACT.fromAddress,
         to: email,
         subject: "You're on the Cardano XP project-posting waitlist",
         text: [

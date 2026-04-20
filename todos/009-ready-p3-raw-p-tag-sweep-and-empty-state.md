@@ -1,5 +1,5 @@
 ---
-status: ready
+status: complete
 priority: p3
 issue_id: "009"
 tags: [code-review, design-system, consistency, pr-50]

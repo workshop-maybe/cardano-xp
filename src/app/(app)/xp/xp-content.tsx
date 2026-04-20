@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CARDANO_XP } from "~/config/cardano-xp";
 import { PUBLIC_ROUTES } from "~/config/routes";
 import { useProject } from "~/hooks/api/project/use-project";
-import { AndamioPageLoading, AndamioErrorAlert } from "~/components/andamio";
+import { AndamioPageLoading, AndamioErrorAlert, AndamioText } from "~/components/andamio";
 
 const STATS = [
   { label: "Total Supply", value: "100,000", unit: "XP", prefix: "", accent: "text-secondary" },
@@ -329,10 +329,12 @@ function CrossLinkCard({
       className="group flex items-center justify-between rounded-xl border border-secondary/30 bg-secondary/5 p-6 transition-colors hover:bg-secondary/10"
     >
       <div className="space-y-1">
-        <p className="font-display font-bold text-lg text-foreground">
+        <AndamioText className="font-display font-bold text-lg text-foreground">
           {title}
-        </p>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        </AndamioText>
+        <AndamioText className="text-sm text-muted-foreground">
+          {description}
+        </AndamioText>
       </div>
       <span className="text-secondary text-2xl transition-transform group-hover:translate-x-1">
         &rarr;

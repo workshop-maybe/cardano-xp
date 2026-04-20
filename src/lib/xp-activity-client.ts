@@ -7,7 +7,7 @@ import type { ActivityStats } from "~/types/xp-activity";
  * the query key and the fetch error contract.
  *
  * Server pages import `activityKeys` for prefetch; they should not import
- * `fetchActivity` (the server path calls `computeActivityStats()` directly).
+ * `fetchActivity` (the server path calls `getCachedActivityStats()` directly).
  */
 
 export const activityKeys = {

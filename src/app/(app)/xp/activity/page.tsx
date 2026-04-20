@@ -4,19 +4,11 @@ import { AndamioPageLoading } from "~/components/andamio";
 import { ActivityContent } from "./activity-content";
 import { activityKeys } from "~/lib/xp-activity-client";
 import { getCachedActivityStats } from "~/lib/xp-activity";
+import { withTimeout } from "~/lib/with-timeout";
 
 /** Bound SSR TTFB under gateway stress. Race the cached prefetch against a
  *  3s ceiling; on timeout the client takes over via useQuery. */
 const SSR_PREFETCH_TIMEOUT_MS = 3_000;
-
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`SSR prefetch timeout after ${ms}ms`)), ms),
-    ),
-  ]);
-}
 
 /**
  * /xp/activity — public page that prefetches activity stats server-side
@@ -35,6 +27,7 @@ export default async function ActivityPage() {
         queryFn: getCachedActivityStats,
       }),
       SSR_PREFETCH_TIMEOUT_MS,
+      "ActivityPage prefetch",
     );
   } catch (err) {
     console.error(

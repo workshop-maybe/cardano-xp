@@ -43,6 +43,12 @@ async function gatewayFetch(path: string, init?: RequestInit): Promise<Response>
   });
 }
 
+/**
+ * Uncached computation — exported for tests and one-off scripts. Production
+ * callers should prefer `getCachedActivityStats` so the result shares the
+ * 5-minute ISR window with other callers of the same aggregation.
+ * @internal
+ */
 export async function computeActivityStats(): Promise<ActivityStats> {
   const [commitmentsRes, projectRes] = await Promise.all([
     gatewayFetch("/project/manager/commitments/list", {
@@ -207,7 +213,9 @@ export async function computeActivityStats(): Promise<ActivityStats> {
  */
 export const getCachedActivityStats = unstable_cache(
   computeActivityStats,
-  ["xp-activity"],
+  // Scoped key so a future unstable_cache call under a broader "xp-activity"
+  // namespace can't collide with this aggregation.
+  ["xp-activity", "computeActivityStats", "v1"],
   { revalidate: 300 },
 );
 

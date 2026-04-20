@@ -8,9 +8,10 @@ import type {
 /**
  * XP Activity API route.
  *
- * Thin wrapper around computeActivityStats() — delegates all computation
- * to ~/lib/xp-activity.ts and handles error → HTTP response mapping.
- * Mirrors the /api/xp-leaderboard pattern.
+ * Thin wrapper around getCachedActivityStats() — delegates all computation
+ * to ~/lib/xp-activity.ts (which memoizes for 300s via unstable_cache) and
+ * handles error → HTTP response mapping. Mirrors the /api/xp-leaderboard
+ * pattern.
  */
 
 export const revalidate = 300;

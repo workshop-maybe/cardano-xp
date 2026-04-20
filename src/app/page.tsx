@@ -1,7 +1,22 @@
 import { getQueryClient, HydrateClient } from "~/trpc/server";
 import { activityKeys } from "~/lib/xp-activity-client";
-import { computeActivityStats } from "~/lib/xp-activity";
+import { getCachedActivityStats } from "~/lib/xp-activity";
 import { HomeContent } from "./page-content";
+
+/** Bound SSR TTFB under gateway stress. The cached function itself has a
+ *  10s gateway AbortSignal, which is fine for API-route use but too long
+ *  for the landing page. A race cap keeps landing TTFB predictable; the
+ *  client-side useQuery takes over on the race-loss path. */
+const SSR_PREFETCH_TIMEOUT_MS = 3_000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`SSR prefetch timeout after ${ms}ms`)), ms),
+    ),
+  ]);
+}
 
 /**
  * Landing page — async server component that prefetches activity stats
@@ -12,10 +27,13 @@ export default async function Home() {
   const queryClient = getQueryClient();
 
   try {
-    await queryClient.prefetchQuery({
-      queryKey: activityKeys.all,
-      queryFn: computeActivityStats,
-    });
+    await withTimeout(
+      queryClient.prefetchQuery({
+        queryKey: activityKeys.all,
+        queryFn: getCachedActivityStats,
+      }),
+      SSR_PREFETCH_TIMEOUT_MS,
+    );
   } catch (err) {
     console.error(
       "[Home] Server prefetch failed, falling back to client:",

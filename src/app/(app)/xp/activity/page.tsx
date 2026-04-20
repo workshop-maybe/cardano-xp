@@ -3,23 +3,39 @@ import { getQueryClient, HydrateClient } from "~/trpc/server";
 import { AndamioPageLoading } from "~/components/andamio";
 import { ActivityContent } from "./activity-content";
 import { activityKeys } from "~/lib/xp-activity-client";
-import { computeActivityStats } from "~/lib/xp-activity";
+import { getCachedActivityStats } from "~/lib/xp-activity";
+
+/** Bound SSR TTFB under gateway stress. Race the cached prefetch against a
+ *  3s ceiling; on timeout the client takes over via useQuery. */
+const SSR_PREFETCH_TIMEOUT_MS = 3_000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`SSR prefetch timeout after ${ms}ms`)), ms),
+    ),
+  ]);
+}
 
 /**
  * /xp/activity — public page that prefetches activity stats server-side
  * and hydrates into React Query for instant client render.
  *
- * Mirrors the `/xp/leaderboard` pattern: prefetch via computeActivityStats,
+ * Mirrors the `/xp/leaderboard` pattern: prefetch via getCachedActivityStats,
  * wrap in HydrateClient + Suspense, hand off to the client content.
  */
 export default async function ActivityPage() {
   const queryClient = getQueryClient();
 
   try {
-    await queryClient.prefetchQuery({
-      queryKey: activityKeys.all,
-      queryFn: computeActivityStats,
-    });
+    await withTimeout(
+      queryClient.prefetchQuery({
+        queryKey: activityKeys.all,
+        queryFn: getCachedActivityStats,
+      }),
+      SSR_PREFETCH_TIMEOUT_MS,
+    );
   } catch (err) {
     console.error(
       "[ActivityPage] Server prefetch failed, falling back to client:",

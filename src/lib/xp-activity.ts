@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import { env } from "~/env";
 import type {
   ManagerCommitmentsResponse,
@@ -194,3 +195,19 @@ export async function computeActivityStats(): Promise<ActivityStats> {
     recentAccepted,
   };
 }
+
+/**
+ * Cached variant of `computeActivityStats` — shared across the landing
+ * prefetch, the `/xp/activity` prefetch, and the `/api/xp-activity` route
+ * handler. Cache lifetime matches the route handler's `revalidate = 300`.
+ *
+ * This makes the existing ISR on the API route actually reachable from
+ * server components, which call the function directly rather than going
+ * through the HTTP layer.
+ */
+export const getCachedActivityStats = unstable_cache(
+  computeActivityStats,
+  ["xp-activity"],
+  { revalidate: 300 },
+);
+

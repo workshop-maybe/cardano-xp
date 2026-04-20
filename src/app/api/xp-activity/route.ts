@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { computeActivityStats } from "~/lib/xp-activity";
+import { getCachedActivityStats } from "~/lib/xp-activity";
 import type {
   ActivityStats,
   ActivityErrorResponse,
@@ -19,7 +19,7 @@ export async function GET(): Promise<
   NextResponse<ActivityStats | ActivityErrorResponse>
 > {
   try {
-    const result = await computeActivityStats();
+    const result = await getCachedActivityStats();
     return NextResponse.json(result);
   } catch (error) {
     console.error("[xp-activity] Unexpected error:", error);

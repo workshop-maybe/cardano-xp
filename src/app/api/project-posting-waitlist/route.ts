@@ -128,36 +128,23 @@ export async function POST(request: Request) {
     const resend = new Resend(env.RESEND_API_KEY);
     const submittedAt = new Date().toISOString();
 
+    // Only the internal notification is sent. Sending a branded confirmation
+    // to the attacker-supplied `email` would make this endpoint a reflector
+    // for email-bombing. The on-page success state is the user's receipt.
     // Resend's SDK resolves with `{ data, error }` on application-level
-    // failures (rejected recipient, quota, invalid from). It only rejects on
-    // transport errors. Inspect the error field so we don't report success
-    // when nothing was actually delivered.
-    const [internal, confirmation] = await Promise.all([
-      resend.emails.send({
-        from: CONTACT.fromAddress,
-        replyTo: email,
-        to: CONTACT.internalEmail,
-        subject: "Cardano XP — project-posting waitlist",
-        text: `Email: ${email}\nSubmitted: ${submittedAt}`,
-      }),
-      resend.emails.send({
-        from: CONTACT.fromAddress,
-        to: email,
-        subject: "You're on the Cardano XP project-posting waitlist",
-        text: [
-          "You're on the list for Cardano XP project posting.",
-          "",
-          "We'll email you when it opens. In the meantime, you can start earning XP by giving feedback to other contributors at https://cardano-xp.io.",
-          "",
-          "— Cardano XP",
-        ].join("\n"),
-      }),
-    ]);
+    // failures; inspect the error field so we don't report success when the
+    // send didn't actually deliver.
+    const internal = await resend.emails.send({
+      from: CONTACT.fromAddress,
+      replyTo: email,
+      to: CONTACT.internalEmail,
+      subject: "Cardano XP — project-posting waitlist",
+      text: `Email: ${email}\nSubmitted: ${submittedAt}`,
+    });
 
-    if (internal.error || confirmation.error) {
+    if (internal.error) {
       console.error("[project-posting-waitlist] Resend send failed:", {
         internal: internal.error,
-        confirmation: confirmation.error,
       });
       return NextResponse.json(
         { error: "Failed to process submission" },

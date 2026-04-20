@@ -1,9 +1,9 @@
 # PR #50 Branch Exercises — todo 005
 
-**Target branch:** `chore/resolve-pr50-todos` (this PR)
-**Preview URL:** _to be filled in once Vercel builds the preview_
-**Runner:** _fill in during review_
-**Date run:** _fill in_
+**Target branch:** `chore/resolve-pr50-todos` — merged as PR #52 (commit `39003b9`)
+**Target URL:** https://www.cardano-xp.io (prod, post-merge)
+**Runner:** Claude (agent), delegated by jdunseith@gimbalabs.io
+**Date run:** 2026-04-20 (API exercises 1–2 only; 3–5 pending browser tooling)
 
 Five branch-coverage exercises that never fire during normal use. Each
 maps to a code path that regressed silently in PR #50's review and is
@@ -36,7 +36,18 @@ After ~65s, one more submission → `200`.
 scaling to multiple instances weakens the guarantee. Note which path
 was exercised.
 
-**Result:** ⬜ pass / ⬜ fail / ⬜ skipped — _notes_
+**Result:** ✅ **pass** — ran via curl from a single source against
+https://www.cardano-xp.io/api/project-posting-waitlist:
+
+```
+req 1-5: HTTP 200  {"success":true}
+req 6:   HTTP 429  {"error":"Too many requests. Please try again in a minute."}
+```
+
+After ~70s sleep, one more submission returned `HTTP 200 {"success":true}`
+(window rolled off cleanly). Backend in use unknown to the runner — at
+minimum the in-memory fallback is working; if Upstash is also wired, the
+429 may have come from there.
 
 ---
 
@@ -60,7 +71,16 @@ await fetch("/api/project-posting-waitlist", {
 the submitter address** even on the happy path — so the "honeypot sends
 nothing to the submitter" property is automatically true.
 
-**Result:** ⬜ pass / ⬜ fail / ⬜ skipped — _notes_
+**Result:** ✅ **pass (code path)** — ran via curl:
+
+```
+HTTP 200  {"success":true}
+```
+
+The route's honeypot guard at `project-posting-waitlist/route.ts` early-returns
+before `resend.emails.send` runs, so a 200 here implies no internal email was
+triggered. The runner cannot verify james@andamio.io's inbox directly; the
+inbox check is a manual follow-up if desired.
 
 ---
 
@@ -178,18 +198,20 @@ Load `/xp/activity`.
 
 | # | Exercise | Result |
 |---|----------|--------|
-| 1 | Rate-limit 429 | ⬜ |
-| 2 | Honeypot | ⬜ |
-| 3 | `computeActivityStats` fallback | ⬜ |
-| 4 | Zero-activity rendering | ⬜ |
-| 5 | Hostile alias | ⬜ |
+| 1 | Rate-limit 429 | ✅ pass |
+| 2 | Honeypot | ✅ pass (code path) |
+| 3 | `computeActivityStats` fallback | ⬜ deferred (browser response-override required) |
+| 4 | Zero-activity rendering | ⬜ deferred (browser response-override required) |
+| 5 | Hostile alias | ⬜ deferred (browser response-override required) |
 
-Gate: **all five must pass** (or be explicitly deferred with a follow-up
-todo) before this PR merges.
+Gate status: 2/5 run post-merge against prod. Exercises 3–5 require
+devtools Network → Override or an equivalent browser automation with
+response interception. Ran after merge rather than before — the gate
+described in the original todo ("before merge") was bypassed.
 
 ## Reference
 
-- PR under test: _fill in once opened_
+- PR under test: [#52](https://github.com/workshop-maybe/cardano-xp/pull/52) (merged as commit `39003b9`)
 - Plan: `docs/plans/2026-04-20-001-chore-resolve-pr50-review-todos-plan.md`
 - Todo: `todos/005-ready-p1-extend-preview-test-checklist.md`
 - Origin PR: [#50](https://github.com/workshop-maybe/cardano-xp/pull/50)

@@ -9,6 +9,7 @@ import {
   AndamioCardHeader,
   AndamioCardTitle,
   AndamioDashboardStat,
+  AndamioEmptyState,
   AndamioErrorAlert,
   AndamioPageHeader,
   AndamioPageLoading,
@@ -78,18 +79,18 @@ export function ActivityContent() {
     <div className="space-y-16">
       {/* Hero */}
       <div className="space-y-4 pt-4">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
+        <AndamioText className="font-mono text-xs uppercase tracking-[0.2em] text-secondary">
           activity
-        </p>
+        </AndamioText>
         <h1 className="font-display font-bold text-4xl sm:text-5xl tracking-tight text-foreground leading-[1.1]">
           What&apos;s happening on{" "}
           <span className="text-secondary">Cardano XP.</span>
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+        <AndamioText className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
           Every contribution is on-chain. This page is the live shape of the
           work happening here — who&apos;s contributing, what&apos;s getting
           accepted, and where XP is going next.
-        </p>
+        </AndamioText>
       </div>
 
       {/* Stats */}
@@ -132,24 +133,19 @@ export function ActivityContent() {
         </AndamioCardHeader>
         <AndamioCardContent>
           {recent.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/50 mb-3">
-                <AchievementIcon className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <AndamioText className="font-medium">
-                No accepted submissions yet
-              </AndamioText>
-              <AndamioText variant="muted" className="mt-1 max-w-[340px]">
-                Be the first — give feedback on the current assignment and earn
-                your first XP.{" "}
+            <AndamioEmptyState
+              icon={AchievementIcon}
+              title="No accepted submissions yet"
+              description="Be the first — give feedback on the current assignment and earn your first XP."
+              action={
                 <Link
                   href={PUBLIC_ROUTES.projects}
                   className="text-primary hover:underline"
                 >
                   Open tasks
                 </Link>
-              </AndamioText>
-            </div>
+              }
+            />
           ) : (
             <AndamioTableContainer>
               <AndamioTable>
@@ -193,9 +189,9 @@ export function ActivityContent() {
         <AndamioCardContent className="space-y-6">
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="space-y-2">
-              <p className="font-mono text-xs uppercase tracking-[0.15em] text-secondary">
+              <AndamioText className="font-mono text-xs uppercase tracking-[0.15em] text-secondary">
                 Step 1 · now
-              </p>
+              </AndamioText>
               <AndamioText className="font-semibold">
                 Give first feedback
               </AndamioText>
@@ -205,9 +201,9 @@ export function ActivityContent() {
               </AndamioText>
             </div>
             <div className="space-y-2">
-              <p className="font-mono text-xs uppercase tracking-[0.15em] text-secondary">
+              <AndamioText className="font-mono text-xs uppercase tracking-[0.15em] text-secondary">
                 Step 2 · soon
-              </p>
+              </AndamioText>
               <AndamioText className="font-semibold">
                 Unlock the how-to
               </AndamioText>
@@ -217,9 +213,9 @@ export function ActivityContent() {
               </AndamioText>
             </div>
             <div className="space-y-2">
-              <p className="font-mono text-xs uppercase tracking-[0.15em] text-secondary">
+              <AndamioText className="font-mono text-xs uppercase tracking-[0.15em] text-secondary">
                 Step 3 · your project
-              </p>
+              </AndamioText>
               <AndamioText className="font-semibold">
                 Mint a project token
               </AndamioText>

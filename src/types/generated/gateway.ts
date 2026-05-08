@@ -161,7 +161,6 @@ export interface AddFundsTxRequest {
   alias?: string;
   /** List of (asset class, quantity) pairs. An asset class is either "lovelace" or a token with its minting policy and token name delimited by dot (.). */
   deposit_value?: any[][];
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -308,7 +307,8 @@ export interface AssessAssignmentsTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   course_id?: string;
-  initiator_data?: WalletData;
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
 }
 
 export interface Asset {
@@ -335,7 +335,8 @@ export interface AssignmentActionTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   course_id?: string;
-  initiator_data?: WalletData;
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
 }
 
 export interface AssignmentCommitment {
@@ -425,7 +426,7 @@ export interface BillingStatusResponseEnvelope {
 export interface CheckoutRequest {
   /** @example "api" */
   product: "api";
-  /** @example "developer" */
+  /** @example "starter" */
   tier: string;
 }
 
@@ -452,7 +453,8 @@ export interface ClaimCourseCredentialsTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   course_id?: string;
-  initiator_data?: WalletData;
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
 }
 
 export interface ClaimCredentialV2Request {
@@ -474,7 +476,6 @@ export interface ClaimProjectCredentialsTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   contributor_state_id?: string;
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -488,6 +489,15 @@ export interface ClaimV2AccessTokenTxRequest {
    * @example "JohnDoe"
    */
   alias?: string;
+}
+
+export interface CleanerStatsView {
+  candidates?: number;
+  deleted?: number;
+  dry_run?: boolean;
+  errored?: number;
+  operation_id?: string;
+  skipped?: number;
 }
 
 export interface CommitAssignmentTxRequest {
@@ -505,12 +515,13 @@ export interface CommitAssignmentTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   course_id?: string;
-  initiator_data?: WalletData;
   /**
    * Hex-encoded hash of the task SLT (exactly 64 characters).
    * @example "a1b2c3d4e5f6..."
    */
   slt_hash?: string;
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
 }
 
 export interface CommitTaskTxRequest {
@@ -526,7 +537,6 @@ export interface CommitTaskTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   contributor_state_id?: string;
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -731,8 +741,27 @@ export interface CreateCourseTxRequest {
    * @example "JohnDoe"
    */
   alias?: string;
-  initiator_data?: WalletData;
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
   teachers?: string[];
+}
+
+export interface CreateKeyRequest {
+  environment: "mainnet" | "preprod";
+  /**
+   * @minLength 3
+   * @maxLength 64
+   */
+  name: string;
+}
+
+export interface CreateKeyResponse {
+  created_at?: string;
+  environment?: string;
+  id?: string;
+  key?: string;
+  last4?: string;
+  name?: string;
 }
 
 export interface CreateModuleRequest {
@@ -754,7 +783,6 @@ export interface CreateProjectTxRequest {
    */
   alias?: string;
   course_prereqs?: any[][];
-  initiator_data?: WalletData;
   managers?: string[];
 }
 
@@ -951,6 +979,12 @@ export interface ErrorResponse {
   error: ErrorDetail;
 }
 
+export interface FederatedCleanupCandidate {
+  created_at?: string;
+  user_id?: string;
+  wallet_address?: string;
+}
+
 export interface ForbiddenErrorResponse {
   details?: string;
   /** @example "Forbidden: Insufficient permissions or tier access." */
@@ -1050,6 +1084,14 @@ export interface JWTResponse {
   token: string;
 }
 
+export interface KeyListItem {
+  created_at?: string;
+  environment?: string;
+  id?: string;
+  last4?: string;
+  name?: string;
+}
+
 export interface LeaveAssignmentCommitmentV2Request {
   course_id?: string;
   course_module_code?: string;
@@ -1065,6 +1107,20 @@ export interface LessonV2 {
   is_live?: boolean;
   title?: string;
   video_url?: string;
+}
+
+export interface ListKeysKeyMetadata {
+  created_at?: string;
+  expires_at?: string;
+  is_active?: boolean;
+  key_id?: string;
+  name?: string;
+  prefix?: string;
+  source?: string;
+}
+
+export interface ListKeysResponse {
+  keys?: KeyListItem[];
 }
 
 export interface ListManagerTasksRequest {
@@ -1089,6 +1145,13 @@ export interface ListTeacherAssignmentCommitmentsRequest {
 
 export interface ListTeacherCourseModulesRequest {
   course_id?: string;
+}
+
+export interface LoginCompleteRequest {
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  session_id: string;
+  /** CIP-30 signature data from a Cardano wallet, containing the COSE_Sign1 signature and COSE_Key. */
+  signature: SignatureData;
 }
 
 export interface LoginRequest {
@@ -1125,6 +1188,30 @@ export interface LoginSession {
   nonce: string;
 }
 
+export interface LoginSessionRequest {
+  /**
+   * @minLength 1
+   * @maxLength 32
+   * @example "johndoe"
+   */
+  alias: string;
+  /**
+   * @minLength 103
+   * @maxLength 108
+   * @example "addr1q..."
+   */
+  wallet_address: string;
+}
+
+export interface LoginSessionResponse {
+  /** @example "2026-05-05T12:35:00Z" */
+  expires_at?: string;
+  /** @example "Sign this message to login to Andamio: abc123..." */
+  nonce?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  session_id?: string;
+}
+
 export interface ManageContributorBlacklistTxRequest {
   /**
    * Plain text alias. Any characters allowed.
@@ -1135,7 +1222,6 @@ export interface ManageContributorBlacklistTxRequest {
   alias?: string;
   aliases_to_add?: string[];
   aliases_to_remove?: string[];
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -1151,7 +1237,6 @@ export interface ManageManagersTxRequest {
    * @example "JohnDoe"
    */
   alias?: string;
-  initiator_data?: WalletData;
   managers_to_add?: string[];
   managers_to_remove?: string[];
   /**
@@ -1174,10 +1259,11 @@ export interface ManageModulesTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   course_id?: string;
-  initiator_data?: WalletData;
   modules_to_add?: MintModuleV2[];
   modules_to_remove?: string[];
   modules_to_update?: UpdateModuleV2[];
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
 }
 
 export interface ManageTasksTxRequest {
@@ -1195,7 +1281,6 @@ export interface ManageTasksTxRequest {
   contributor_state_id?: string;
   /** List of (asset class, quantity) pairs. An asset class is either "lovelace" or a token with its minting policy and token name delimited by dot (.). */
   deposit_value?: any[][];
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -1218,7 +1303,8 @@ export interface ManageTeachersTxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   course_id?: string;
-  initiator_data?: WalletData;
+  /** Sponsored path (Path A) — API caller needs to handle sponsorship tank. */
+  sponsor_data?: SponsorData;
   teachers_to_add?: string[];
   teachers_to_remove?: string[];
 }
@@ -1581,13 +1667,33 @@ export interface MintAccessTokenTxRequest {
    * @example "JohnDoe"
    */
   alias?: string;
+  /** Self-funded path: Bech32 address of the access token recipient. Enterprise Path B also uses this as the receiver address. */
   initiator_data?: string;
+  /** Sponsored path (Path A): provide this OR initiator_data, not both. */
+  sponsor_data?: MintSponsorData;
 }
 
 export interface MintModuleV2 {
   allowed_student_state_ids?: string[];
   prereq_slt_hashes?: string[];
   slts?: string[];
+}
+
+export interface MintSponsorData {
+  /**
+   * Bech32 address of the end-user wallet that will receive the minted access token.
+   * MUST differ from sponsor_address — the sponsor pays fees but does not receive the token.
+   */
+  access_token_receiver: string;
+  /** UTxO reference for collateral (format: txhash#index) returned by getStaticInfo() from the utxos.dev SDK. */
+  collateral_utxo_ref: string;
+  /** Bech32 address of the sponsor wallet that funds the transaction. */
+  sponsor_address: string;
+  /**
+   * UTxO reference (format: txhash#index) returned by getStaticInfo() from the utxos.dev SDK.
+   * Do not pick arbitrary UTxOs — the sponsorship contract requires this exact reference.
+   */
+  static_utxo_ref: string;
 }
 
 export interface ModuleContent {
@@ -1640,6 +1746,14 @@ export interface Pagination {
   page_size: number;
   /** @example 100 */
   total: number;
+}
+
+export interface PaymentRequiredErrorResponse {
+  details?: string;
+  /** @example "Payment Required: Sponsorship quota exhausted." */
+  message: string;
+  /** @example 402 */
+  status_code: number;
 }
 
 export interface PendingAssessmentSummary {
@@ -1775,6 +1889,13 @@ export interface PostUserAccessTokenAliasJSONRequestBody {
   access_token_alias?: string;
 }
 
+export interface PreviewCandidatesResponse {
+  candidates?: FederatedCleanupCandidate[];
+  count?: number;
+  cross_env_operation_id?: string;
+  grace_period_minutes?: number;
+}
+
 export interface Project {
   content?: ProjectContentInput;
   contributor_state_id?: string;
@@ -1908,6 +2029,36 @@ export interface PublicModuleContent {
 export interface PublishModuleV2Request {
   course_id?: string;
   course_module_code?: string;
+}
+
+export interface QualifiedContributorsResponse {
+  aliases?: string[];
+  project_id?: string;
+  /**
+   * Status indicates the reason for an empty aliases list.
+   * "ok" — prerequisites are configured and the intersection was computed.
+   * "no_prerequisites_configured" — the project has no prerequisites on-chain; every alias is vacuously qualified.
+   */
+  status?: string;
+  total_count?: number;
+  truncated?: boolean;
+}
+
+export interface QualifiedContributorsResponseEnvelope {
+  data: QualifiedContributorsResponse;
+}
+
+export interface RefreshRequest {
+  /** @example "a3f1c2d4e5b6..." */
+  refresh_token: string;
+}
+
+/** Refresh token data included in login and refresh responses */
+export interface RefreshTokenData {
+  /** @example "2026-06-04T12:30:00Z" */
+  expires_at?: string;
+  /** @example "a3f1c2d4e5b6..." */
+  token?: string;
 }
 
 export interface RegisterCompleteRequest {
@@ -2091,6 +2242,13 @@ export interface ReviewAssignmentCommitmentV2Request {
   pending_tx_hash?: string;
 }
 
+export interface RevokeKeyResponse {
+  cross_env_operation_id?: string;
+  environment?: string;
+  key_id?: string;
+  revoked_at?: string;
+}
+
 export interface RotateAPIKeyRequest {
   /**
    * @minLength 3
@@ -2108,6 +2266,27 @@ export interface RotateAPIKeyRequest {
 export interface RotateAPIKeyResponse {
   /** @example "API key expiration extended to 2026-08-31T23:59:59Z" */
   confirmation: string;
+}
+
+export interface RunCleanupOnceRequest {
+  dry_run?: boolean;
+}
+
+export interface RunCleanupOnceResponse {
+  cross_env_operation_id?: string;
+  stats?: CleanerStatsView;
+}
+
+export interface SecureLoginResponse {
+  /** @example "johndoe" */
+  alias?: string;
+  jwt?: JWTResponse;
+  /** Refresh token data included in login and refresh responses */
+  refresh_token?: RefreshTokenData;
+  /** @example "pioneer" */
+  tier?: string;
+  /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
+  user_id?: string;
 }
 
 export interface ServiceUnavailableErrorResponse {
@@ -2163,6 +2342,18 @@ export interface SltV2 {
   /** SltIndex 1-based SLT index (starts at 1, not 0) */
   slt_index?: number;
   slt_text?: string;
+}
+
+export interface SponsorData {
+  /** UTxO reference for collateral (format: txhash#index) returned by getStaticInfo() from the utxos.dev SDK. */
+  collateral_utxo_ref: string;
+  /** Bech32 address of the sponsor wallet that funds the transaction. */
+  sponsor_address: string;
+  /**
+   * UTxO reference (format: txhash#index) returned by getStaticInfo() from the utxos.dev SDK.
+   * Do not pick arbitrary UTxOs — the sponsorship contract requires this exact reference.
+   */
+  static_utxo_ref: string;
 }
 
 /** Request to start an Access Token ownership verification session. */
@@ -2288,6 +2479,14 @@ export interface SubmitAssignmentCommitmentV2Request {
   slt_hash?: string;
 }
 
+export interface SubmitSponsoredRequest {
+  /**
+   * holder-signed tx hex
+   * @example "84a40081825820..."
+   */
+  tx: string;
+}
+
 export interface SubscriptionStatus {
   /** @example false */
   cancel_at_period_end?: boolean;
@@ -2328,7 +2527,6 @@ export interface TaskActionTxRequest {
    * @example "JohnDoe"
    */
   alias?: string;
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -2359,7 +2557,7 @@ export interface TaskCommitmentContent {
   evidence?: any;
   /** Hash for on-chain verification */
   task_evidence_hash?: string;
-  /** ACCEPTED, REFUSED, DENIED */
+  /** accept, refuse, deny (lowercase, matches db-api enum) */
   task_outcome?: string;
 }
 
@@ -2415,7 +2613,6 @@ export interface TasksAssessV2TxRequest {
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
    */
   contributor_state_id?: string;
-  initiator_data?: WalletData;
   /**
    * Hash of a minting policy script.
    * @example "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef"
@@ -2879,11 +3076,4 @@ export interface VerifyEmailResponse {
   message?: string;
   /** @example "a1b2c3d4-e5f6-7890-1234-567890abcdef" */
   user_id?: string;
-}
-
-export interface WalletData {
-  /** Bech32-encoded change address */
-  change_address?: string;
-  /** Bech32-encoded wallet addresses that have been used in the wallet. */
-  used_addresses?: string[];
 }

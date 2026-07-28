@@ -65,4 +65,4 @@ The journal/ directory documents every step of development with agent skills. "V
 
 This app and these courses were vibe coded on a Sunday afternoon on top of Andamio. Full documentation of the process is public.
 
-Source: [XP tokenomics strategy](../../020-areas/strategy/xp-tokenomics-draft.md) + voice memo, 2026-03-15.
+Source: the XP tokenomics strategy draft (internal) + voice memo, 2026-03-15.

@@ -58,7 +58,7 @@ The core TX state machine (useTransaction, useTxStream, tx-watcher-store) is ide
 
 #### `src/stores/tx-watcher-store.ts` — 8 insertion points (~60 lines)
 
-Copy from app repo at `/Users/james/projects/01-projects/andamio-platform/andamio-app-v2/src/stores/tx-watcher-store.ts`:
+Copy from app repo at `$REPOS/andamio-app-v2/src/stores/tx-watcher-store.ts`:
 
 1. **Import** (top): Add `import { useCelebrationStore } from "./celebration-store";`
 2. **Constants**: Add `CONFIRMED_TIMEOUT_MS` and `MOMENTS_OF_COMMITMENT`
@@ -116,6 +116,6 @@ Note: The `MOMENTS_OF_COMMITMENT` array should be adapted for XP's actual TX typ
 ## Sources
 
 - **Origin brainstorm:** [docs/brainstorms/2026-03-22-tx-state-machine-sync-brainstorm.md](docs/brainstorms/2026-03-22-tx-state-machine-sync-brainstorm.md) — Copy TX improvements from app, new celebration UX, document state machine
-- **App reference:** `~/projects/01-projects/andamio-platform/andamio-app-v2/src/stores/tx-watcher-store.ts` — source of truth for timeout + celebration logic
-- **App TX doc:** `~/projects/01-projects/andamio-platform/andamio-app-v2/.claude/skills/audit-api-coverage/tx-state-machine.md` — basis for XP documentation
+- **App reference:** `$REPOS/andamio-app-v2/src/stores/tx-watcher-store.ts` — source of truth for timeout + celebration logic
+- **App TX doc:** `$REPOS/andamio-app-v2/.claude/skills/audit-api-coverage/tx-state-machine.md` — basis for XP documentation
 - **TX error gotcha:** `docs/solutions/runtime-errors/assignment-commit-500-three-root-causes.md` — three-layer diagnostic pattern for TX failures

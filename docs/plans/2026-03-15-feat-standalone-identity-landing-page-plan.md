@@ -136,6 +136,6 @@ Three phases, each independently shippable:
 - **Origin brainstorm:** [docs/brainstorms/2026-03-15-standalone-identity-brainstorm.md](docs/brainstorms/2026-03-15-standalone-identity-brainstorm.md) — key decisions: single hero + CTA, "Powered by Andamio" positioning, clean + bold visual, wallet flow unchanged
 - Theme system solution: `docs/solutions/ui-bugs/cardano-dapp-theme-system.md`
 - Architecture solution: `docs/solutions/architecture/strip-template-to-single-course-app.md`
-- Strategic context: `~/projects/02-areas/andamio/020-areas/strategy/xp-tokenomics-draft.md` (tagline, positioning)
+- Strategic context: the internal `xp-tokenomics-draft` note (tagline, positioning)
 - Key config files: `src/config/branding.ts`, `src/config/marketing.ts`, `src/config/theme.ts`
 - Landing page: `src/app/page.tsx`, `src/components/landing/landing-hero.tsx`

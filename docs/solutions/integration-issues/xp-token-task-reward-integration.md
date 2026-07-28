@@ -89,7 +89,7 @@ The work was wiring it up, not building it from scratch.
 - Implementation plan: `docs/plans/2026-03-15-feat-xp-token-task-rewards-plan.md`
 - Tokenomics spec: `docs/tokenomics.md`
 - Standalone identity: `docs/solutions/project-setup/template-to-standalone-product-identity.md`
-- API spec: `~/projects/01-projects/andamio-api/openapi/specs/andamio-db-api.json` (CreateTaskRequest.tokens, ProjectTaskToken)
+- API spec: `$REPOS/andamio-api/openapi/specs/andamio-db-api.json` (CreateTaskRequest.tokens, ProjectTaskToken)
 
 ## Files Changed
 

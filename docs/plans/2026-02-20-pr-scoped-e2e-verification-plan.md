@@ -428,7 +428,7 @@ Verifies post-claim UI state:
 ### Task 3: Update workflow memory with new Verify sub-steps
 
 **Files:**
-- Modify: `/Users/robertom/.claude/projects/-Users-robertom-Documents-Workspace-Projects-andamio-app-v2/memory/workflow.md`
+- Modify: the local Claude config directory
 
 **Step 1: Update the pipeline definition**
 
@@ -450,7 +450,7 @@ To:
 **Step 2: Commit**
 
 ```bash
-git add /Users/robertom/.claude/projects/-Users-robertom-Documents-Workspace-Projects-andamio-app-v2/memory/workflow.md
+git add <local Claude project dir>
 git commit -m "docs: update workflow with PR spec verification in Verify step"
 ```
 

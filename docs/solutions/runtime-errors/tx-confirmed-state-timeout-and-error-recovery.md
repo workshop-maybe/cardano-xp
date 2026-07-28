@@ -114,4 +114,4 @@ const canCommit = hasAccessToken && hasEvidence && hasValidTaskHash && isTaskPub
 
 - `docs/solutions/runtime-errors/assignment-commit-500-three-root-causes.md` — TX build failure diagnosis (complementary: that doc covers build errors, this covers confirmation stalls)
 - `docs/brainstorms/2026-03-22-tx-state-machine-sync-brainstorm.md` — design decisions
-- App v2 source: `~/projects/01-projects/andamio-platform/andamio-app-v2/src/stores/tx-watcher-store.ts`
+- App v2 source: `$REPOS/andamio-app-v2/src/stores/tx-watcher-store.ts`

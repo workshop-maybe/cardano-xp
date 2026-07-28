@@ -122,7 +122,7 @@ When API changes:
 
 ```bash
 npx swagger-typescript-api \
-  -p ~/projects/01-projects/andamio-api/docs/swagger.json \
+  -p $REPOS/andamio-api/docs/swagger.json \
   -o src/types/generated \
   -n gateway.ts \
   --no-client

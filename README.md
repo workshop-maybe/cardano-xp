@@ -64,4 +64,4 @@ All ADA spent building this project is tracked through this wallet.
 
 ## License
 
-MIT
+Apache License 2.0. See [LICENSE](LICENSE). Code from [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template) keeps its MIT notice in [NOTICE](NOTICE).
